@@ -1,0 +1,52 @@
+{
+	"emulators": {
+		"default": {
+			"port": 3569,
+			"serviceAccount": "emulator-account"
+		}
+	},
+	"contracts": {
+		"NFTContract": "./NFTContract.cdc",
+		"TriQueta": "./TriQueta.cdc",
+		"NonFungibleToken": "./NonFungibleToken.cdc"
+	},
+	"networks": {
+		"emulator": "127.0.0.1:3569",
+		"mainnet": "access.mainnet.nodes.onflow.org:9000",
+		"testnet": "access.devnet.nodes.onflow.org:9000"
+	},
+	"accounts": {
+		"emulator-account": {
+			"address": "f8d6e0586b0a20c7",
+			"key": "fc2192571f18225dde71d611cb5f022724a0038ccc111fe587bd1868616b971e"
+		},
+		"testnet-new-NFTContract": {
+			"address": "0xb8b8bf394da0ff54",
+			"key": {
+				"type": "hex",
+				"index": 0,
+				"signatureAlgorithm": "ECDSA_secp256k1",
+				"hashAlgorithm": "SHA3_256",
+				"privateKey": "9301982df7a1c77db94af43e062ceb3300d3e038fcd82ee7abb1897d98ad7d1f"
+			  }
+		}, 
+		"testnet-new-NowWhereContract": {
+			"address": "0xab79c34632e5a7af",
+			"key": {
+				"type": "hex",
+				"index": 0,
+				"signatureAlgorithm": "ECDSA_secp256k1",
+				"hashAlgorithm": "SHA3_256",
+				"privateKey": "9301982df7a1c77db94af43e062ceb3300d3e038fcd82ee7abb1897d98ad7d1f"
+			  }
+		}
+	},
+	"deployments": {
+		"testnet": {
+			"testnet-new-NFTContract": ["NFTContract"]
+		  },
+		  "emulator": {
+			  "emulator-account": ["TriQueta"]
+		  }
+	}
+}
