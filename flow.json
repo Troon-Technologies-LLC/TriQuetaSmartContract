@@ -6,9 +6,9 @@
 		}
 	},
 	"contracts": {
-		"NFTContract": "./NFTContract.cdc",
-		"TriQueta": "./TriQueta.cdc",
-		"NonFungibleToken": "./NonFungibleToken.cdc"
+		"NFTContract": "./contracts/NFTContract.cdc",
+		"TriQueta": "./contracts/TriQueta.cdc",
+		"NonFungibleToken": "./contracts/NonFungibleToken.cdc"
 	},
 	"networks": {
 		"emulator": "127.0.0.1:3569",
