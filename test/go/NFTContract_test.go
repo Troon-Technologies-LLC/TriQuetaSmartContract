@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var BrandName string = "Nowwhere"
+var BrandName string = "TriQueta"
 var BrandMetadataKey string = "brandName"
 var BrandMetadataValue string = "Mercedes-Benz"
 var UpdateBrandMetadataValue string = "Mercedes-Benz_GLA"
@@ -40,7 +40,7 @@ func Test_NFTContractTestDeployment(test *testing.T) {
 	nonfungibleAddr, ownerAddr, _, _ := NFTContractDeployContracts(emulator, test)
 
 	test.Run("Should have initialized Supply field zero correctly", func(test *testing.T) {
-		supply := executeScriptAndCheck(test, emulator, NowwhereGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
+		supply := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
 		var supplyOnitial uint64 = uint64(zero)
 		assert.EqualValues(test, CadenceUInt64(supplyOnitial), supply)
 	})
@@ -354,7 +354,7 @@ func Test_CreateTemplate_WithoutBrandID(test *testing.T) {
 	metadatatemplate := []cadence.KeyValuePair{{Key: TemplateNameField, Value: cadence.NewUInt64(two)}}
 
 	// Create Template Transaction with brand ID:1 and schema ID:1 and 2 max Supply
-	NowwhereCreateTemplateTransaction(
+	TriQuetaCreateTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -369,7 +369,7 @@ func Test_CreateTemplate_WithoutBrandID(test *testing.T) {
 
 	// Post Condition: Check brand initialized properly
 	test.Run("Should have initialized Template correctly", func(test *testing.T) {
-		schemaCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
+		schemaCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), schemaCount)
 	})
 }
@@ -392,11 +392,11 @@ func Test_CreateTemplate_WithoutSchemaID(test *testing.T) {
 	// metadata
 	metadatatemplate := []cadence.KeyValuePair{{Key: brandNameField, Value: cadence.NewUInt64(2)}}
 	// Create Template Transaction with brand ID:1 and schema ID:1 and 2 max Supply
-	NowwhereCreateTemplateTransaction(test, emulator, nonfungibleAddr, ownerAddr, ownerAddr, signer, shouldFail, one, one, two, metadatatemplate)
+	TriQuetaCreateTemplateTransaction(test, emulator, nonfungibleAddr, ownerAddr, ownerAddr, signer, shouldFail, one, one, two, metadatatemplate)
 
 	// Post Condition: Check brand initialized properly
 	test.Run("Should not have initialized Schema correctly", func(test *testing.T) {
-		schemaCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
+		schemaCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), schemaCount)
 	})
 }
@@ -423,7 +423,7 @@ func Test_CreateTemplate_withOwnBrandIDandSchemaID(test *testing.T) {
 	metadatatemplate := []cadence.KeyValuePair{{Key: TemplateField, Value: TemplateField}}
 
 	// Create Template Transaction  with brand ID:1 and schema ID:1 and 2 max Supply
-	NowwhereCreateTemplateTransaction(
+	TriQuetaCreateTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -438,7 +438,7 @@ func Test_CreateTemplate_withOwnBrandIDandSchemaID(test *testing.T) {
 
 	// Post Condition: Check brand initialized properly
 	test.Run("Should have initialized template correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceInt(one), templateCount)
 	})
 }
@@ -464,7 +464,7 @@ func Test_CreateTemplate_withzeroSupply(test *testing.T) {
 	// metadata
 	metadatatemplate := []cadence.KeyValuePair{{Key: TemplateField, Value: TemplateField}}
 	// Create Template Transaction  with brand ID:1 and schema ID:1 and 2 max Supply
-	NowwhereCreateTemplateTransaction(
+	TriQuetaCreateTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -479,7 +479,7 @@ func Test_CreateTemplate_withzeroSupply(test *testing.T) {
 
 	// Post Condition: Check brand initialized properly
 	test.Run("Should have initialized template correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 }
@@ -505,7 +505,7 @@ func Test_CreateTemplate_SchemaCheck(test *testing.T) {
 	// metadata
 	metadatatemplate := []cadence.KeyValuePair{{Key: WrongTemplateField, Value: cadence.NewInt(two)}}
 	// Create Template Transaction  with brand ID:1 and schema ID:1 and 2 max Supply
-	NowwhereCreateTemplateTransaction(
+	TriQuetaCreateTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -520,7 +520,7 @@ func Test_CreateTemplate_SchemaCheck(test *testing.T) {
 
 	// Post Condition: Check brand initialized properly
 	test.Run("Should have initialized template correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 }
@@ -549,7 +549,7 @@ func Test_CreateTemplate_withOthersBrandIDandSchemaID(test *testing.T) {
 	userAddress, usersigner := NFTContractSetupAccount(test, emulator, nonfungibleAddr, ownerAddr, shouldNotFail)
 
 	// Create Template Transaction  with brand ID:1 and schema ID:1 and 2 max Supply
-	NowwhereCreateTemplateTransaction(
+	TriQuetaCreateTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -564,7 +564,7 @@ func Test_CreateTemplate_withOthersBrandIDandSchemaID(test *testing.T) {
 
 	// Post Condition: Check brand initialized properly
 	test.Run("Should not have initialized template with others brand correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 }
@@ -632,7 +632,7 @@ func Test_CreateTemplate_withOwnBrandIDandOthersSchemaID(test *testing.T) {
 	metadatatemplate := []cadence.KeyValuePair{{Key: brandNameField, Value: cadence.NewUInt64(two)}}
 
 	// Create Template Transaction  with brand ID:1 and schema ID:1 and 2 max Supply
-	NowwhereCreateTemplateTransaction(
+	TriQuetaCreateTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -647,7 +647,7 @@ func Test_CreateTemplate_withOwnBrandIDandOthersSchemaID(test *testing.T) {
 
 	// Post Condition: Check brand initialized properly
 	test.Run("Should not have initialized template with others brand correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 }
@@ -663,11 +663,11 @@ func Test_MintTemplate_WithoutTemplate(test *testing.T) {
 	// Create Setup New Account
 	receiverAccount, _ := NFTContractSetupAccount(test, emulator, nonfungibleAddr, ownerAddr, shouldNotFail)
 	var templateId uint64 = one
-	NowwhereMintTemplateTransaction(test, emulator, nonfungibleAddr, ownerAddr, ownerAddr, signer, shouldFail, templateId, receiverAccount)
+	TriQuetaMintTemplateTransaction(test, emulator, nonfungibleAddr, ownerAddr, ownerAddr, signer, shouldFail, templateId, receiverAccount)
 
 	// Post Condition: Check brand initialized properly
 	test.Run("Should not have initialized Template correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetTemplateCountScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 }
@@ -695,7 +695,7 @@ func Test_MintTemplate_Success(test *testing.T) {
 	// metadata
 	metadatatemplate := []cadence.KeyValuePair{{Key: TemplateField, Value: TemplateField}}
 	// Create Template Transaction  with brand ID:1 and schema ID:1 and 2 max Supply
-	NowwhereCreateTemplateTransaction(
+	TriQuetaCreateTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -711,7 +711,7 @@ func Test_MintTemplate_Success(test *testing.T) {
 	// Directly Minted to reciever address
 	receiverAddress, _ := NFTContractSetupAccount(test, emulator, nonfungibleAddr, ownerAddr, shouldNotFail)
 	var templateId uint64 = one
-	NowwhereMintTemplateTransaction(
+	TriQuetaMintTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -725,13 +725,13 @@ func Test_MintTemplate_Success(test *testing.T) {
 
 	// NFT Supply
 	test.Run("Should have initialized Supply field correctly", func(test *testing.T) {
-		supply := executeScriptAndCheck(test, emulator, NowwhereGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
+		supply := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceUInt64(one), supply)
 	})
 
 	// Post Condition: Check brand initialized properly
 	test.Run("Should Mint Template correctly", func(test *testing.T) {
-		MintCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetNFTAddressScript(nonfungibleAddr, ownerAddr),
+		MintCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetNFTAddressScript(nonfungibleAddr, ownerAddr),
 			[][]byte{jsoncdc.MustEncode(cadence.Address(receiverAddress))})
 		assert.EqualValues(test, CadenceArray(one), MintCount)
 	})
@@ -760,7 +760,7 @@ func Test_MintTemplate_WithoutSetupUser(test *testing.T) {
 	// metadata
 	metadatatemplate := []cadence.KeyValuePair{{Key: TemplateField, Value: TemplateField}}
 	// Create Template Transaction  with brand ID:1 and schema ID:1 and 2 max Supply
-	NowwhereCreateTemplateTransaction(
+	TriQuetaCreateTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -778,11 +778,11 @@ func Test_MintTemplate_WithoutSetupUser(test *testing.T) {
 	// Directly Minted to reciever address
 	//receiverAddress, _ := NFTContractSetupAccount(test, emulator, nonfungibleAddr, ownerAddr, shouldNotFail)
 	var templateId uint64 = one
-	NowwhereMintTemplateTransaction(test, emulator, nonfungibleAddr, ownerAddr, ownerAddr, signer, shouldFail, templateId, receiverAddress)
+	TriQuetaMintTemplateTransaction(test, emulator, nonfungibleAddr, ownerAddr, ownerAddr, signer, shouldFail, templateId, receiverAddress)
 
 	// NFT Supply
 	test.Run("Should not have initialized Supply field correctly", func(test *testing.T) {
-		supply := executeScriptAndCheck(test, emulator, NowwhereGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
+		supply := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceUInt64(zero), supply)
 	})
 
@@ -810,7 +810,7 @@ func Test_TransferNFT_Success(test *testing.T) {
 	// metadata
 	metadatatemplate := []cadence.KeyValuePair{{Key: TemplateField, Value: TemplateField}}
 	// Create Template Transaction  with brand ID:1 and schema ID:1 and 2 max Supply
-	NowwhereCreateTemplateTransaction(
+	TriQuetaCreateTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -825,12 +825,12 @@ func Test_TransferNFT_Success(test *testing.T) {
 
 	var templateId uint64 = one
 	// Mint NFT to own Address
-	NowwhereMintTemplateTransaction(test, emulator, nonfungibleAddr, ownerAddr, ownerAddr, signer, shouldNotFail, templateId, ownerAddr)
+	TriQuetaMintTemplateTransaction(test, emulator, nonfungibleAddr, ownerAddr, ownerAddr, signer, shouldNotFail, templateId, ownerAddr)
 	// Setup Account
 	receiverAddress, _ := NFTContractSetupAccount(test, emulator, nonfungibleAddr, ownerAddr, shouldNotFail)
 	// Post Condition: Check brand initialized properly
 	test.Run("Should have initialized brand correctly", func(test *testing.T) {
-		MintCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetNFTAddressScript(nonfungibleAddr, ownerAddr),
+		MintCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetNFTAddressScript(nonfungibleAddr, ownerAddr),
 			[][]byte{jsoncdc.MustEncode(cadence.Address(ownerAddr))})
 		assert.EqualValues(test, CadenceArray(one), MintCount)
 	})
@@ -849,13 +849,13 @@ func Test_TransferNFT_Success(test *testing.T) {
 
 	// NFT Supply
 	test.Run("Should have initialized NFT Supply field correctly after Minting", func(test *testing.T) {
-		supply := executeScriptAndCheck(test, emulator, NowwhereGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
+		supply := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceUInt64(1), supply)
 	})
 
 	// Post Condition: Check brand initialized properly
 	test.Run("Should have transferred NFT correctly", func(test *testing.T) {
-		MintCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetNFTAddressScript(nonfungibleAddr, ownerAddr),
+		MintCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetNFTAddressScript(nonfungibleAddr, ownerAddr),
 			[][]byte{jsoncdc.MustEncode(cadence.Address(receiverAddress))})
 		assert.EqualValues(test, CadenceArray(one), MintCount)
 	})
@@ -883,7 +883,7 @@ func Test_MintTemplate_morethanSupply(test *testing.T) {
 	// metadata
 	metadatatemplate := []cadence.KeyValuePair{{Key: TemplateField, Value: TemplateField}}
 	// Create Template Transaction  with brand ID:1 and schema ID:1 and 2 max Supply
-	NowwhereCreateTemplateTransaction(
+	TriQuetaCreateTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -898,14 +898,14 @@ func Test_MintTemplate_morethanSupply(test *testing.T) {
 
 	// Pre Condition
 	test.Run("Should have initialized Supply field Zero correctly", func(test *testing.T) {
-		supply := executeScriptAndCheck(test, emulator, NowwhereGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
+		supply := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceUInt64(zero), supply)
 	})
 
 	// Directly Minted to reciever address
 	var templateId uint64 = one
 	// Mint transaction # 1
-	NowwhereMintTemplateTransaction(
+	TriQuetaMintTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -917,12 +917,12 @@ func Test_MintTemplate_morethanSupply(test *testing.T) {
 		ownerAddr)
 
 	test.Run("Should have initialized Supply field One correctly", func(test *testing.T) {
-		supply := executeScriptAndCheck(test, emulator, NowwhereGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
+		supply := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceUInt64(one), supply)
 	})
 
 	// Mint transaction # 2
-	NowwhereMintTemplateTransaction(
+	TriQuetaMintTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -934,12 +934,12 @@ func Test_MintTemplate_morethanSupply(test *testing.T) {
 		ownerAddr)
 
 	test.Run("Should have initialized Supply field Two  correctly", func(test *testing.T) {
-		supply := executeScriptAndCheck(test, emulator, NowwhereGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
+		supply := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceUInt64(two), supply)
 	})
 
 	// Mint transaction # 3
-	NowwhereMintTemplateTransaction(
+	TriQuetaMintTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -952,7 +952,7 @@ func Test_MintTemplate_morethanSupply(test *testing.T) {
 
 	// Check NFT Supply
 	test.Run("Should have initialized Supply field two correctly", func(test *testing.T) {
-		supply := executeScriptAndCheck(test, emulator, NowwhereGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
+		supply := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceUInt64(two), supply)
 	})
 
@@ -981,7 +981,7 @@ func Test_DestroyNFT_Success(test *testing.T) {
 	// metadata
 	metadatatemplate := []cadence.KeyValuePair{{Key: TemplateField, Value: TemplateField}}
 	// Create Template Transaction  with brand ID:1 and schema ID:1 and 2 max Supply
-	NowwhereCreateTemplateTransaction(
+	TriQuetaCreateTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -996,14 +996,14 @@ func Test_DestroyNFT_Success(test *testing.T) {
 
 	// Pre Condition
 	test.Run("Should have initialized Supply field zero correctly", func(test *testing.T) {
-		supply := executeScriptAndCheck(test, emulator, NowwhereGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
+		supply := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceUInt64(zero), supply)
 	})
 
 	// Directly Minted to reciever address
 	var templateId uint64 = one
 	// Mint transaction # 1
-	NowwhereMintTemplateTransaction(
+	TriQuetaMintTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
@@ -1015,11 +1015,11 @@ func Test_DestroyNFT_Success(test *testing.T) {
 		ownerAddr)
 	// Mint Should received
 	test.Run("Should have initialized Supply field one correctly", func(test *testing.T) {
-		supply := executeScriptAndCheck(test, emulator, NowwhereGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
+		supply := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
 		assert.EqualValues(test, CadenceUInt64(one), supply)
 	})
 	test.Run("Should Mint Template correctly", func(test *testing.T) {
-		MintCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetNFTAddressScript(nonfungibleAddr, ownerAddr),
+		MintCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetNFTAddressScript(nonfungibleAddr, ownerAddr),
 			[][]byte{jsoncdc.MustEncode(cadence.Address(ownerAddr))})
 		assert.EqualValues(test, CadenceArray(one), MintCount)
 	})
@@ -1036,7 +1036,7 @@ func Test_DestroyNFT_Success(test *testing.T) {
 
 	// Post Condition: Check brand initialized properly
 	test.Run("Should Mint Template correctly", func(test *testing.T) {
-		MintCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetNFTAddressScript(nonfungibleAddr, ownerAddr),
+		MintCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetNFTAddressScript(nonfungibleAddr, ownerAddr),
 			[][]byte{jsoncdc.MustEncode(cadence.Address(ownerAddr))})
 		assert.NotEqualValues(test, CadenceArray(one), MintCount)
 	})

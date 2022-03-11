@@ -21,16 +21,16 @@ var DropField, _ = cadence.NewString("1")      // Metdata Template Field
 func Test_ContractTestDeployment(test *testing.T) {
 	emulator := newEmulator()
 
-	nonfungibleAddr, ownerAddr, _, _, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, ownerAddr, _, _, _ := TriQuetaContractDeployContracts(emulator, test)
 
 	test.Run("Should have initialized Supply field zero correctly", func(test *testing.T) {
-		supply := executeScriptAndCheck(test, emulator, NowwhereGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
+		supply := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
 		var supplyOnitial uint64 = uint64(zero)
 		assert.EqualValues(test, CadenceUInt64(supplyOnitial), supply)
 	})
 
 	test.Run("Should have initialized Supply field zero correctly", func(test *testing.T) {
-		supply := executeScriptAndCheck(test, emulator, NowwhereGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
+		supply := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetSupplyScript(nonfungibleAddr, ownerAddr), nil)
 		var supplyOnitial uint64 = uint64(zero)
 		assert.EqualValues(test, CadenceUInt64(supplyOnitial), supply)
 	})
@@ -42,10 +42,10 @@ func Test_ContractTestDeployment(test *testing.T) {
 // Test-case-type: Positive
 func Test_Admin_CheckCapablity(test *testing.T) {
 	emulator := newEmulator()
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 	// 1st account(admin) configure
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
-	//	CheckCapabilityTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, shouldNotFail)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
+	//	CheckCapabilityTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, shouldNotFail)
 }
 
 // Description: Create Drop of template
@@ -54,7 +54,7 @@ func Test_Admin_CheckCapablity(test *testing.T) {
 // Test-case-type: Positive
 func Test_CreateDrop_Success(test *testing.T) {
 	emulator := newEmulator()
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 
 	// metadata
 	metadatatemplateforDrop := []cadence.KeyValuePair{{Key: TemplateIDforDrop, Value: DropField}}
@@ -67,22 +67,22 @@ func Test_CreateDrop_Success(test *testing.T) {
 	endDate := strconv.FormatInt(endtUnix, 10) + ".0"
 
 	// 1st account(admin) configure
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldNotFail,
 		one,
@@ -92,7 +92,7 @@ func Test_CreateDrop_Success(test *testing.T) {
 	)
 
 	test.Run("Should have initialized Drop with one correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(one), templateCount)
 	})
 }
@@ -103,7 +103,7 @@ func Test_CreateDrop_Success(test *testing.T) {
 // Test-case-type: Positive
 func Test_CreateDrop_TwoDropswithSameTemplate(test *testing.T) {
 	emulator := newEmulator()
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 
 	// metadata
 	metadatatemplateforDrop := []cadence.KeyValuePair{{Key: TemplateIDforDrop, Value: DropField}}
@@ -115,21 +115,21 @@ func Test_CreateDrop_TwoDropswithSameTemplate(test *testing.T) {
 	startDate := strconv.FormatInt(starttUnix, 10) + ".0"
 	endDate := strconv.FormatInt(endtUnix, 10) + ".0"
 
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldNotFail,
 		one,
@@ -139,17 +139,17 @@ func Test_CreateDrop_TwoDropswithSameTemplate(test *testing.T) {
 	)
 
 	test.Run("Should have initialized Drop with one correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(one), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldNotFail,
 		two,                     // drop ID
@@ -159,7 +159,7 @@ func Test_CreateDrop_TwoDropswithSameTemplate(test *testing.T) {
 	)
 
 	test.Run("Should have initialized Drop with one correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(two), templateCount)
 	})
 }
@@ -171,7 +171,7 @@ func Test_CreateDrop_TwoDropswithSameTemplate(test *testing.T) {
 func Test_CreateDrop_withWrongStartDate(test *testing.T) {
 	emulator := newEmulator()
 
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 
 	// metadata
 	metadatatemplateforDrop := []cadence.KeyValuePair{{Key: TemplateIDforDrop, Value: DropField}}
@@ -187,22 +187,22 @@ func Test_CreateDrop_withWrongStartDate(test *testing.T) {
 	startDate := strconv.FormatInt(starttUnix, 10) + ".0"
 	endDate := strconv.FormatInt(endtUnix, 10) + ".0"
 
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldFail,
 		one,
@@ -212,7 +212,7 @@ func Test_CreateDrop_withWrongStartDate(test *testing.T) {
 	)
 
 	test.Run("Should now have initialized Drop correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 }
@@ -224,7 +224,7 @@ func Test_CreateDrop_withWrongStartDate(test *testing.T) {
 func Test_CreateDrop_withWrongEndDate(test *testing.T) {
 	emulator := newEmulator()
 
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 
 	// metadata
 	metadatatemplateforDrop := []cadence.KeyValuePair{{Key: TemplateIDforDrop, Value: DropField}}
@@ -238,22 +238,22 @@ func Test_CreateDrop_withWrongEndDate(test *testing.T) {
 	startDate := strconv.FormatInt(starttUnix, 10) + ".0"
 	endDate := strconv.FormatInt(endtUnix, 10) + ".0"
 
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldFail,
 		one,
@@ -263,7 +263,7 @@ func Test_CreateDrop_withWrongEndDate(test *testing.T) {
 	)
 
 	test.Run("Should now have initialized Drop correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
@@ -276,7 +276,7 @@ func Test_CreateDrop_withWrongEndDate(test *testing.T) {
 func Test_CreateDrop_withSameDates(test *testing.T) {
 	emulator := newEmulator()
 
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 	// metadata
 	metadatatemplateforDrop := []cadence.KeyValuePair{{Key: TemplateIDforDrop, Value: DropField}}
 
@@ -291,22 +291,22 @@ func Test_CreateDrop_withSameDates(test *testing.T) {
 	startDate := strconv.FormatInt(starttUnix, 10) + ".0"
 	endDate := strconv.FormatInt(endtUnix, 10) + ".0"
 
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldFail,
 		one,
@@ -316,7 +316,7 @@ func Test_CreateDrop_withSameDates(test *testing.T) {
 	)
 
 	test.Run("Should now have initialized Drop correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 }
@@ -327,7 +327,7 @@ func Test_CreateDrop_withSameDates(test *testing.T) {
 // Test-case-type: Negative
 func Test_CreateDrop_Duplicate(test *testing.T) {
 	emulator := newEmulator()
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 	// metadata
 	metadatatemplateforDrop := []cadence.KeyValuePair{{Key: TemplateIDforDrop, Value: DropField}}
 	// Unix Timestamp
@@ -338,21 +338,21 @@ func Test_CreateDrop_Duplicate(test *testing.T) {
 	startDate := strconv.FormatInt(starttUnix, 10) + ".0"
 	endDate := strconv.FormatInt(endtUnix, 10) + ".0"
 
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldNotFail,
 		one,
@@ -362,17 +362,17 @@ func Test_CreateDrop_Duplicate(test *testing.T) {
 	)
 
 	test.Run("Should have initialized Drop with one correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(one), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldFail,
 		one,
@@ -382,7 +382,7 @@ func Test_CreateDrop_Duplicate(test *testing.T) {
 	)
 
 	test.Run("Should not have initialized duplicate Drop:", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(one), templateCount)
 	})
 }
@@ -393,7 +393,7 @@ func Test_CreateDrop_Duplicate(test *testing.T) {
 // Test-case-type: Negative
 func Test_CreateDrop_WithWrongTemplateID(test *testing.T) {
 	emulator := newEmulator()
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 	DropField, _ := cadence.NewString("1") // Metdata Template Field
 	// metadata first argument template ID and second its information
 	metadatatemplateforDrop := []cadence.KeyValuePair{{Key: cadence.NewUInt64(two), Value: DropField}}
@@ -405,22 +405,22 @@ func Test_CreateDrop_WithWrongTemplateID(test *testing.T) {
 	startDate := strconv.FormatInt(starttUnix, 10) + ".0"
 	endDate := strconv.FormatInt(endtUnix, 10) + ".0"
 
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldFail,
 		one,                     // drop ID
@@ -430,7 +430,7 @@ func Test_CreateDrop_WithWrongTemplateID(test *testing.T) {
 	)
 
 	test.Run("Should have initialized Drop with one correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 }
@@ -442,7 +442,7 @@ func Test_CreateDrop_WithWrongTemplateID(test *testing.T) {
 func Test_PurchaseDrop_Success(test *testing.T) {
 	emulator := newEmulator()
 
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 	// Metdata Template Field
 
 	// metadata
@@ -459,22 +459,22 @@ func Test_PurchaseDrop_Success(test *testing.T) {
 
 	// Set Admin Rights for creating collection, schema and template
 	// Admin will give rights to this account
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldNotFail,
 		one,
@@ -483,7 +483,7 @@ func Test_PurchaseDrop_Success(test *testing.T) {
 		metadatatemplateforDrop,
 	)
 
-	DropCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropIdsScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+	DropCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropIdsScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 	fmt.Println("count:", DropCount.ToGoValue())
 	re := regexp.MustCompile("[0-9]+")
 	submatchall := re.FindAllString(DropCount.String(), 1)
@@ -494,23 +494,23 @@ func Test_PurchaseDrop_Success(test *testing.T) {
 		latestdropID, _ = strconv.ParseUint(element, 10, 64)
 	}
 
-	NowwherePurchaseDropTransaction(
+	TriQuetaPurchaseDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldNotFail,
 		latestdropID,         // drop ID
 		one,                  // templateID
 		one,                  // Mint numbers
-		NowwhereContractAddr, // ownerAddress
+		TriQuetaContractAddr, // ownerAddress
 	)
 	test.Run("Should Mint Template correctly", func(test *testing.T) {
-		MintCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetNFTAddressCountScript(nonfungibleAddr, NFTContractAddr),
-			[][]byte{jsoncdc.MustEncode(cadence.Address(NowwhereContractAddr))})
+		MintCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetNFTAddressCountScript(nonfungibleAddr, NFTContractAddr),
+			[][]byte{jsoncdc.MustEncode(cadence.Address(TriQuetaContractAddr))})
 		assert.EqualValues(test, CadenceInt(one), MintCount)
 	})
 }
@@ -522,7 +522,7 @@ func Test_PurchaseDrop_Success(test *testing.T) {
 func Test_PurchaseDrop_morethansupply(test *testing.T) {
 	emulator := newEmulator()
 
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 	// Metdata Template Field
 
 	// metadata
@@ -537,22 +537,22 @@ func Test_PurchaseDrop_morethansupply(test *testing.T) {
 	startDate := strconv.FormatInt(starttUnix, 10) + ".0"
 	endDate := strconv.FormatInt(endtUnix, 10) + ".0"
 
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldNotFail,
 		one,
@@ -561,7 +561,7 @@ func Test_PurchaseDrop_morethansupply(test *testing.T) {
 		metadatatemplateforDrop,
 	)
 
-	DropCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropIdsScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+	DropCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropIdsScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 
 	re := regexp.MustCompile("[0-9]+")
 	submatchall := re.FindAllString(DropCount.String(), 1)
@@ -571,23 +571,23 @@ func Test_PurchaseDrop_morethansupply(test *testing.T) {
 		latestdropID, _ = strconv.ParseUint(element, 10, 64)
 	}
 	fmt.Println(latestdropID)
-	NowwherePurchaseDropTransaction(
+	TriQuetaPurchaseDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldFail,
 		latestdropID,         // drop ID
 		one,                  // templateID
 		three,                // Mint numbers
-		NowwhereContractAddr, // ownerAddress
+		TriQuetaContractAddr, // ownerAddress
 	)
 	test.Run("Should Mint Template correctly", func(test *testing.T) {
-		MintCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetNFTAddressCountScript(nonfungibleAddr, NFTContractAddr),
-			[][]byte{jsoncdc.MustEncode(cadence.Address(NowwhereContractAddr))})
+		MintCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetNFTAddressCountScript(nonfungibleAddr, NFTContractAddr),
+			[][]byte{jsoncdc.MustEncode(cadence.Address(TriQuetaContractAddr))})
 		assert.EqualValues(test, CadenceInt(zero), MintCount)
 	})
 }
@@ -599,7 +599,7 @@ func Test_PurchaseDrop_morethansupply(test *testing.T) {
 func Test_PurchaseDrop_zerosupply(test *testing.T) {
 	emulator := newEmulator()
 
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 	// Metdata Template Field
 
 	// metadata
@@ -614,22 +614,22 @@ func Test_PurchaseDrop_zerosupply(test *testing.T) {
 	startDate := strconv.FormatInt(starttUnix, 10) + ".0"
 	endDate := strconv.FormatInt(endtUnix, 10) + ".0"
 
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldNotFail,
 		one,
@@ -638,7 +638,7 @@ func Test_PurchaseDrop_zerosupply(test *testing.T) {
 		metadatatemplateforDrop,
 	)
 
-	DropCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropIdsScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+	DropCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropIdsScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 
 	re := regexp.MustCompile("[0-9]+")
 	submatchall := re.FindAllString(DropCount.String(), 1)
@@ -648,24 +648,24 @@ func Test_PurchaseDrop_zerosupply(test *testing.T) {
 		latestdropID, _ = strconv.ParseUint(element, 10, 64)
 	}
 	fmt.Println(latestdropID)
-	NowwherePurchaseDropTransaction(
+	TriQuetaPurchaseDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldFail,
 		latestdropID,         // drop ID
 		one,                  // templateID
 		zero,                 // Mint numbers
-		NowwhereContractAddr, // ownerAddress
+		TriQuetaContractAddr, // ownerAddress
 	)
 
 	test.Run("Should Mint Template correctly", func(test *testing.T) {
-		MintCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetNFTAddressCountScript(nonfungibleAddr, NFTContractAddr),
-			[][]byte{jsoncdc.MustEncode(cadence.Address(NowwhereContractAddr))})
+		MintCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetNFTAddressCountScript(nonfungibleAddr, NFTContractAddr),
+			[][]byte{jsoncdc.MustEncode(cadence.Address(TriQuetaContractAddr))})
 		assert.EqualValues(test, CadenceInt(zero), MintCount)
 	})
 }
@@ -677,7 +677,7 @@ func Test_PurchaseDrop_zerosupply(test *testing.T) {
 func Test_PurchaseDrop_nonexistentTemplate(test *testing.T) {
 	emulator := newEmulator()
 
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 	// Metdata Template Field
 
 	// metadata
@@ -692,22 +692,22 @@ func Test_PurchaseDrop_nonexistentTemplate(test *testing.T) {
 	startDate := strconv.FormatInt(starttUnix, 10) + ".0"
 	endDate := strconv.FormatInt(endtUnix, 10) + ".0"
 
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldNotFail,
 		one,
@@ -716,7 +716,7 @@ func Test_PurchaseDrop_nonexistentTemplate(test *testing.T) {
 		metadatatemplateforDrop,
 	)
 
-	DropCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropIdsScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+	DropCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropIdsScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 
 	re := regexp.MustCompile("[0-9]+")
 	submatchall := re.FindAllString(DropCount.String(), 1)
@@ -726,24 +726,24 @@ func Test_PurchaseDrop_nonexistentTemplate(test *testing.T) {
 		latestdropID, _ = strconv.ParseUint(element, 10, 64)
 	}
 
-	NowwherePurchaseDropTransaction(
+	TriQuetaPurchaseDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldFail,
 		latestdropID,         // drop ID
 		two,                  // templateID
 		one,                  // Mint numbers
-		NowwhereContractAddr, // ownerAddress
+		TriQuetaContractAddr, // ownerAddress
 	)
 
 	test.Run("Should Mint Template correctly", func(test *testing.T) {
-		MintCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetNFTAddressCountScript(nonfungibleAddr, NFTContractAddr),
-			[][]byte{jsoncdc.MustEncode(cadence.Address(NowwhereContractAddr))})
+		MintCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetNFTAddressCountScript(nonfungibleAddr, NFTContractAddr),
+			[][]byte{jsoncdc.MustEncode(cadence.Address(TriQuetaContractAddr))})
 		assert.EqualValues(test, CadenceInt(zero), MintCount)
 	})
 }
@@ -755,7 +755,7 @@ func Test_PurchaseDrop_nonexistentTemplate(test *testing.T) {
 func Test_RemoveDrop_Success(test *testing.T) {
 	emulator := newEmulator()
 
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 	// Metdata Template Field
 
 	// metadata
@@ -770,22 +770,22 @@ func Test_RemoveDrop_Success(test *testing.T) {
 	startDate := strconv.FormatInt(starttUnix, 10) + ".0"
 	endDate := strconv.FormatInt(endtUnix, 10) + ".0"
 
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldNotFail,
 		one,
@@ -794,7 +794,7 @@ func Test_RemoveDrop_Success(test *testing.T) {
 		metadatatemplateforDrop,
 	)
 
-	DropCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropIdsScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+	DropCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropIdsScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 
 	re := regexp.MustCompile("[0-9]+")
 	submatchall := re.FindAllString(DropCount.String(), 1)
@@ -804,22 +804,22 @@ func Test_RemoveDrop_Success(test *testing.T) {
 		latestdropID, _ = strconv.ParseUint(element, 10, 64)
 	}
 	test.Run("Should have initialized Drop with one correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(one), templateCount)
 	})
-	NowwhereRemoveDropTransaction(
+	TriQuetaRemoveDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldNotFail,
 		latestdropID, // drop ID
 	)
 	test.Run("Should have initialized Drop with one correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
@@ -832,30 +832,30 @@ func Test_RemoveDrop_Success(test *testing.T) {
 func Test_RemoveDrop_NonExistingDrop(test *testing.T) {
 	emulator := newEmulator()
 
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereRemoveDropTransaction(
+	TriQuetaRemoveDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldFail,
 		one, // drop ID
 	)
 	test.Run("Should not have initialized Drop with one correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
@@ -868,7 +868,7 @@ func Test_RemoveDrop_NonExistingDrop(test *testing.T) {
 func Test_RemoveDrop_WithoutPermission(test *testing.T) {
 	emulator := newEmulator()
 
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 	// Metdata Template Field
 
 	// metadata
@@ -883,22 +883,22 @@ func Test_RemoveDrop_WithoutPermission(test *testing.T) {
 	startDate := strconv.FormatInt(starttUnix, 10) + ".0"
 	endDate := strconv.FormatInt(endtUnix, 10) + ".0"
 
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
-		NowwhereContractAddr, // Authorizer(sign transaction)
+		TriQuetaContractAddr,
+		TriQuetaContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldNotFail,
 		one,
@@ -907,7 +907,7 @@ func Test_RemoveDrop_WithoutPermission(test *testing.T) {
 		metadatatemplateforDrop,
 	)
 
-	DropCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropIdsScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+	DropCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropIdsScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 
 	re := regexp.MustCompile("[0-9]+")
 	submatchall := re.FindAllString(DropCount.String(), 1)
@@ -917,22 +917,22 @@ func Test_RemoveDrop_WithoutPermission(test *testing.T) {
 		latestdropID, _ = strconv.ParseUint(element, 10, 64)
 	}
 	test.Run("Should have initialized Drop with one correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(one), templateCount)
 	})
-	NowwhereRemoveDropTransaction(
+	TriQuetaRemoveDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
+		TriQuetaContractAddr,
 		NFTContractAddr, // Authorizer(sign transaction)
 		signer,
 		shouldFail,
 		latestdropID, // drop ID
 	)
 	test.Run("Should have initialized Drop with one correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(one), templateCount)
 	})
 }
@@ -944,7 +944,7 @@ func Test_RemoveDrop_WithoutPermission(test *testing.T) {
 func Test_CreateDrop_WithoutPermission(test *testing.T) {
 	emulator := newEmulator()
 
-	nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, _ := NowwhereContractDeployContracts(emulator, test)
+	nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, _ := TriQuetaContractDeployContracts(emulator, test)
 	// Metdata Template Field
 
 	// metadata
@@ -958,21 +958,21 @@ func Test_CreateDrop_WithoutPermission(test *testing.T) {
 	// Unix Timestamp
 	startDate := strconv.FormatInt(starttUnix, 10) + ".0"
 	endDate := strconv.FormatInt(endtUnix, 10) + ".0"
-	SetupAdminAndGiveCapabilityNowwhere(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	SetupAdminAndGiveCapabilityTriQueta(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
-	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, shouldNotFail, signer)
+	CreateBrandSchemaTemplateTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, shouldNotFail, signer)
 
 	test.Run("Should have initialized Drop with zero correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
-	NowwhereCreateDropTransaction(
+	TriQuetaCreateDropTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
+		TriQuetaContractAddr,
 		NFTContractAddr, // Authorizer(sign transaction with NFTContract Address who didn't create Template(Who Created NFTContract Address))
 		signer,
 		shouldFail,
@@ -983,23 +983,23 @@ func Test_CreateDrop_WithoutPermission(test *testing.T) {
 	)
 
 	test.Run("Should have initialized Drop with one correctly", func(test *testing.T) {
-		templateCount := executeScriptAndCheck(test, emulator, NowwhereGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, NowwhereContractAddr), nil)
+		templateCount := executeScriptAndCheck(test, emulator, TriQuetaGenerateGetDropCountScript(nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr), nil)
 		assert.EqualValues(test, CadenceInt(zero), templateCount)
 	})
 
 }
 
 // Give capability to user after account setup
-//nonfungibleAddr, NFTContractAddr, NowwhereContractAddr
-func SetupAdminAndGiveCapabilityNowwhere(test *testing.T, emulator *emulator.Blockchain,
-	nonfungibleAddr flow.Address, NFTContractAddr flow.Address, NowwhereAddress flow.Address, shouldNotFail bool, signer crypto.Signer) {
+//nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr
+func SetupAdminAndGiveCapabilityTriQueta(test *testing.T, emulator *emulator.Blockchain,
+	nonfungibleAddr flow.Address, NFTContractAddr flow.Address, TriQuetaAddress flow.Address, shouldNotFail bool, signer crypto.Signer) {
 	NFTContractSetupAdminAccount(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
 		shouldNotFail,
-		NowwhereAddress, // setup Admin account to that address
+		TriQuetaAddress, // setup Admin account to that address
 		signer,          // Signer of Admin Account
 	)
 
@@ -1010,11 +1010,11 @@ func SetupAdminAndGiveCapabilityNowwhere(test *testing.T, emulator *emulator.Blo
 		NFTContractAddr,
 		signer,
 		shouldNotFail,
-		NowwhereAddress, // setup Admin account to that address
+		TriQuetaAddress, // setup Admin account to that address
 	)
 }
 
-func CreateBrandSchemaTemplateTransaction(test *testing.T, emulator *emulator.Blockchain, nonfungibleAddr flow.Address, NFTContractAddr flow.Address, NowwhereContractAddr flow.Address, shouldNotFail bool, signer crypto.Signer) {
+func CreateBrandSchemaTemplateTransaction(test *testing.T, emulator *emulator.Blockchain, nonfungibleAddr flow.Address, NFTContractAddr flow.Address, TriQuetaContractAddr flow.Address, shouldNotFail bool, signer crypto.Signer) {
 	/// Create Brand, schema and template
 	brandNameField, _ := cadence.NewString(BrandMetadataKey)
 	brandName, _ := cadence.NewString(BrandMetadataValue)
@@ -1022,17 +1022,17 @@ func CreateBrandSchemaTemplateTransaction(test *testing.T, emulator *emulator.Bl
 	brandMetadata := cadence.NewDictionary(metadata)
 	TemplateField, _ := cadence.NewString(SchemaName) // Metdata Template Field
 
-	NFTContractCreateBrandTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, shouldNotFail, BrandName, brandMetadata)
-	CreateSchema_Transaction(test, emulator, nonfungibleAddr, NFTContractAddr, NowwhereContractAddr, signer, shouldNotFail, SchemaName)
+	NFTContractCreateBrandTransaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, shouldNotFail, BrandName, brandMetadata)
+	CreateSchema_Transaction(test, emulator, nonfungibleAddr, NFTContractAddr, TriQuetaContractAddr, signer, shouldNotFail, SchemaName)
 	// metadata
 	metadatatemplate := []cadence.KeyValuePair{{Key: TemplateField, Value: TemplateField}}
 	// Create Template Transaction  with brand ID:1 and schema ID:1 and 2 max Supply
-	NowwhereCreateTemplateTransaction(
+	TriQuetaCreateTemplateTransaction(
 		test,
 		emulator,
 		nonfungibleAddr,
 		NFTContractAddr,
-		NowwhereContractAddr,
+		TriQuetaContractAddr,
 		signer,
 		shouldNotFail,
 		one, // brand ID

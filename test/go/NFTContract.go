@@ -20,36 +20,36 @@ import (
 )
 
 const (
-	nowwhereRootPath                      = "../.."
-	NFTContractPath                       = nowwhereRootPath + "/contracts/NFTContract.cdc"
-	NowwhereContractPath                  = nowwhereRootPath + "/contracts/NowWhereContract.cdc"
-	NFTContractTransferTokensPath         = nowwhereRootPath + "/transactions/transferNFT.cdc"
-	NFTContractDestroyTokensPath          = nowwhereRootPath + "/transactions/destroyNFT.cdc"
-	NFTContractMintTokensPath             = nowwhereRootPath + "/transactions/mintNFT.cdc"
-	NFTContractGetSupplyPath              = nowwhereRootPath + "/scripts/getTotalSupply.cdc"
-	NFTContractGetCollectionPath          = nowwhereRootPath + "/scripts/getBrand.cdc"
-	NFTContractGetCollectionCountPath     = nowwhereRootPath + "/scripts/getBrandCount.cdc"
-	NFTContractGetBrandNamePath           = nowwhereRootPath + "/scripts/getBrandName.cdc"
-	NFTContractGetBrandIDPath             = nowwhereRootPath + "/scripts/getBrandIDs.cdc"
-	NFTContractGetSchemaCountPath         = nowwhereRootPath + "/scripts/getSchemaCount.cdc"
-	NFTContractGetTemplateCountPath       = nowwhereRootPath + "/scripts/getTemplateCount.cdc"
-	NFTContractGetNFTAddressPath          = nowwhereRootPath + "/scripts/getNFTAddress.cdc"
-	NFTContractGetNFTAddressCountPath     = nowwhereRootPath + "/scripts/getAddressOwnedNFTCount.cdc"
-	NFTContractCreateCollectionPath       = nowwhereRootPath + "/transactions/createBrand.cdc"
-	NFTContractUpdateBrandPath            = nowwhereRootPath + "/transactions/UpdateBrand.cdc"
-	NFTContractCreateSchemaPath           = nowwhereRootPath + "/transactions/createSchema.cdc"
-	NFTContractCreateTemplatePath         = nowwhereRootPath + "/transactions/createTemplate.cdc"
-	NFTContractSetupAccountPath           = nowwhereRootPath + "/transactions/setupAccount.cdc"
-	NFTContractSetupAdminAccountPath      = nowwhereRootPath + "/transactions/setupAdminAccount.cdc"
-	NFTContractAddAdminCapabilityPath     = nowwhereRootPath + "/transactions/addAdminAccount.cdc"
-	NFTContractSelfAddAdminCapabilityPath = nowwhereRootPath + "/transactions/addNFTContractAdminAccount.cdc"
-	NFTContractCreateDropPath             = nowwhereRootPath + "/transactions/createDrop.cdc"
-	NowwherePurchaseDropPath              = nowwhereRootPath + "/transactions/purchaseDrop.cdc"
-	NowwhereRemoveDropPath                = nowwhereRootPath + "/transactions/RemoveDrop.cdc"
-	CapabilityAdminCheck                  = nowwhereRootPath + "/transactions/CheckAdminCapability.cdc"
-	NowwhereContractgetDropCountPath      = nowwhereRootPath + "/scripts/getDropCount.cdc"
-	NowwhereContractgetDropIdsPath        = nowwhereRootPath + "/scripts/getDropIds.cdc"
-	getDate                               = nowwhereRootPath + "/scripts/getDate.cdc"
+	TriQuetaRootPath                      = "../.."
+	NFTContractPath                       = TriQuetaRootPath + "/contracts/NFTContract.cdc"
+	TriQuetaPath                  		  = TriQuetaRootPath + "/contracts/TriQueta.cdc"
+	NFTContractTransferTokensPath         = TriQuetaRootPath + "/transactions/transferNFT.cdc"
+	NFTContractDestroyTokensPath          = TriQuetaRootPath + "/transactions/destroyNFT.cdc"
+	NFTContractMintTokensPath             = TriQuetaRootPath + "/transactions/mintNFT.cdc"
+	NFTContractGetSupplyPath              = TriQuetaRootPath + "/scripts/getTotalSupply.cdc"
+	NFTContractGetCollectionPath          = TriQuetaRootPath + "/scripts/getBrand.cdc"
+	NFTContractGetCollectionCountPath     = TriQuetaRootPath + "/scripts/getBrandCount.cdc"
+	NFTContractGetBrandNamePath           = TriQuetaRootPath + "/scripts/getBrandName.cdc"
+	NFTContractGetBrandIDPath             = TriQuetaRootPath + "/scripts/getBrandIDs.cdc"
+	NFTContractGetSchemaCountPath         = TriQuetaRootPath + "/scripts/getSchemaCount.cdc"
+	NFTContractGetTemplateCountPath       = TriQuetaRootPath + "/scripts/getTemplateCount.cdc"
+	NFTContractGetNFTAddressPath          = TriQuetaRootPath + "/scripts/getNFTAddress.cdc"
+	NFTContractGetNFTAddressCountPath     = TriQuetaRootPath + "/scripts/getAddressOwnedNFTCount.cdc"
+	NFTContractCreateCollectionPath       = TriQuetaRootPath + "/transactions/createBrand.cdc"
+	NFTContractUpdateBrandPath            = TriQuetaRootPath + "/transactions/UpdateBrand.cdc"
+	NFTContractCreateSchemaPath           = TriQuetaRootPath + "/transactions/createSchema.cdc"
+	NFTContractCreateTemplatePath         = TriQuetaRootPath + "/transactions/createTemplate.cdc"
+	NFTContractSetupAccountPath           = TriQuetaRootPath + "/transactions/setupAccount.cdc"
+	NFTContractSetupAdminAccountPath      = TriQuetaRootPath + "/transactions/setupAdminAccount.cdc"
+	NFTContractAddAdminCapabilityPath     = TriQuetaRootPath + "/transactions/addAdminAccount.cdc"
+	NFTContractSelfAddAdminCapabilityPath = TriQuetaRootPath + "/transactions/addNFTContractAdminAccount.cdc"
+	NFTContractCreateDropPath             = TriQuetaRootPath + "/transactions/createDrop.cdc"
+	TriQuetaPurchaseDropPath              = TriQuetaRootPath + "/transactions/purchaseDrop.cdc"
+	TriQuetaRemoveDropPath                = TriQuetaRootPath + "/transactions/RemoveDrop.cdc"
+	CapabilityAdminCheck                  = TriQuetaRootPath + "/transactions/CheckAdminCapability.cdc"
+	TriQuetagetDropCountPath              = TriQuetaRootPath + "/scripts/getDropCount.cdc"
+	TriQuetagetDropIdsPath                = TriQuetaRootPath + "/scripts/getDropIds.cdc"
+	getDate                               = TriQuetaRootPath + "/scripts/getDate.cdc"
 )
 
 func NFTContractDeployContracts(emulator *emulator.Blockchain, testing *testing.T) (flow.Address, flow.Address, crypto.Signer, sdk.Address) {
@@ -90,7 +90,7 @@ func NFTContractDeployContracts(emulator *emulator.Blockchain, testing *testing.
 	return nftAddr, adminAddr, adminSigner, address
 }
 
-func nowwhereReplaceAddressPlaceholders(code string, nonfungibleAddress, nftContractAddress string) []byte {
+func TriQuetaReplaceAddressPlaceholders(code string, nonfungibleAddress, nftContractAddress string) []byte {
 	return []byte(replaceImports(
 		code,
 		map[string]*regexp.Regexp{
@@ -100,13 +100,13 @@ func nowwhereReplaceAddressPlaceholders(code string, nonfungibleAddress, nftCont
 	))
 }
 
-func nowwhereContractReplaceAddressPlaceholders(code string, nonfungibleAddress, nftContractAddress, nowwhereAddress string) []byte {
+func TriQuetaReplaceAddressPlaceholders(code string, nonfungibleAddress, nftContractAddress, TriQuetaAddress string) []byte {
 	return []byte(replaceImports(
 		code,
 		map[string]*regexp.Regexp{
 			nonfungibleAddress: nftAddressPlaceholder,
 			nftContractAddress: NFTContractAddressPlaceHolder,
-			nowwhereAddress:    NowwherePlaceholder,
+			TriQuetaAddress:    TriQuetaPlaceholder,
 		},
 	))
 }
@@ -123,9 +123,9 @@ func loadNFTContract(nftAddr string) []byte {
 		},
 	))
 }
-func loadNowwhereContract(nftAddr string, nftContractAddr string) []byte {
+func loadTriQueta(nftAddr string, nftContractAddr string) []byte {
 	return []byte(replaceImports(
-		string(readFile(NowwhereContractPath)),
+		string(readFile(TriQuetaPath)),
 		map[string]*regexp.Regexp{
 			nftAddr:         nftAddressPlaceholder,
 			nftContractAddr: NFTContractAddressPlaceHolder,
@@ -142,104 +142,104 @@ func loadNFT(fungibleAddr flow.Address) []byte {
 	))
 }
 
-func NowwhereGenerateGetSupplyScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func TriQuetaGenerateGetSupplyScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractGetSupplyPath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NowwhereGenerateGetCollectionScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func TriQuetaGenerateGetCollectionScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractGetCollectionPath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NFTContractGenerateGetBrandCountScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func NFTContractGenerateGetBrandCountScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractGetCollectionCountPath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NFTContractGenerateGetBrandNameScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func NFTContractGenerateGetBrandNameScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractGetBrandNamePath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NFTContractGenerateGetBrandIDsScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func NFTContractGenerateGetBrandIDsScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractGetBrandIDPath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func GetSchema_CountScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func GetSchema_CountScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractGetSchemaCountPath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
 // Template Script
-func NowwhereGenerateGetTemplateCountScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func TriQuetaGenerateGetTemplateCountScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractGetTemplateCountPath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
 // Drops Script
-func NowwhereGenerateGetDropCountScript(fungibleAddr, NFTContract, nowwhereAddr flow.Address) []byte {
-	return nowwhereContractReplaceAddressPlaceholders(
-		string(readFile(NowwhereContractgetDropCountPath)),
+func TriQuetaGenerateGetDropCountScript(fungibleAddr, NFTContract, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
+		string(readFile(TriQuetagetDropCountPath)),
 		fungibleAddr.String(),
 		NFTContract.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
 // Drops Script
-func NowwhereGenerateGetDropIdsScript(fungibleAddr, NFTContract, nowwhereAddr flow.Address) []byte {
-	return nowwhereContractReplaceAddressPlaceholders(
-		string(readFile(NowwhereContractgetDropIdsPath)),
+func TriQuetaGenerateGetDropIdsScript(fungibleAddr, NFTContract, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
+		string(readFile(TriQuetagetDropIdsPath)),
 		fungibleAddr.String(),
 		NFTContract.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func getCurrentTime(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func getCurrentTime(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(getDate)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NowwhereGenerateGetNFTAddressScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func TriQuetaGenerateGetNFTAddressScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractGetNFTAddressPath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NowwhereGenerateGetNFTAddressCountScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func TriQuetaGenerateGetNFTAddressCountScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractGetNFTAddressCountPath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
@@ -247,99 +247,99 @@ func loadNonFungibleToken() []byte {
 	return nft_contracts.NonFungibleToken()
 }
 
-func NowwhereCreateGenerateCollectionScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func TriQuetaCreateGenerateCollectionScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractCreateCollectionPath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func CapabilityAccessScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func CapabilityAccessScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(CapabilityAdminCheck)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NowwhereUpdateBrandScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func TriQuetaUpdateBrandScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractUpdateBrandPath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NowwhereCreateGenerateSchemaScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func TriQuetaCreateGenerateSchemaScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractCreateSchemaPath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NowwhereCreateGenerateTemplateScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func TriQuetaCreateGenerateTemplateScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractCreateTemplatePath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NFTContractSetupAccountScript(nonfungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func NFTContractSetupAccountScript(nonfungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractSetupAccountPath)),
 		nonfungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NowwhereSetupAdminAccountScript(nonfungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func TriQuetaSetupAdminAccountScript(nonfungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractSetupAdminAccountPath)),
 		nonfungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NFTContractAddAdminCapabilityScript(nonfungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func NFTContractAddAdminCapabilityScript(nonfungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractSelfAddAdminCapabilityPath)),
 		nonfungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NFTContractAddNewAdminCapabilityScript(nonfungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func NFTContractAddNewAdminCapabilityScript(nonfungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractAddAdminCapabilityPath)),
 		nonfungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NFTContractTransferNFTScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func NFTContractTransferNFTScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractTransferTokensPath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NFTContractDestroyNFTScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func NFTContractDestroyNFTScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractDestroyTokensPath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
-func NowwhereMintTokensScript(fungibleAddr, nowwhereAddr flow.Address) []byte {
-	return nowwhereReplaceAddressPlaceholders(
+func TriQuetaMintTokensScript(fungibleAddr, TriQuetaAddr flow.Address) []byte {
+	return TriQuetaReplaceAddressPlaceholders(
 		string(readFile(NFTContractMintTokensPath)),
 		fungibleAddr.String(),
-		nowwhereAddr.String(),
+		TriQuetaAddr.String(),
 	)
 }
 
@@ -347,13 +347,13 @@ func CheckCapabilityTransaction(
 	testing *testing.T,
 	emulator *emulator.Blockchain,
 	fungibleAddr,
-	nowwhereAddr flow.Address,
+	TriQuetaAddr flow.Address,
 	userAddress sdk.Address,
 	userSigner crypto.Signer,
 	shouldFail bool,
 ) {
 	tx := flow.NewTransaction().
-		SetScript(CapabilityAccessScript(fungibleAddr, nowwhereAddr)).
+		SetScript(CapabilityAccessScript(fungibleAddr, TriQuetaAddr)).
 		SetGasLimit(100).
 		SetProposalKey(emulator.ServiceKey().Address, emulator.ServiceKey().Index, emulator.ServiceKey().SequenceNumber).
 		SetPayer(emulator.ServiceKey().Address).
@@ -371,7 +371,7 @@ func NFTContractCreateBrandTransaction(
 	testing *testing.T,
 	emulator *emulator.Blockchain,
 	fungibleAddr,
-	nowwhereAddr flow.Address,
+	TriQuetaAddr flow.Address,
 	userAddress sdk.Address,
 	userSigner crypto.Signer,
 	shouldFail bool,
@@ -379,7 +379,7 @@ func NFTContractCreateBrandTransaction(
 	metaData cadence.Dictionary,
 ) {
 	tx := flow.NewTransaction().
-		SetScript(NowwhereCreateGenerateCollectionScript(fungibleAddr, nowwhereAddr)).
+		SetScript(TriQuetaCreateGenerateCollectionScript(fungibleAddr, TriQuetaAddr)).
 		SetGasLimit(100).
 		SetProposalKey(emulator.ServiceKey().Address, emulator.ServiceKey().Index, emulator.ServiceKey().SequenceNumber).
 		SetPayer(emulator.ServiceKey().Address).
@@ -402,7 +402,7 @@ func NFTContractUpdateBrandTransaction(
 	testing *testing.T,
 	emulator *emulator.Blockchain,
 	fungibleAddr,
-	nowwhereAddr flow.Address,
+	TriQuetaAddr flow.Address,
 	userAddress sdk.Address,
 	userSigner crypto.Signer,
 	shouldFail bool,
@@ -410,7 +410,7 @@ func NFTContractUpdateBrandTransaction(
 	brandNameToUpdate string,
 ) {
 	tx := flow.NewTransaction().
-		SetScript(NowwhereUpdateBrandScript(fungibleAddr, nowwhereAddr)).
+		SetScript(TriQuetaUpdateBrandScript(fungibleAddr, TriQuetaAddr)).
 		SetGasLimit(100).
 		SetProposalKey(emulator.ServiceKey().Address, emulator.ServiceKey().Index, emulator.ServiceKey().SequenceNumber).
 		SetPayer(emulator.ServiceKey().Address).
@@ -433,14 +433,14 @@ func CreateSchema_Transaction(
 	testing *testing.T,
 	emulator *emulator.Blockchain,
 	fungibleAddr,
-	nowwhereAddr flow.Address,
+	TriQuetaAddr flow.Address,
 	userAddress sdk.Address,
 	userSigner crypto.Signer,
 	shouldFail bool,
 	schemaName string,
 ) {
 	tx := flow.NewTransaction().
-		SetScript(NowwhereCreateGenerateSchemaScript(fungibleAddr, nowwhereAddr)).
+		SetScript(TriQuetaCreateGenerateSchemaScript(fungibleAddr, TriQuetaAddr)).
 		SetGasLimit(100).
 		SetProposalKey(emulator.ServiceKey().Address, emulator.ServiceKey().Index, emulator.ServiceKey().SequenceNumber).
 		SetPayer(emulator.ServiceKey().Address).
@@ -457,11 +457,11 @@ func CreateSchema_Transaction(
 	)
 }
 
-func NowwhereCreateTemplateTransaction(
+func TriQuetaCreateTemplateTransaction(
 	testing *testing.T,
 	emulator *emulator.Blockchain,
 	fungibleAddr,
-	nowwhereAddr flow.Address,
+	TriQuetaAddr flow.Address,
 	userAddress sdk.Address,
 	userSigner crypto.Signer,
 	shouldFail bool,
@@ -471,7 +471,7 @@ func NowwhereCreateTemplateTransaction(
 	metadata []cadence.KeyValuePair,
 ) {
 	tx := flow.NewTransaction().
-		SetScript(NowwhereCreateGenerateTemplateScript(fungibleAddr, nowwhereAddr)).
+		SetScript(TriQuetaCreateGenerateTemplateScript(fungibleAddr, TriQuetaAddr)).
 		SetGasLimit(100).
 		SetProposalKey(emulator.ServiceKey().Address, emulator.ServiceKey().Index, emulator.ServiceKey().SequenceNumber).
 		SetPayer(emulator.ServiceKey().Address).
@@ -490,11 +490,11 @@ func NowwhereCreateTemplateTransaction(
 	)
 }
 
-func NowwhereMintTemplateTransaction(
+func TriQuetaMintTemplateTransaction(
 	testing *testing.T,
 	emulator *emulator.Blockchain,
 	fungibleAddr,
-	nowwhereAddr flow.Address,
+	TriQuetaAddr flow.Address,
 	userAddress sdk.Address,
 	userSigner crypto.Signer,
 	shouldFail bool,
@@ -502,7 +502,7 @@ func NowwhereMintTemplateTransaction(
 	receiverAccount sdk.Address,
 ) {
 	tx := flow.NewTransaction().
-		SetScript(NowwhereMintTokensScript(fungibleAddr, nowwhereAddr)).
+		SetScript(TriQuetaMintTokensScript(fungibleAddr, TriQuetaAddr)).
 		SetGasLimit(100).
 		SetProposalKey(emulator.ServiceKey().Address, emulator.ServiceKey().Index, emulator.ServiceKey().SequenceNumber).
 		SetPayer(emulator.ServiceKey().Address).
@@ -523,7 +523,7 @@ func NFTContractSetupAccount(
 	testing *testing.T,
 	emulator *emulator.Blockchain,
 	nonfungibleAddr,
-	nowwhereAddr sdk.Address,
+	TriQuetaAddr sdk.Address,
 	shouldFail bool,
 ) (sdk.Address, crypto.Signer) {
 	accountKeys := test.AccountKeyGenerator()
@@ -531,7 +531,7 @@ func NFTContractSetupAccount(
 	address, _ := emulator.CreateAccount([]*sdk.AccountKey{AccountKey}, nil)
 
 	tx := flow.NewTransaction().
-		SetScript(NFTContractSetupAccountScript(nonfungibleAddr, nowwhereAddr)).
+		SetScript(NFTContractSetupAccountScript(nonfungibleAddr, TriQuetaAddr)).
 		SetGasLimit(100).
 		SetProposalKey(emulator.ServiceKey().Address, emulator.ServiceKey().Index, emulator.ServiceKey().SequenceNumber).
 		SetPayer(emulator.ServiceKey().Address).
@@ -551,7 +551,7 @@ func GenerateAddress(
 	testing *testing.T,
 	emulator *emulator.Blockchain,
 	nonfungibleAddr,
-	nowwhereAddr sdk.Address,
+	TriQuetaAddr sdk.Address,
 	shouldFail bool,
 ) sdk.Address {
 	accountKeys := test.AccountKeyGenerator()
@@ -565,7 +565,7 @@ func NFTContractTransferNFT(
 	testing *testing.T,
 	emulator *emulator.Blockchain,
 	nonfungibleAddr,
-	nowwhereAddr sdk.Address,
+	TriQuetaAddr sdk.Address,
 	userAddress sdk.Address,
 	userSigner crypto.Signer,
 	shouldFail bool,
@@ -574,7 +574,7 @@ func NFTContractTransferNFT(
 ) {
 
 	tx := flow.NewTransaction().
-		SetScript(NFTContractTransferNFTScript(nonfungibleAddr, nowwhereAddr)).
+		SetScript(NFTContractTransferNFTScript(nonfungibleAddr, TriQuetaAddr)).
 		SetGasLimit(100).
 		SetProposalKey(emulator.ServiceKey().Address, emulator.ServiceKey().Index, emulator.ServiceKey().SequenceNumber).
 		SetPayer(emulator.ServiceKey().Address).
@@ -594,7 +594,7 @@ func NFTContractDestroyNFT(
 	testing *testing.T,
 	emulator *emulator.Blockchain,
 	nonfungibleAddr,
-	nowwhereAddr sdk.Address,
+	TriQuetaAddr sdk.Address,
 	userAddress sdk.Address,
 	userSigner crypto.Signer,
 	shouldFail bool,
@@ -602,7 +602,7 @@ func NFTContractDestroyNFT(
 ) {
 
 	tx := flow.NewTransaction().
-		SetScript(NFTContractDestroyNFTScript(nonfungibleAddr, nowwhereAddr)).
+		SetScript(NFTContractDestroyNFTScript(nonfungibleAddr, TriQuetaAddr)).
 		SetGasLimit(100).
 		SetProposalKey(emulator.ServiceKey().Address, emulator.ServiceKey().Index, emulator.ServiceKey().SequenceNumber).
 		SetPayer(emulator.ServiceKey().Address).
@@ -621,7 +621,7 @@ func NFTContractSetupNewAdminAccount(
 	testing *testing.T,
 	emulator *emulator.Blockchain,
 	nonfungibleAddr,
-	nowwhereAddr sdk.Address,
+	TriQuetaAddr sdk.Address,
 	shouldFail bool,
 ) (sdk.Address, crypto.Signer) {
 	accountKeys := test.AccountKeyGenerator()
@@ -629,7 +629,7 @@ func NFTContractSetupNewAdminAccount(
 	address, _ := emulator.CreateAccount([]*sdk.AccountKey{AccountKey}, nil)
 
 	tx := flow.NewTransaction().
-		SetScript(NowwhereSetupAdminAccountScript(nonfungibleAddr, nowwhereAddr)).
+		SetScript(TriQuetaSetupAdminAccountScript(nonfungibleAddr, TriQuetaAddr)).
 		SetGasLimit(100).
 		SetProposalKey(emulator.ServiceKey().Address, emulator.ServiceKey().Index, emulator.ServiceKey().SequenceNumber).
 		SetPayer(emulator.ServiceKey().Address).
@@ -656,7 +656,7 @@ func NFTContractSetupAdminAccount(
 ) {
 
 	tx := flow.NewTransaction().
-		SetScript(NowwhereSetupAdminAccountScript(nonfungibleAddr, nftContractAddr)).
+		SetScript(TriQuetaSetupAdminAccountScript(nonfungibleAddr, nftContractAddr)).
 		SetGasLimit(100).
 		SetProposalKey(emulator.ServiceKey().Address, emulator.ServiceKey().Index, emulator.ServiceKey().SequenceNumber).
 		SetPayer(emulator.ServiceKey().Address).

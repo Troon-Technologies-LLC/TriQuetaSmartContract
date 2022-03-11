@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func NowwhereContractDeployContracts(b *emulator.Blockchain, testing *testing.T) (flow.Address, flow.Address, flow.Address, crypto.Signer, sdk.Address) {
+func TriQuetaContractDeployContracts(b *emulator.Blockchain, testing *testing.T) (flow.Address, flow.Address, flow.Address, crypto.Signer, sdk.Address) {
 	// Create Admin Account
 	accountKeys := test.AccountKeyGenerator()
 	adminAccountKey, adminSigner := accountKeys.NewWithSigner()
@@ -37,7 +37,7 @@ func NowwhereContractDeployContracts(b *emulator.Blockchain, testing *testing.T)
 	assert.NoError(testing, err)
 	address, err := b.CreateAccount([]*sdk.AccountKey{adminAccountKey}, nil)
 
-	// Load NFTContract Code of Nowwhere
+	// Load NFTContract Code of TriQueta
 	NFTContractCode := loadNFTContract(nftAddr.String())
 	adminAddr, err := b.CreateAccount(
 		[]*flow.AccountKey{adminAccountKey},
@@ -50,13 +50,13 @@ func NowwhereContractDeployContracts(b *emulator.Blockchain, testing *testing.T)
 
 	_, err = b.CommitBlock()
 	assert.NoError(testing, err)
-	NowwhereCode := loadNowwhereContract(nftAddr.String(), adminAddr.String())
+	TriQuetaCode := loadTriQuetaContract(nftAddr.String(), adminAddr.String())
 
-	NowwhereAddr, err := b.CreateAccount(
+	TriQuetaAddr, err := b.CreateAccount(
 		[]*flow.AccountKey{adminAccountKey},
 		[]templates.Contract{templates.Contract{
-			Name:   "NowWhereContract",
-			Source: string(NowwhereCode),
+			Name:   "TriQuetaContract",
+			Source: string(TriQuetaCode),
 		}},
 	)
 	assert.NoError(testing, err)
@@ -64,42 +64,42 @@ func NowwhereContractDeployContracts(b *emulator.Blockchain, testing *testing.T)
 	_, err = b.CommitBlock()
 	assert.NoError(testing, err)
 
-	return nftAddr, adminAddr, NowwhereAddr, adminSigner, address
+	return nftAddr, adminAddr, TriQuetaAddr, adminSigner, address
 }
 
-func NowwhereCreateGenerateDropScript(fungibleAddr, nonFungibleAddr, nowwhereContract flow.Address) []byte {
-	return nowwhereContractReplaceAddressPlaceholders(
+func TriQuetaCreateGenerateDropScript(fungibleAddr, nonFungibleAddr, TriQuetaContract flow.Address) []byte {
+	return TriQuetaContractReplaceAddressPlaceholders(
 		string(readFile(NFTContractCreateDropPath)),
 		fungibleAddr.String(),
 		nonFungibleAddr.String(),
-		nowwhereContract.String(),
+		TriQuetaContract.String(),
 	)
 }
 
-func NowwherePurchaseGenerateDropScript(fungibleAddr, nonFungibleAddr, nowwhereContract flow.Address) []byte {
-	return nowwhereContractReplaceAddressPlaceholders(
-		string(readFile(NowwherePurchaseDropPath)),
+func TriQuetaPurchaseGenerateDropScript(fungibleAddr, nonFungibleAddr, TriQuetaContract flow.Address) []byte {
+	return TriQuetaContractReplaceAddressPlaceholders(
+		string(readFile(TriQuetaPurchaseDropPath)),
 		fungibleAddr.String(),
 		nonFungibleAddr.String(),
-		nowwhereContract.String(),
+		TriQuetaContract.String(),
 	)
 }
 
-func NowwhereRemoveDropScript(fungibleAddr, nonFungibleAddr, nowwhereContract flow.Address) []byte {
-	return nowwhereContractReplaceAddressPlaceholders(
-		string(readFile(NowwhereRemoveDropPath)),
+func TriQuetaRemoveDropScript(fungibleAddr, nonFungibleAddr, TriQuetaContract flow.Address) []byte {
+	return TriQuetaContractReplaceAddressPlaceholders(
+		string(readFile(TriQuetaRemoveDropPath)),
 		fungibleAddr.String(),
 		nonFungibleAddr.String(),
-		nowwhereContract.String(),
+		TriQuetaContract.String(),
 	)
 }
 
-func NowwhereCreateDropTransaction(
+func TriQuetaCreateDropTransaction(
 	testing *testing.T,
 	emulator *emulator.Blockchain,
 	fungibleAddr,
 	NFTContractAddr,
-	nowwhereAddr flow.Address,
+	TriQuetaAddr flow.Address,
 	userAddress sdk.Address,
 	userSigner crypto.Signer,
 	shouldFail bool,
@@ -109,7 +109,7 @@ func NowwhereCreateDropTransaction(
 	metadata []cadence.KeyValuePair,
 ) {
 	tx := flow.NewTransaction().
-		SetScript(NowwhereCreateGenerateDropScript(fungibleAddr, NFTContractAddr, nowwhereAddr)).
+		SetScript(TriQuetaCreateGenerateDropScript(fungibleAddr, NFTContractAddr, TriQuetaAddr)).
 		SetGasLimit(100).
 		SetProposalKey(emulator.ServiceKey().Address, emulator.ServiceKey().Index, emulator.ServiceKey().SequenceNumber).
 		SetPayer(emulator.ServiceKey().Address).
@@ -131,12 +131,12 @@ func NowwhereCreateDropTransaction(
 	)
 }
 
-func NowwherePurchaseDropTransaction(
+func TriQuetaPurchaseDropTransaction(
 	testing *testing.T,
 	emulator *emulator.Blockchain,
 	fungibleAddr,
 	NFTContractAddr,
-	nowwhereAddr flow.Address,
+	TriQuetaAddr flow.Address,
 	userAddress sdk.Address,
 	userSigner crypto.Signer,
 	shouldFail bool,
@@ -146,7 +146,7 @@ func NowwherePurchaseDropTransaction(
 	creator sdk.Address,
 ) {
 	tx := flow.NewTransaction().
-		SetScript(NowwherePurchaseGenerateDropScript(fungibleAddr, NFTContractAddr, nowwhereAddr)).
+		SetScript(TriQuetaPurchaseGenerateDropScript(fungibleAddr, NFTContractAddr, TriQuetaAddr)).
 		SetGasLimit(100).
 		SetProposalKey(emulator.ServiceKey().Address, emulator.ServiceKey().Index, emulator.ServiceKey().SequenceNumber).
 		SetPayer(emulator.ServiceKey().Address).
@@ -167,19 +167,19 @@ func NowwherePurchaseDropTransaction(
 	)
 }
 
-func NowwhereRemoveDropTransaction(
+func TriQuetaRemoveDropTransaction(
 	testing *testing.T,
 	emulator *emulator.Blockchain,
 	fungibleAddr,
 	NFTContractAddr,
-	nowwhereAddr flow.Address,
+	TriQuetaAddr flow.Address,
 	userAddress sdk.Address,
 	userSigner crypto.Signer,
 	shouldFail bool,
 	dropId uint64,
 ) {
 	tx := flow.NewTransaction().
-		SetScript(NowwhereRemoveDropScript(fungibleAddr, NFTContractAddr, nowwhereAddr)).
+		SetScript(TriQuetaRemoveDropScript(fungibleAddr, NFTContractAddr, TriQuetaAddr)).
 		SetGasLimit(100).
 		SetProposalKey(emulator.ServiceKey().Address, emulator.ServiceKey().Index, emulator.ServiceKey().SequenceNumber).
 		SetPayer(emulator.ServiceKey().Address).
