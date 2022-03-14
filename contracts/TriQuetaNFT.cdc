@@ -223,10 +223,24 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
     }
 
+    pub resource interface TriQuetaNFTContractCollectionPublic {
+        pub fun deposit(token: @NonFungibleToken.NFT)
+        pub fun getIDs(): [UInt64]
+        pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
+        pub fun borrowNFTTriQuetaContract(id: UInt64): &TriQuetaNFT.NFT? {
+            // If the result isn't nil, the id of the returned reference
+            // should be the same as the argument to the function
+            post {
+                (result == nil) || (result?.id == id):
+                    "Cannot borrow Reward reference: The ID of the returned reference is incorrect"
+            }
+        }
+    }
+
     // Collection is a resource that every user who owns NFTs 
     // will store in their account to manage their NFTS
     //
-    pub resource Collection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
+    pub resource Collection: TriQuetaNFTContractCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
         pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
         pub fun withdraw(withdrawID: UInt64): @NonFungibleToken.NFT {
@@ -254,6 +268,20 @@ pub contract TriQuetaNFT: NonFungibleToken {
             return &self.ownedNFTs[id] as &NonFungibleToken.NFT
         }
 
+        // borrowNFTTriQuetaContract returns a borrowed reference to a TriQuetaNFT
+        // so that the caller can read data and call methods from it.
+        //
+        // Parameters: id: The ID of the NFT to get the reference for
+        //
+        // Returns: A reference to the NFT
+        pub fun borrowNFTTriQuetaContract(id: UInt64): &TriQuetaNFT.NFT? {
+            if self.ownedNFTs[id] != nil {
+                let ref = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
+                return ref as! &TriQuetaNFT.NFT
+            } else {
+                return nil
+            }
+        }
         init() {
             self.ownedNFTs <- {}
         }
@@ -400,7 +428,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
             let receiptAccount = getAccount(account)
             let recipientCollection = receiptAccount
                 .getCapability(TriQuetaNFT.CollectionPublicPath)
-                .borrow<&{NonFungibleToken.CollectionPublic}>()
+                .borrow<&{TriQuetaNFT.TriQuetaNFTContractCollectionPublic}>()
                 ?? panic("Could not get receiver reference to the NFT Collection")
             var newNFT: @NFT <- create NFT(templateID: templateId, mintNumber: TriQuetaNFT.allTemplates[templateId]!.incrementIssuedSupply())
             recipientCollection.deposit(token: <-newNFT)

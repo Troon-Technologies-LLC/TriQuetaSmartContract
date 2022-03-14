@@ -1,5 +1,5 @@
-import TriQuetaNFT from "../contracts/TriQuetaNFT.cdc"
-import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
+import TriQuetaNFT from 0x3a57788afdda9ea7
+import NonFungibleToken from 0x631e88ae7f1d7c20
 
 transaction() {
     prepare(signer: AuthAccount) {
@@ -23,7 +23,7 @@ transaction() {
         // store the empty NFT Collection in account storage
         signer.save( <- collection, to: TriQuetaNFT.CollectionStoragePath)
         // create a public capability for the Collection
-        signer.link<&{NonFungibleToken.CollectionPublic}>(TriQuetaNFT.CollectionPublicPath, target:TriQuetaNFT.CollectionStoragePath)
+        signer.link<&{TriQuetaNFT.TriQuetaNFTContractCollectionPublic}>(TriQuetaNFT.CollectionPublicPath, target:TriQuetaNFT.CollectionStoragePath)
         log("ok")
     }
 }

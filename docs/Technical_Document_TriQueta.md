@@ -13,6 +13,8 @@ A common order of creating Drop would be
 - Create new Template with `transactions/createTemplate` using Admin Account.
 - Create NFT Receiver with `transaction/setupAccount` .
 - Create new Drop with `transactions/createDrop` using Admin Account.
+- update Drop `transactions/updateDrop.cdc` using Admin Account.
+- Reserve mints any address with `transactions/reserveUsermints.cdc` using User Account.
 - Purchase NFT and send to any address with `transactions/purchaseDrop` using Admin Account.
 - Purchase NFT with flow and send to any address with `transactions/purchaseNFTWithFlow` using Admin Account and User Account.
 - Remove Drop `transactions/RemoveDrop.cdc` using Admin Account.
@@ -47,7 +49,7 @@ A common order of creating Drop would be
 
 | Network | Contract Address     |
 | ------- | -------------------- |
-| Testnet | `0xb1295645abe1f315` |
+| Testnet | `0xc864a46475249419` |
 
 ## Drop Structure
 
@@ -61,6 +63,19 @@ In drops we have the following Information:
 ## Instructions for Create Drops
 
 To Create a drop of specific Template, we have to give arguments shown above, after that our function will check that start and end time should be greater than present time, template must not be null, drop Ids should be unique.
+
+## Instruction of Update Drops
+
+To Update a drop of specific Template, we have to give arguments shown above, after that our function will check that start and end time should be greater than present time, template must not be null, drop Ids should be unique.
+
+## Instruction of Reserve Mints
+
+To Reserve Mints with any Drop we have to give the following fields:
+
+- dropId
+- templateId
+- receiptAddress(Address which will recieve NFT)
+- mintNumber(Mint Number of Template)
 
 ## Instructions for Purchase Drop
 

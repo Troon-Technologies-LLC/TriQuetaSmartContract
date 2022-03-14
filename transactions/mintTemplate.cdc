@@ -1,4 +1,4 @@
-import TriQuetaNFT from "./TriQuetaNFT.cdc"
+import TriQuetaNFT from 0x3a57788afdda9ea7
 
 transaction(templateId: UInt64, account: Address){
     prepare(acct: AuthAccount) {

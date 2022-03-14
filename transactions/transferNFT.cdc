@@ -1,5 +1,5 @@
-import TriQuetaNFT from "./TriQuetaNFT.cdc"
-import NonFungibleToken from "./NonFungibleToken.cdc"
+import TriQuetaNFT from 0x3a57788afdda9ea7
+import NonFungibleToken from 0x631e88ae7f1d7c20
 
 // This transaction transfers a template to a recipient
 // This transaction is how a user would transfer an NFT
@@ -24,7 +24,7 @@ transaction(recipient: Address, withdrawID: UInt64) {
     execute {
         // get the recipient's public account object
         let recipient = getAccount(recipient)
-        let receiverRef = recipient.getCapability<&{NonFungibleToken.CollectionPublic}>(TriQuetaNFT.CollectionPublicPath)
+        let receiverRef = recipient.getCapability<&{TriQuetaNFT.TriQuetaNFTContractCollectionPublic}>(TriQuetaNFT.CollectionPublicPath)
             .borrow()
             ?? panic("Could not borrow receiver reference")
         // deposit the NFT in the receivers collection

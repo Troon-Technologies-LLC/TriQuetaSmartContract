@@ -1,4 +1,4 @@
-import TriQuetaNFT from "../contracts/TriQuetaNFT.cdc"
+import TriQuetaNFT from 0x3a57788afdda9ea7
 transaction(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData:{String: AnyStruct}) {
     prepare(acct: AuthAccount) {
         let actorResource = acct.getCapability

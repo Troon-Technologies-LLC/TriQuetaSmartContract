@@ -1,4 +1,4 @@
-import TriQuetaNFT from "../contracts/TriQuetaNFT.cdc"
+import TriQuetaNFT from 0x3a57788afdda9ea7
 transaction (brandName: String, data: {String:String}){
     prepare(acct: AuthAccount) {
     
