@@ -1,5 +1,5 @@
-import NFTContract from "../contracts/NFTContract.cdc"
+import TriQuetaNFT from "../contracts/TriQuetaNFT.cdc"
 
 pub fun main() : Int {
-  return  NFTContract.getAllTemplates().length
+  return  TriQuetaNFT.getAllTemplates().length
 }

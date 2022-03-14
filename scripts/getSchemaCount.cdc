@@ -1,6 +1,6 @@
-import NFTContract from "../contracts/NFTContract.cdc"
+import TriQuetaNFT from "../contracts/TriQuetaNFT.cdc"
 
 // Print the Collection owned by accounts 0x01
 pub fun main() : Int {
-  return  NFTContract.getAllSchemas().length
+  return  TriQuetaNFT.getAllSchemas().length
 }

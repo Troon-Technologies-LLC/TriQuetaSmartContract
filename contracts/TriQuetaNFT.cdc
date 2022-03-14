@@ -1,6 +1,6 @@
 import NonFungibleToken from 0x631e88ae7f1d7c20
 
-pub contract NFTContract: NonFungibleToken {
+pub contract TriQuetaNFT: NonFungibleToken {
 
     // Events
     pub event ContractInitialized()
@@ -66,7 +66,7 @@ pub contract NFTContract: NonFungibleToken {
                 brandName.length > 0: "Brand name is required";
             }
 
-            let newBrandId = NFTContract.lastIssuedBrandId
+            let newBrandId = TriQuetaNFT.lastIssuedBrandId
             self.brandId = newBrandId
             self.brandName = brandName
             self.author = author
@@ -89,7 +89,7 @@ pub contract NFTContract: NonFungibleToken {
                 schemaName.length > 0: "Could not create schema: name is required"
             }
 
-            let newSchemaId = NFTContract.lastIssuedSchemaId
+            let newSchemaId = TriQuetaNFT.lastIssuedSchemaId
             self.schemaId = newSchemaId
             self.schemaName = schemaName
             self.author = author
@@ -108,20 +108,20 @@ pub contract NFTContract: NonFungibleToken {
 
         init(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct}) {
             pre {
-                NFTContract.allBrands[brandId] != nil:"Brand Id must be valid"
-                NFTContract.allSchemas[schemaId] != nil:"Schema Id must be valid"
+                TriQuetaNFT.allBrands[brandId] != nil:"Brand Id must be valid"
+                TriQuetaNFT.allSchemas[schemaId] != nil:"Schema Id must be valid"
                 maxSupply > 0 : "MaxSupply must be greater than zero"
                 immutableData != nil: "ImmutableData must not be nil"
             }
 
-            self.templateId = NFTContract.lastIssuedTemplateId
+            self.templateId = TriQuetaNFT.lastIssuedTemplateId
             self.brandId = brandId
             self.schemaId = schemaId
             self.maxSupply = maxSupply
             self.immutableData = immutableData
             self.issuedSupply = 0
             // Before creating template, we need to check template data, if it is valid against given schema or not
-            let schema = NFTContract.allSchemas[schemaId]!
+            let schema = TriQuetaNFT.allSchemas[schemaId]!
             var invalidKey: String = ""
             var isValidTemplate = true
 
@@ -132,47 +132,47 @@ pub contract NFTContract: NonFungibleToken {
                     invalidKey = "key $".concat(key.concat(" not found"))
                     break
                 }
-                if schema.format[key] == NFTContract.SchemaType.String {
+                if schema.format[key] == TriQuetaNFT.SchemaType.String {
                     if(value as? String == nil) {
                         isValidTemplate = false
                         invalidKey = "key $".concat(key.concat(" has type mismatch"))
                         break
                     }
                 }
-                else if schema.format[key] == NFTContract.SchemaType.Int {
+                else if schema.format[key] == TriQuetaNFT.SchemaType.Int {
                     if(value as? Int == nil) {
                         isValidTemplate = false
                         invalidKey = "key $".concat(key.concat(" has type mismatch"))
                         break
                     }
                 } 
-                else if schema.format[key] == NFTContract.SchemaType.Fix64 {
+                else if schema.format[key] == TriQuetaNFT.SchemaType.Fix64 {
                     if(value as? Fix64 == nil) {
                         isValidTemplate = false
                         invalidKey = "key $".concat(key.concat(" has type mismatch"))
                         break
                     }
-                }else if schema.format[key] == NFTContract.SchemaType.Bool {
+                }else if schema.format[key] == TriQuetaNFT.SchemaType.Bool {
                     if(value as? Bool == nil) {
                         isValidTemplate = false
                         invalidKey = "key $".concat(key.concat(" has type mismatch"))
                         break
                     }
-                }else if schema.format[key] == NFTContract.SchemaType.Address {
+                }else if schema.format[key] == TriQuetaNFT.SchemaType.Address {
                     if(value as? Address == nil) {
                         isValidTemplate = false
                         invalidKey = "key $".concat(key.concat(" has type mismatch"))
                         break
                     }
                 }
-                else if schema.format[key] == NFTContract.SchemaType.Array {
+                else if schema.format[key] == TriQuetaNFT.SchemaType.Array {
                     if(value as? [AnyStruct] == nil) {
                         isValidTemplate = false
                         invalidKey = "key $".concat(key.concat(" has type mismatch"))
                         break
                     }
                 }
-                else if schema.format[key] == NFTContract.SchemaType.Any {
+                else if schema.format[key] == TriQuetaNFT.SchemaType.Any {
                     if(value as? {String:AnyStruct} ==nil) {
                         isValidTemplate = false
                         invalidKey = "key $".concat(key.concat(" has type mismatch"))
@@ -205,17 +205,17 @@ pub contract NFTContract: NonFungibleToken {
         }
     }
 
-    // The resource that represents the Troon NFTs
+    // The resource that represents the TriQueta NFTs
     // 
     pub resource NFT: NonFungibleToken.INFT {
         pub let id: UInt64
         access(contract) let data: NFTData
 
         init(templateID: UInt64, mintNumber: UInt64) {
-            NFTContract.totalSupply = NFTContract.totalSupply + 1
-            self.id = NFTContract.totalSupply
-            NFTContract.allNFTs[self.id] = NFTData(templateID: templateID, mintNumber: mintNumber)
-            self.data = NFTContract.allNFTs[self.id]!
+            TriQuetaNFT.totalSupply = TriQuetaNFT.totalSupply + 1
+            self.id = TriQuetaNFT.totalSupply
+            TriQuetaNFT.allNFTs[self.id] = NFTData(templateID: templateID, mintNumber: mintNumber)
+            self.data = TriQuetaNFT.allNFTs[self.id]!
             emit NFTMinted(nftId: self.id, templateId: templateID, mintNumber: mintNumber)
         }
         destroy(){
@@ -241,7 +241,7 @@ pub contract NFTContract: NonFungibleToken {
         }
 
         pub fun deposit(token: @NonFungibleToken.NFT) {
-            let token <- token as! @NFTContract.NFT
+            let token <- token as! @TriQuetaNFT.NFT
             let id = token.id
             let oldToken <- self.ownedNFTs[id] <- token
             if self.owner?.address != nil {
@@ -282,13 +282,13 @@ pub contract NFTContract: NonFungibleToken {
         
         pub fun addwhiteListedAccount(_user: Address) {
             pre{
-                NFTContract.whiteListedAccounts.contains(_user) == false: "user already exist"
+                TriQuetaNFT.whiteListedAccounts.contains(_user) == false: "user already exist"
             }
-            NFTContract.whiteListedAccounts.append(_user)
+            TriQuetaNFT.whiteListedAccounts.append(_user)
         }
 
         pub fun isWhiteListedAccount(_user: Address): Bool {
-            return NFTContract.whiteListedAccounts.contains(_user)
+            return TriQuetaNFT.whiteListedAccounts.contains(_user)
         }
 
         init(){}
@@ -311,7 +311,7 @@ pub contract NFTContract: NonFungibleToken {
                 // valid before executing the method
                 cap.borrow() != nil: "could not borrow a reference to the SpecialCapability"
                 self.capability == nil: "resource already has the SpecialCapability"
-                NFTContract.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
+                TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
             }
             // add the SpecialCapability
             self.capability = cap
@@ -323,14 +323,14 @@ pub contract NFTContract: NonFungibleToken {
                 // the transaction will instantly revert if
                 // the capability has not been added
                 self.capability != nil: "I don't have the special capability :("
-                NFTContract.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
+                TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
             }
 
             let newBrand = Brand(brandName: brandName, author: self.owner?.address!, data: data)
-            NFTContract.allBrands[NFTContract.lastIssuedBrandId] = newBrand
-            emit BrandCreated(brandId: NFTContract.lastIssuedBrandId ,brandName: brandName, author: self.owner?.address!, data: data)
-            self.ownedBrands[NFTContract.lastIssuedBrandId] = newBrand 
-            NFTContract.lastIssuedBrandId = NFTContract.lastIssuedBrandId + 1
+            TriQuetaNFT.allBrands[TriQuetaNFT.lastIssuedBrandId] = newBrand
+            emit BrandCreated(brandId: TriQuetaNFT.lastIssuedBrandId ,brandName: brandName, author: self.owner?.address!, data: data)
+            self.ownedBrands[TriQuetaNFT.lastIssuedBrandId] = newBrand 
+            TriQuetaNFT.lastIssuedBrandId = TriQuetaNFT.lastIssuedBrandId + 1
         }
 
         //method to update the existing Brand, only author of brand can update this brand
@@ -339,16 +339,16 @@ pub contract NFTContract: NonFungibleToken {
                 // the transaction will instantly revert if
                 // the capability has not been added
                 self.capability != nil: "I don't have the special capability :("
-                NFTContract.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
-                NFTContract.allBrands[brandId] != nil: "brand Id does not exists"
+                TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
+                TriQuetaNFT.allBrands[brandId] != nil: "brand Id does not exists"
             }
 
-            let oldBrand = NFTContract.allBrands[brandId]
+            let oldBrand = TriQuetaNFT.allBrands[brandId]
             if self.owner?.address! != oldBrand!.author {
                 panic("No permission to update others brand")
             }
 
-            NFTContract.allBrands[brandId]!.update(data: data)
+            TriQuetaNFT.allBrands[brandId]!.update(data: data)
             emit BrandUpdated(brandId: brandId, brandName: oldBrand!.brandName, author: oldBrand!.author, data: data)
         }
 
@@ -358,14 +358,14 @@ pub contract NFTContract: NonFungibleToken {
                 // the transaction will instantly revert if 
                 // the capability has not been added
                 self.capability != nil: "I don't have the special capability :("
-                NFTContract.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
+                TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
             }
 
             let newSchema = Schema(schemaName: schemaName, author: self.owner?.address!, format: format)
-            NFTContract.allSchemas[NFTContract.lastIssuedSchemaId] = newSchema
-            emit SchemaCreated(schemaId: NFTContract.lastIssuedSchemaId, schemaName: schemaName, author: self.owner?.address!)
-            self.ownedSchemas[NFTContract.lastIssuedSchemaId] = newSchema
-            NFTContract.lastIssuedSchemaId = NFTContract.lastIssuedSchemaId + 1
+            TriQuetaNFT.allSchemas[TriQuetaNFT.lastIssuedSchemaId] = newSchema
+            emit SchemaCreated(schemaId: TriQuetaNFT.lastIssuedSchemaId, schemaName: schemaName, author: self.owner?.address!)
+            self.ownedSchemas[TriQuetaNFT.lastIssuedSchemaId] = newSchema
+            TriQuetaNFT.lastIssuedSchemaId = TriQuetaNFT.lastIssuedSchemaId + 1
             
         }
 
@@ -375,16 +375,16 @@ pub contract NFTContract: NonFungibleToken {
                 // the transaction will instantly revert if 
                 // the capability has not been added
                 self.capability != nil: "I don't have the special capability :("
-                NFTContract.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
+                TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
                 self.ownedBrands[brandId] != nil: "Collection Id Must be valid"
                 self.ownedSchemas[schemaId] != nil: "Schema Id Must be valid"
             }
 
             let newTemplate = Template(brandId: brandId, schemaId: schemaId, maxSupply: maxSupply, immutableData: immutableData)
-            NFTContract.allTemplates[NFTContract.lastIssuedTemplateId] = newTemplate
-            emit TemplateCreated(templateId: NFTContract.lastIssuedTemplateId, brandId: brandId, schemaId: schemaId, maxSupply: maxSupply)
-            self.ownedTemplates[NFTContract.lastIssuedTemplateId] = newTemplate
-            NFTContract.lastIssuedTemplateId = NFTContract.lastIssuedTemplateId + 1
+            TriQuetaNFT.allTemplates[TriQuetaNFT.lastIssuedTemplateId] = newTemplate
+            emit TemplateCreated(templateId: TriQuetaNFT.lastIssuedTemplateId, brandId: brandId, schemaId: schemaId, maxSupply: maxSupply)
+            self.ownedTemplates[TriQuetaNFT.lastIssuedTemplateId] = newTemplate
+            TriQuetaNFT.lastIssuedTemplateId = TriQuetaNFT.lastIssuedTemplateId + 1
         }
 
         //method to mint NFT, only access by the verified user
@@ -393,16 +393,16 @@ pub contract NFTContract: NonFungibleToken {
                 // the transaction will instantly revert if 
                 // the capability has not been added
                 self.capability != nil: "I don't have the special capability :("
-                NFTContract.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
+                TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
                 self.ownedTemplates[templateId]!= nil: "Minter does not have specific template Id"
-                NFTContract.allTemplates[templateId] != nil: "Template Id must be valid"
+                TriQuetaNFT.allTemplates[templateId] != nil: "Template Id must be valid"
                 }
             let receiptAccount = getAccount(account)
             let recipientCollection = receiptAccount
-                .getCapability(NFTContract.CollectionPublicPath)
+                .getCapability(TriQuetaNFT.CollectionPublicPath)
                 .borrow<&{NonFungibleToken.CollectionPublic}>()
                 ?? panic("Could not get receiver reference to the NFT Collection")
-            var newNFT: @NFT <- create NFT(templateID: templateId, mintNumber: NFTContract.allTemplates[templateId]!.incrementIssuedSupply())
+            var newNFT: @NFT <- create NFT(templateID: templateId, mintNumber: TriQuetaNFT.allTemplates[templateId]!.incrementIssuedSupply())
             recipientCollection.deposit(token: <-newNFT)
         }
 
@@ -416,7 +416,7 @@ pub contract NFTContract: NonFungibleToken {
     
     //method to create empty Collection
     pub fun createEmptyCollection(): @NonFungibleToken.Collection {
-        return <- create NFTContract.Collection()
+        return <- create TriQuetaNFT.Collection()
     }
 
     //method to create Admin Resources
@@ -426,49 +426,49 @@ pub contract NFTContract: NonFungibleToken {
 
     //method to get all brands
     pub fun getAllBrands(): {UInt64: Brand} {
-        return NFTContract.allBrands
+        return TriQuetaNFT.allBrands
     }
 
     //method to get brand by id
     pub fun getBrandById(brandId: UInt64): Brand {
         pre {
-            NFTContract.allBrands[brandId] != nil: "brand Id does not exists"
+            TriQuetaNFT.allBrands[brandId] != nil: "brand Id does not exists"
         }
-        return NFTContract.allBrands[brandId]!
+        return TriQuetaNFT.allBrands[brandId]!
     }
 
     //method to get all schema
     pub fun getAllSchemas(): {UInt64: Schema} {
-        return NFTContract.allSchemas
+        return TriQuetaNFT.allSchemas
     }
 
     //method to get schema by id
     pub fun getSchemaById(schemaId: UInt64): Schema {
         pre {
-            NFTContract.allSchemas[schemaId] != nil: "schema id does not exist"
+            TriQuetaNFT.allSchemas[schemaId] != nil: "schema id does not exist"
         }
-        return NFTContract.allSchemas[schemaId]!
+        return TriQuetaNFT.allSchemas[schemaId]!
     }
 
     //method to get all templates
     pub fun getAllTemplates(): {UInt64: Template} {
-        return NFTContract.allTemplates
+        return TriQuetaNFT.allTemplates
     }
 
     //method to get template by id
     pub fun getTemplateById(templateId: UInt64): Template {
         pre {
-            NFTContract.allTemplates[templateId]!=nil: "Template id does not exist"
+            TriQuetaNFT.allTemplates[templateId]!=nil: "Template id does not exist"
         }
-        return NFTContract.allTemplates[templateId]!
+        return TriQuetaNFT.allTemplates[templateId]!
     } 
 
     //method to get nft-data by id
     pub fun getNFTDataById(nftId: UInt64): NFTData {
         pre {
-            NFTContract.allNFTs[nftId]!=nil:"nft id does not exist"
+            TriQuetaNFT.allNFTs[nftId]!=nil:"nft id does not exist"
         }
-        return NFTContract.allNFTs[nftId]!
+        return TriQuetaNFT.allNFTs[nftId]!
     }
 
     //Initialize all variables with default values
@@ -483,12 +483,12 @@ pub contract NFTContract: NonFungibleToken {
         self.allNFTs = {}
         self.whiteListedAccounts = [self.account.address]
 
-        self.AdminResourceStoragePath = /storage/TroonAdminResource
-        self.CollectionStoragePath = /storage/TroonCollection
-        self.CollectionPublicPath = /public/TroonCollection
-        self.AdminStorageCapability = /storage/AdminCapability
-        self.AdminCapabilityPrivate = /private/AdminCapability
-        self.NFTMethodsCapabilityPrivatePath = /private/NFTMethodsCapability
+        self.AdminResourceStoragePath = /storage/TriQuetaAdminResource
+        self.CollectionStoragePath = /storage/TriQuetaCollection
+        self.CollectionPublicPath = /public/TriQuetaCollection
+        self.AdminStorageCapability = /storage/TriQuetaAdminCapability
+        self.AdminCapabilityPrivate = /private/TriQuetaAdminCapability
+        self.NFTMethodsCapabilityPrivatePath = /private/TriQuetaNFTMethodsCapability
         
         self.account.save<@AdminCapability>(<- create AdminCapability(), to: /storage/AdminStorageCapability)
         self.account.link<&AdminCapability>(self.AdminCapabilityPrivate, target: /storage/AdminStorageCapability)

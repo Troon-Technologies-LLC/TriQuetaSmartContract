@@ -1,6 +1,6 @@
 
-import NFTContract from "../contracts/NFTContract.cdc"
+import TriQuetaNFT from "../contracts/TriQuetaNFT.cdc"
 
-pub fun main(brandId:UInt64): NFTContract.Brand {
-    return NFTContract.getBrandById(brandId: brandId)
+pub fun main(brandId:UInt64): TriQuetaNFT.Brand {
+    return TriQuetaNFT.getBrandById(brandId: brandId)
 }

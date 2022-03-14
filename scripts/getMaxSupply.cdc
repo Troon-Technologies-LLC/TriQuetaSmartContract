@@ -1,4 +1,4 @@
-import NFTContract from "./NFTContract.cdc"
+import TriQuetaNFT from "./TriQuetaNFT.cdc"
 import TriQueta from "./TriQueta.cdc"
 
 pub fun main(dropId: UInt64):{String:UInt64}{
@@ -6,7 +6,7 @@ pub fun main(dropId: UInt64):{String:UInt64}{
     let outdropId = TriQueta.getDropById(dropId: dropId)
     let templateid = outdropId.templates.keys
 
-    let getTemplate = NFTContract.getTemplateById(templateId: templateid[0])
+    let getTemplate = TriQuetaNFT.getTemplateById(templateId: templateid[0])
     let issuedSupply = getTemplate.issuedSupply
 
     let maxSupply = getTemplate.maxSupply

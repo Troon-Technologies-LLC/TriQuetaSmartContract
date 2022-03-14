@@ -1,6 +1,6 @@
-import NFTContract from "./NFTContract.cdc"
+import TriQuetaNFT from "./TriQuetaNFT.cdc"
 
-pub fun main(): {UInt64:NFTContract.Schema} {
-    return NFTContract.getAllSchemas()
+pub fun main(): {UInt64:TriQuetaNFT.Schema} {
+    return TriQuetaNFT.getAllSchemas()
 
 }

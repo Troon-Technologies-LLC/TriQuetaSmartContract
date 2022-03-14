@@ -1,4 +1,4 @@
-import NFTContract from 0xf8d6e0586b0a20c7
+import TriQuetaNFT from 0xf8d6e0586b0a20c7
 import NonFungibleToken from 0xf8d6e0586b0a20c7
 import FungibleToken from  0xee82856bf20e2aa6
 import FlowToken from 0x0ae53cb6e3f42a79
@@ -19,7 +19,7 @@ pub contract TriQueta {
     // Contract level paths for storing resources
     pub let DropAdminStoragePath: StoragePath
     // The capability that is used for calling the admin functions 
-    access(contract) let adminRef: Capability<&{NFTContract.NFTMethodsCapability}>
+    access(contract) let adminRef: Capability<&{TriQuetaNFT.NFTMethodsCapability}>
     // Variable size dictionary of Drop structs
     access(self) var allDrops: {UInt64: Drop}
     // -----------------------------------------------------------------------
@@ -65,7 +65,7 @@ pub contract TriQueta {
 
             var areValidTemplates: Bool = true
             for templateId in templates.keys {
-                var template = NFTContract.getTemplateById(templateId: templateId)
+                var template = TriQuetaNFT.getTemplateById(templateId: templateId)
                 if(template == nil){
                     areValidTemplates = false
                     break
@@ -102,7 +102,7 @@ pub contract TriQueta {
                 TriQueta.allDrops[dropId]!.templates[templateId] != nil: "template id does not exist"
             }
 
-            var template = NFTContract.getTemplateById(templateId: templateId)
+            var template = TriQuetaNFT.getTemplateById(templateId: templateId)
             assert(template.issuedSupply + mintNumbers <= template.maxSupply, message: "template reached to its max supply") 
             var i: UInt64 = 0
             while i < mintNumbers {
@@ -131,7 +131,7 @@ pub contract TriQueta {
             let vaultRef = self.ownerVault!.borrow()
                 ?? panic("Could not borrow reference to owner token vault")
             vaultRef.deposit(from: <-flowPayment)
-            var template = NFTContract.getTemplateById(templateId: templateId)
+            var template = TriQuetaNFT.getTemplateById(templateId: templateId)
             assert(template.issuedSupply + mintNumbers <= template.maxSupply, message: "template reached to its max supply")
             
             var i: UInt64 = 0
@@ -166,7 +166,7 @@ pub contract TriQueta {
         self.DropAdminStoragePath = /storage/TriQuetaDropAdmin
         // get the private capability to the admin resource interface
         // to call the functions of this interface.
-        self.adminRef = self.account.getCapability<&{NFTContract.NFTMethodsCapability}>(NFTContract.NFTMethodsCapabilityPrivatePath)
+        self.adminRef = self.account.getCapability<&{TriQuetaNFT.NFTMethodsCapability}>(TriQuetaNFT.NFTMethodsCapabilityPrivatePath)
 
         // Put the Drop Admin in storage
         self.account.save(<- create DropAdmin(), to: self.DropAdminStoragePath)

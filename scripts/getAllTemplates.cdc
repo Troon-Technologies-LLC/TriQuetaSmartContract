@@ -1,5 +1,5 @@
-import NFTContract from "./NFTContract.cdc"
+import TriQuetaNFT from "./TriQuetaNFT.cdc"
 
-pub fun main():{UInt64:NFTContract.Template}  {
-    return NFTContract.getAllTemplates()
+pub fun main():{UInt64:TriQuetaNFT.Template}  {
+    return TriQuetaNFT.getAllTemplates()
 }

@@ -68,8 +68,8 @@ describe("Deployment", () => {
     }
     expect(name).toBe("NonFungibleToken");
   });
-  test("Deploy for NFTContract", async () => {
-    const name = "NFTContract";
+  test("Deploy for TriQuetaNFT", async () => {
+    const name = "TriQuetaNFT";
     const to = await getAccountAddress("Bob");
     let update = true;
 
@@ -89,18 +89,18 @@ describe("Deployment", () => {
     } catch (e) {
       console.log(e);
     }
-    expect(name).toBe("NFTContract");
+    expect(name).toBe("TriQuetaNFT");
   });
   test("Deploy for TriQueta", async () => {
     const name = "TriQueta";
     const to = await getAccountAddress("Charlie");
     let update = true;
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
 
     let addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
     };
     let result;
     try {
@@ -126,11 +126,11 @@ describe("Transactions", () => {
     const signers = [Charlie];
     // Generate addressMap from import statements
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
     const TriQueta = await getContractAddress("TriQueta");
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
       TriQueta,
     };
 
@@ -160,11 +160,11 @@ describe("Transactions", () => {
     const signers = [Bob];
     // Generate addressMap from import statements
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
     const TriQueta = await getContractAddress("TriQueta");
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
       TriQueta,
     };
 
@@ -196,11 +196,11 @@ describe("Transactions", () => {
     const signers = [Charlie];
     // Generate addressMap from import statements
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
     const TriQueta = await getContractAddress("TriQueta");
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
       TriQueta,
     };
 
@@ -231,11 +231,11 @@ describe("Transactions", () => {
     const signers = [Charlie];
     // Generate addressMap from import statements
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
     const TriQueta = await getContractAddress("TriQueta");
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
       TriQueta,
     };
 
@@ -267,11 +267,11 @@ describe("Transactions", () => {
     const signers = [Charlie];
     // Generate addressMap from import statements
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
     const TriQueta = await getContractAddress("TriQueta");
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
       TriQueta,
     };
 
@@ -307,11 +307,11 @@ describe("Transactions", () => {
 
     // Generate addressMap from import statements
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
     const TriQueta = await getContractAddress("TriQueta");
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
       TriQueta,
     };
 
@@ -345,11 +345,11 @@ describe("Transactions", () => {
 
     // Generate addressMap from import statements
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
     const TriQueta = await getContractAddress("TriQueta");
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
       TriQueta,
     };
 
@@ -377,11 +377,11 @@ describe("Transactions", () => {
     const signers = [Bob];
     // Generate addressMap from import statements
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
     const TriQueta = await getContractAddress("TriQueta");
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
       TriQueta,
     };
 
@@ -412,11 +412,11 @@ describe("Transactions", () => {
 
     // Generate addressMap from import statements
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
     const TriQueta = await getContractAddress("TriQueta");
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
       TriQueta,
     };
 
@@ -463,11 +463,11 @@ describe("Transactions", () => {
     const signers = [Charlie, Bob];
     // Generate addressMap from import statements
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
     const TriQueta = await getContractAddress("TriQueta");
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
       TriQueta,
     };
 
@@ -511,11 +511,11 @@ describe("Scripts", () => {
     const Bob = await getAccountAddress("Bob");
     let nftcount = 0;
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
 
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
     };
     let code = await getScriptCode({
       name,
@@ -534,11 +534,11 @@ describe("Scripts", () => {
     const Bob = await getAccountAddress("Bob");
 
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
 
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
     };
     let code = await getScriptCode({
       name,
@@ -566,11 +566,11 @@ describe("Scripts", () => {
     const Bob = await getAccountAddress("Bob");
 
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
 
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
     };
     let code = await getScriptCode({
       name,
@@ -598,11 +598,11 @@ describe("Scripts", () => {
     const Bob = await getAccountAddress("Bob");
 
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
 
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
     };
     let code = await getScriptCode({
       name,
@@ -632,11 +632,11 @@ describe("Scripts", () => {
     const Bob = await getAccountAddress("Bob");
 
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
 
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
     };
     let code = await getScriptCode({
       name,
@@ -664,11 +664,11 @@ describe("Scripts", () => {
     const Bob = await getAccountAddress("Bob");
 
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
 
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
     };
     let code = await getScriptCode({
       name,
@@ -699,11 +699,11 @@ describe("Scripts", () => {
     const Bob = await getAccountAddress("Bob");
 
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
 
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
     };
     let code = await getScriptCode({
       name,
@@ -731,11 +731,11 @@ describe("Scripts", () => {
     const Bob = await getAccountAddress("Bob");
 
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
 
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
     };
     let code = await getScriptCode({
       name,
@@ -764,11 +764,11 @@ describe("Scripts", () => {
     const Bob = await getAccountAddress("Bob");
 
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
 
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
     };
     let code = await getScriptCode({
       name,
@@ -796,12 +796,12 @@ describe("Scripts", () => {
     const Charlie = await getAccountAddress("Charlie");
 
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
     const TriQueta = await getContractAddress("TriQueta");
 
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
       TriQueta,
     };
     let code = await getScriptCode({
@@ -835,12 +835,12 @@ describe("Scripts", () => {
     const Charlie = await getAccountAddress("Charlie");
 
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
     const TriQueta = await getContractAddress("TriQueta");
 
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
       TriQueta,
     };
 
@@ -870,11 +870,11 @@ describe("Scripts", () => {
     const Charlie = await getAccountAddress("Charlie");
 
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
 
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
     };
     let code = await getScriptCode({
       name,
@@ -903,11 +903,11 @@ describe("Scripts", () => {
     const Bob = await getAccountAddress("Bob");
 
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTContract = await getContractAddress("NFTContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
 
     const addressMap = {
       NonFungibleToken,
-      NFTContract,
+      TriQuetaNFT,
     };
     let code = await getScriptCode({
       name,

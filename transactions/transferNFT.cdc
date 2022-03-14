@@ -1,10 +1,10 @@
-import NFTContract from "./NFTContract.cdc"
+import TriQuetaNFT from "./TriQuetaNFT.cdc"
 import NonFungibleToken from "./NonFungibleToken.cdc"
 
 // This transaction transfers a template to a recipient
 // This transaction is how a user would transfer an NFT
 // from their account to another account
-// The recipient must have a NFTContract Collection object stored
+// The recipient must have a TriQuetaNFT Collection object stored
 // and a public TransferInterface capability stored at
 // `/public/TemplateCollection`
 
@@ -16,7 +16,7 @@ transaction(recipient: Address, withdrawID: UInt64) {
     // local variable for storing the transferred token
     let transferToken: @NonFungibleToken.NFT
     prepare(acct: AuthAccount) {
-        let collectionRef =  acct.borrow<&NFTContract.Collection>(from: NFTContract.CollectionStoragePath)
+        let collectionRef =  acct.borrow<&TriQuetaNFT.Collection>(from: TriQuetaNFT.CollectionStoragePath)
         ??panic("could not borrow a reference to the the stored nft Collection")
         self.transferToken <- collectionRef.withdraw(withdrawID: withdrawID)
     }
@@ -24,7 +24,7 @@ transaction(recipient: Address, withdrawID: UInt64) {
     execute {
         // get the recipient's public account object
         let recipient = getAccount(recipient)
-        let receiverRef = recipient.getCapability<&{NonFungibleToken.CollectionPublic}>(NFTContract.CollectionPublicPath)
+        let receiverRef = recipient.getCapability<&{NonFungibleToken.CollectionPublic}>(TriQuetaNFT.CollectionPublicPath)
             .borrow()
             ?? panic("Could not borrow receiver reference")
         // deposit the NFT in the receivers collection

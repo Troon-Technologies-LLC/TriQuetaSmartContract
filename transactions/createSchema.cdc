@@ -1,24 +1,24 @@
-import NFTContract from "../contracts/NFTContract.cdc"
+import TriQuetaNFT from "../contracts/TriQuetaNFT.cdc"
 
 transaction (schemaName:String){
 
    prepare(acct: AuthAccount) {
       let actorResource = acct.getCapability
-            <&{NFTContract.NFTMethodsCapability}>
-            (NFTContract.NFTMethodsCapabilityPrivatePath)
+            <&{TriQuetaNFT.NFTMethodsCapability}>
+            (TriQuetaNFT.NFTMethodsCapabilityPrivatePath)
             .borrow() ?? 
             panic("could not borrow a reference to the NFTMethodsCapability interface")
 
-         let format : {String: NFTContract.SchemaType} = {
-            "artist" : NFTContract.SchemaType.String,
-            "artistEmail"  :  NFTContract.SchemaType.String,
-            "title":NFTContract.SchemaType.String,
-            "mintType":  NFTContract.SchemaType.String,
-            "nftType":  NFTContract.SchemaType.String,
-            "rarity":  NFTContract.SchemaType.String,
-            "contectType":  NFTContract.SchemaType.String,
-            "contectValue":  NFTContract.SchemaType.String,
-            "extras": NFTContract.SchemaType.Any
+         let format : {String: TriQuetaNFT.SchemaType} = {
+            "artist" : TriQuetaNFT.SchemaType.String,
+            "artistEmail"  :  TriQuetaNFT.SchemaType.String,
+            "title":TriQuetaNFT.SchemaType.String,
+            "mintType":  TriQuetaNFT.SchemaType.String,
+            "nftType":  TriQuetaNFT.SchemaType.String,
+            "rarity":  TriQuetaNFT.SchemaType.String,
+            "contectType":  TriQuetaNFT.SchemaType.String,
+            "contectValue":  TriQuetaNFT.SchemaType.String,
+            "extras": TriQuetaNFT.SchemaType.Any
             }
          actorResource.createSchema(schemaName: schemaName, format: format)
          log("ok")

@@ -1,9 +1,9 @@
-import NFTContract from "../contracts/NFTContract.cdc"
+import TriQuetaNFT from "../contracts/TriQuetaNFT.cdc"
 transaction(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData:{String: AnyStruct}) {
     prepare(acct: AuthAccount) {
         let actorResource = acct.getCapability
-            <&{NFTContract.NFTMethodsCapability}>
-            (NFTContract.NFTMethodsCapabilityPrivatePath)
+            <&{TriQuetaNFT.NFTMethodsCapability}>
+            (TriQuetaNFT.NFTMethodsCapabilityPrivatePath)
             .borrow() ?? 
             panic("could not borrow a reference to the NFTMethodsCapability interface")
              let extra: {String: AnyStruct} = {
