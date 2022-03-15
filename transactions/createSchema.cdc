@@ -1,5 +1,5 @@
 import TriQuetaNFT from 0x3a57788afdda9ea7
-transaction (){
+transaction (schemaName: String){
 // schemaName:String
    prepare(acct: AuthAccount) {
       let actorResource = acct.getCapability
@@ -19,7 +19,7 @@ transaction (){
             "contectValue":  TriQuetaNFT.SchemaType.String,
             "extras": TriQuetaNFT.SchemaType.Any
             }
-         actorResource.createSchema(schemaName: "nft-series", format: format)
+         actorResource.createSchema(schemaName: schemaName, format: format)
          log("ok")
    }
 }

@@ -1,5 +1,5 @@
 import TriQueta from 0xc864a46475249419
-transaction(DropId: UInt64,TemplateId: UInt64,MintNumber: UInt64, Creator: Address){
+transaction(DropId: UInt64,TemplateId: UInt64, Creator: Address,MintNumber: UInt64){
     let adminRef: &TriQueta.DropAdmin
     prepare(acct: AuthAccount) {
         self.adminRef = acct.borrow<&TriQueta.DropAdmin>(from: TriQueta.DropAdminStoragePath)

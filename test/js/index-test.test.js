@@ -4,7 +4,6 @@ import {
   emulator,
   getAccountAddress,
   deployContractByName,
-  getContractCode,
   getContractAddress,
   getTransactionCode,
   getScriptCode,
@@ -258,7 +257,6 @@ describe("Transactions", () => {
     console.log("tx Result", txResult);
     // expect(txResult.errorMessage).toBe("");
   });
-
   test("test transaction  create template", async () => {
     const name = "createTemplateStaticData";
     // Import participating accounts
@@ -294,7 +292,6 @@ describe("Transactions", () => {
     console.log("tx Result", txResult);
     // expect(txResult.errorMessage).toBe("");
   });
-
   test("test transaction  create drop", async () => {
     const name = "createDropStaticData";
     var currentTimeInSeconds = Math.floor(Date.now() / 1000); //unix timestamp in seconds
@@ -401,6 +398,42 @@ describe("Transactions", () => {
     console.log("tx Result", txResult);
     // expect(txResult.errorMessage).toBe("");
   });
+  test("test transaction  reserve user mints", async () => {
+    const name = "reserveUsermints";
+    // Import participating accounts
+    const Charlie = await getAccountAddress("Charlie");
+    // Set transaction signers
+    const signers = [Charlie];
+    // Generate addressMap from import statements
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+    const TriQueta = await getContractAddress("TriQueta");
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+      TriQueta,
+    };
+
+    let code = await getTransactionCode({
+      name,
+      addressMap,
+    });
+
+    const args = [1, 1, Charlie, 1];
+
+    let txResult;
+    try {
+      txResult = await sendTransaction({
+        code,
+        signers,
+        args,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    console.log("tx Result", txResult);
+    expect(txResult.errorMessage).toBe(undefined);
+  });
   test("test transaction  purchase drop", async () => {
     const name = "purchaseDrop";
 
@@ -425,8 +458,7 @@ describe("Transactions", () => {
       addressMap,
     });
 
-    const args = [1, 1, 4, Charlie];
-
+    const args = [1, 1, 1, Charlie];
     let txResult;
     try {
       txResult = await sendTransaction({
@@ -453,6 +485,43 @@ describe("Transactions", () => {
     //expected results
     expect(updatedBalance1.toString()).toBe(userOne);
     expect(updatedBalance2.toString()).toBe(user2);
+  });
+  test("test transaction  reserve user mints", async () => {
+    const name = "reserveUsermints";
+    // Import participating accounts
+    const Charlie = await getAccountAddress("Charlie");
+    const Bob = await getAccountAddress("Bob");
+    // Set transaction signers
+    const signers = [Charlie];
+    // Generate addressMap from import statements
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+    const TriQueta = await getContractAddress("TriQueta");
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+      TriQueta,
+    };
+
+    let code = await getTransactionCode({
+      name,
+      addressMap,
+    });
+
+    const args = [Bob];
+
+    let txResult;
+    try {
+      txResult = await sendTransaction({
+        code,
+        signers,
+        args,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    console.log("tx Result", txResult);
+    expect(txResult.errorMessage).toBe(undefined);
   });
   test("purchase drop with flow", async () => {
     const name = "purchaseNFTWithFlow";
@@ -865,39 +934,39 @@ describe("Scripts", () => {
     });
     console.log("result", result);
   });
-  test("get nft template data", async () => {
-    const name = "getNFTTemplateData";
-    const Charlie = await getAccountAddress("Charlie");
+  // test("get nft template data", async () => {
+  //   const name = "getNFTTemplateData";
+  //   const Charlie = await getAccountAddress("Charlie");
 
-    const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+  //   const NonFungibleToken = await getContractAddress("NonFungibleToken");
+  //   const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
 
-    const addressMap = {
-      NonFungibleToken,
-      TriQuetaNFT,
-    };
-    let code = await getScriptCode({
-      name,
-      addressMap,
-    });
+  //   const addressMap = {
+  //     NonFungibleToken,
+  //     TriQuetaNFT,
+  //   };
+  //   let code = await getScriptCode({
+  //     name,
+  //     addressMap,
+  //   });
 
-    code = code
-      .toString()
-      .replace(/(?:getAccount\(\s*)(0x.*)(?:\s*\))/g, (_, match) => {
-        const accounts = {
-          "0x03": Charlie,
-        };
-        const name = accounts[match];
-        return `getAccount(${name})`;
-      });
+  //   code = code
+  //     .toString()
+  //     .replace(/(?:getAccount\(\s*)(0x.*)(?:\s*\))/g, (_, match) => {
+  //       const accounts = {
+  //         "0x03": Charlie,
+  //       };
+  //       const name = accounts[match];
+  //       return `getAccount(${name})`;
+  //     });
 
-    const args = [Charlie];
-    const result = await executeScript({
-      code,
-      args,
-    });
-    console.log("result", result);
-  });
+  //   const args = [Charlie];
+  //   const result = await executeScript({
+  //     code,
+  //     args,
+  //   });
+  //   console.log("result", result);
+  // });
   test("get nft maxSupply drop data", async () => {
     const name = "getMaxSupply";
     const Bob = await getAccountAddress("Bob");
