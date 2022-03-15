@@ -508,8 +508,7 @@ describe("Transactions", () => {
       addressMap,
     });
 
-    const args = [Bob];
-
+    const args = [1, 1, Bob, 1];
     let txResult;
     try {
       txResult = await sendTransaction({
