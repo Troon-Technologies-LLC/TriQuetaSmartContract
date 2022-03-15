@@ -7,14 +7,13 @@ transaction {
     let adminRef: &TriQueta.DropAdmin
 
     prepare(acct: AuthAccount) {
-       let data = acct.getCapability<&FlowToken.Vault{FungibleToken.Receiver}>(/public/flowTokenReceiver)
+        let data = acct.getCapability<&FlowToken.Vault{FungibleToken.Receiver}>(/public/flowTokenReceiver)
 
-       self.adminRef = acct.borrow<&TriQueta.DropAdmin>(from:TriQueta.DropAdminStoragePath)
+        self.adminRef = acct.borrow<&TriQueta.DropAdmin>(from:TriQueta.DropAdminStoragePath)
         ??panic("could not borrow admin reference")
 
-       self.adminRef.addOwnerVault(_ownerVault: data)
+        self.adminRef.addOwnerVault(_ownerVault: data)
     }
-
     execute{
         log("Vault capability added")
     }

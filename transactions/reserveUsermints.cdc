@@ -5,7 +5,6 @@ transaction(DropId: UInt64,TemplateId: UInt64,MintNumber: UInt64, Creator: Addre
         self.adminRef = acct.borrow<&TriQueta.DropAdmin>(from: TriQueta.DropAdminStoragePath)
                         ??panic("could not borrow admin reference")
     }
-
     execute {
         self.adminRef.ReserveUserNFT(dropId: DropId, templateId:TemplateId, receiptAddress: Creator, mintNumbers: MintNumber)
     }
