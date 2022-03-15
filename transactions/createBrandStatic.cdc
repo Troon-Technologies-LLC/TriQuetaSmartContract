@@ -8,7 +8,7 @@ transaction () {
             .borrow() ??
             panic("could not borrow a reference to the NFTMethodsCapability interface")
         actorResource.createNewBrand(
-         brandName: "TriQuetaNFT",
+        brandName: "TriQuetaNFT",
         data: {
             "name":"TriQuetaNFT",
             "description":"A two-sided blockchain-backed intelligent NFT marketplace with a 'NETFLIX-style' recommend engine - indexing / scoring and ranking assets - connecting Collectors with Creators and vice versa",

@@ -8,8 +8,6 @@ transaction(DropId: UInt64, StartDate: UFix64,EndDate: UFix64,template: {UInt64:
     }
     execute{
         self.adminRef.createDrop(dropId: DropId, startDate: StartDate, endDate: EndDate, templates: template)
-        
-        
         log("ok")
     }
 }

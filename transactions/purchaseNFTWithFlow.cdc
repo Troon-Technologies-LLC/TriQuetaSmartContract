@@ -11,16 +11,13 @@ transaction(DropId: UInt64, TemplateId: UInt64, MintNumber: UInt64, receiptAddre
     prepare(providerAccount: AuthAccount, tokenRecipientAccount:AuthAccount) {
         self.adminRef = providerAccount.borrow<&TriQueta.DropAdmin>(from:TriQueta.DropAdminStoragePath)
         ??panic("could not borrow admin reference")
- 
-         let vaultRef = tokenRecipientAccount.borrow<&FlowToken.Vault>(from: /storage/flowTokenVault)
+        let vaultRef = tokenRecipientAccount.borrow<&FlowToken.Vault>(from: /storage/flowTokenVault)
                 ?? panic("Could not borrow buyer vault reference")
         self.temporaryVault <- vaultRef.withdraw(amount: Price)
     }
   
     execute{
-      
-      let dropResponse = self.adminRef.purchaseNFTWithFlow(dropId: DropId, templateId: TemplateId, mintNumbers: MintNumber, receiptAddress: receiptAddress, price:Price,flowPayment: <- self.temporaryVault)
-      
-      log(dropResponse)
+        let dropResponse = self.adminRef.purchaseNFTWithFlow(dropId: DropId, templateId: TemplateId, mintNumbers: MintNumber, receiptAddress: receiptAddress, price:Price,flowPayment: <- self.temporaryVault)
+        log(dropResponse)
     }
 }

@@ -6,7 +6,7 @@ transaction(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData:
             (TriQuetaNFT.NFTMethodsCapabilityPrivatePath)
             .borrow() ?? 
             panic("could not borrow a reference to the NFTMethodsCapability interface")
-             let extra: {String: AnyStruct} = {
+            let extra: {String: AnyStruct} = {
                 "name" : "alex", // string
                 "age" : 21,// integer
                 "percentage" : 2.1 as Fix64, // address
@@ -15,7 +15,6 @@ transaction(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData:
                 "startDate" : "",
                 "endDate" : ""             
         }
-     
         actorResource.createTemplate(brandId: brandId, schemaId: schemaId, maxSupply: maxSupply, immutableData: immutableData)
         log("ok")
     }

@@ -65,7 +65,7 @@ pub contract TriQueta {
             
             self.user_address = user_address
         }
-         pub fun addUserMint(mintNumber: String, mintNumberValue :UInt64){
+        pub fun addUserMint(mintNumber: String, mintNumberValue :UInt64){
             self.user_address.insert(key: mintNumber, mintNumberValue)
         }
     }
@@ -206,7 +206,7 @@ pub contract TriQueta {
         }
 
         pub fun ReserveUserNFT(dropId: UInt64, templateId: UInt64, receiptAddress: Address, mintNumbers: UInt64){
-             pre {
+            pre {
                 mintNumbers > 0: "mint number must be greater than zero"
                 mintNumbers <= 10: "mint numbers must be less than ten"
                 dropId != nil : "invalid drop id"
@@ -227,7 +227,7 @@ pub contract TriQueta {
         }
 
         pub fun getUserMintsByDropId(dropId: UInt64, receiptAddress:Address): Bool{
-             pre {
+            pre {
                 dropId != nil : "invalid drop id"
                 receiptAddress !=nil: "invalid receipt Address"
                 TriQueta.allDrops[dropId] != nil: "drop id does not exist"

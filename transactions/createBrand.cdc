@@ -9,7 +9,7 @@ transaction (brandName: String, data: {String:String}){
             panic("could not borrow a reference to the NFTMethodsCapability interface")
 
         actorResource.createNewBrand(
-         brandName: brandName,
+        brandName: brandName,
         data: data)
         log("ok")
     }
