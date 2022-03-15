@@ -132,6 +132,8 @@ pub contract TriQueta {
             pre {
                 dropId != nil : "invalid drop id"
                 TriQueta.allDrops[dropId] != nil: "drop id does not exist"
+                getCurrentBlock().timestamp < TriQueta.allDrops[dropId]!.startDate: "Drop sale is started"
+
             }
 
             TriQueta.allDrops.remove(key: dropId)
