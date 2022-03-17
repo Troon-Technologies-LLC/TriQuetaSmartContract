@@ -583,12 +583,12 @@ describe("Transactions", () => {
     const signers = [Charlie];
     // Generate addressMap from import statements
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTWhiteLabelContract = await getContractAddress("NFTWhiteLabelContract");
-    const DropWhiteLabelContract = await getContractAddress("DropWhiteLabelContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+    const TriQueta = await getContractAddress("TriQueta");
     const addressMap = {
       NonFungibleToken,
-      NFTWhiteLabelContract,
-      DropWhiteLabelContract,
+      TriQuetaNFT,
+      TriQueta,
     };
 
     let code = await getTransactionCode({
@@ -623,12 +623,12 @@ describe("Transactions", () => {
     const signers = [Charlie];
     // Generate addressMap from import statements
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
-    const NFTWhiteLabelContract = await getContractAddress("NFTWhiteLabelContract");
-    const DropWhiteLabelContract = await getContractAddress("DropWhiteLabelContract");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+    const TriQueta = await getContractAddress("TriQueta");
     const addressMap = {
       NonFungibleToken,
-      NFTWhiteLabelContract,
-      DropWhiteLabelContract,
+      TriQuetaNFT,
+      TriQueta,
     };
 
     let code = await getTransactionCode({
