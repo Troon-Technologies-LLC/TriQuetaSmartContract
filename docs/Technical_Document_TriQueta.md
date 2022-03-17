@@ -15,6 +15,7 @@ A common order of creating Drop would be
 - Create new Drop with `transactions/createDrop` using Admin Account.
 - update Drop `transactions/updateDrop.cdc` using Admin Account.
 - Reserve mints any address with `transactions/reserveUsermints.cdc` using User Account.
+- Remove reserve mints any address with `transactions/removeReserveMints.cdc` using User Account.
 - Purchase NFT and send to any address with `transactions/purchaseDrop` using Admin Account.
 - Purchase NFT with flow and send to any address with `transactions/purchaseNFTWithFlow` using Admin Account and User Account.
 - Remove Drop `transactions/RemoveDrop.cdc` using Admin Account.
@@ -76,6 +77,13 @@ To Reserve Mints with any Drop we have to give the following fields:
 - templateId
 - receiptAddress(Address which will recieve NFT)
 - mintNumber(Mint Number of Template)
+
+## Instruction of Remove Reserve Mints
+
+To Reserve Mints with any Drop we have to give the following fields:
+
+- dropId
+- receiptAddress(Address which will recieve NFT)
 
 ## Instructions for Purchase Drop
 

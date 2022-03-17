@@ -226,6 +226,20 @@ pub contract TriQueta {
             emit MintNumberReserved(dropId: dropId, receiptAddress: receiptAddress)
         }
 
+        pub fun removeReservedUserNFT(dropId: UInt64, receiptAddress:Address): Bool{
+            pre {
+                dropId != nil : "invalid drop id"
+                receiptAddress !=nil: "invalid receipt Address"
+                TriQueta.allDrops[dropId] != nil: "drop id does not exist"
+                TriQueta.allReserved[dropId] != nil: "drop id does not exist in reserved"
+                TriQueta.allReserved[dropId]![receiptAddress] != nil: "given address does not exist in reserved"
+                TriQueta.allReserved[dropId]![receiptAddress]!.user_address["mintNumber"]! > 0: "mint for this address is not reserved"
+            }
+            let mintsData = TriQueta.allReserved[dropId]![receiptAddress]!.user_address.remove(key: "mintNumber")
+            let reserveData = TriQueta.allReserved[dropId]!.remove(key: receiptAddress)
+            return true
+         }
+
         pub fun getUserMintsByDropId(dropId: UInt64, receiptAddress:Address): Bool{
             pre {
                 dropId != nil : "invalid drop id"

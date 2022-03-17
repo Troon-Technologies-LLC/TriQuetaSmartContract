@@ -572,6 +572,86 @@ describe("Transactions", () => {
     expect(updatedBalance1.toString()).toBe(userOne);
     expect(updatedBalance2.toString()).toBe(userTwo);
   });
+  //remove user mints testcase
+  //reserve mints for dave
+  test("test transaction  reserve user mints", async () => {
+    const name = "reserveUsermints";
+    // Import participating accounts
+    const Charlie = await getAccountAddress("Charlie");
+    const Dave = await getAccountAddress("Dave");
+    // Set transaction signers
+    const signers = [Charlie];
+    // Generate addressMap from import statements
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const NFTWhiteLabelContract = await getContractAddress("NFTWhiteLabelContract");
+    const DropWhiteLabelContract = await getContractAddress("DropWhiteLabelContract");
+    const addressMap = {
+      NonFungibleToken,
+      NFTWhiteLabelContract,
+      DropWhiteLabelContract,
+    };
+
+    let code = await getTransactionCode({
+      name,
+      addressMap,
+    });
+
+    const args = [1, 1, Dave, 1];
+
+    let txResult;
+    try {
+      txResult = await sendTransaction({
+        code,
+        signers,
+        args,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    console.log("tx Result", txResult);
+    console.log("reserved Dave nfts");
+    expect(txResult.errorMessage).toBe(undefined);
+  });
+  //remove mints of dave
+
+  test("test transaction  rremove eserve user mints", async () => {
+    const name = "removeReserveMints";
+    // Import participating accounts
+    const Charlie = await getAccountAddress("Charlie");
+    const Dave = await getAccountAddress("Dave");
+    // Set transaction signers
+    const signers = [Charlie];
+    // Generate addressMap from import statements
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const NFTWhiteLabelContract = await getContractAddress("NFTWhiteLabelContract");
+    const DropWhiteLabelContract = await getContractAddress("DropWhiteLabelContract");
+    const addressMap = {
+      NonFungibleToken,
+      NFTWhiteLabelContract,
+      DropWhiteLabelContract,
+    };
+
+    let code = await getTransactionCode({
+      name,
+      addressMap,
+    });
+
+    const args = [1, Dave];
+
+    let txResult;
+    try {
+      txResult = await sendTransaction({
+        code,
+        signers,
+        args,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    console.log("tx Result", txResult);
+    console.log("remove the Dave nfts");
+    expect(txResult.errorMessage).toBe(undefined);
+  });
 });
 describe("Scripts", () => {
   test("get user NFT", async () => {
