@@ -13,6 +13,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
     pub event BrandUpdated(brandId: UInt64, brandName: String, author: Address, data:{String: String})
     pub event SchemaCreated(schemaId: UInt64, schemaName: String, author: Address)
     pub event TemplateCreated(templateId: UInt64, brandId: UInt64, schemaId: UInt64, maxSupply: UInt64)
+    pub event TemplateRemoved(templateId: UInt64)
 
     // Paths
     pub let AdminResourceStoragePath: StoragePath
@@ -303,6 +304,8 @@ pub contract TriQuetaNFT: NonFungibleToken {
         pub fun createSchema(schemaName: String, format: {String: SchemaType})
         pub fun createTemplate(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct})
         pub fun mintNFT(templateId: UInt64, account: Address)
+        pub fun removeTemplateById(templateId: UInt64): Bool
+
     }
     
     //AdminCapability to add whiteListedAccounts
@@ -432,6 +435,18 @@ pub contract TriQuetaNFT: NonFungibleToken {
                 ?? panic("Could not get receiver reference to the NFT Collection")
             var newNFT: @NFT <- create NFT(templateID: templateId, mintNumber: TriQuetaNFT.allTemplates[templateId]!.incrementIssuedSupply())
             recipientCollection.deposit(token: <-newNFT)
+        }
+
+        //method to remove template by id
+        pub fun removeTemplateById(templateId: UInt64): Bool {
+            pre {
+                templateId != nil: "invalid template id"
+                TriQuetaNFT.allTemplates[templateId]!=nil: "template id does not exist"
+                TriQuetaNFT.allTemplates[templateId]!.issuedSupply == 0: "could not remove template with given id"   
+            }
+            let mintsData =  TriQuetaNFT.allTemplates.remove(key: templateId)
+            emit TemplateRemoved(templateId: templateId)
+            return true
         }
 
         init() {
