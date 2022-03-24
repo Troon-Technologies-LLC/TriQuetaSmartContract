@@ -26,8 +26,10 @@ pub contract TriQueta {
     access(contract) let adminRef: Capability<&{TriQuetaNFT.NFTMethodsCapability}>
     // Variable size dictionary of Drop structs
     access(self) var allDrops: {UInt64: Drop}
-    // The capability that is used for calling the admin functions 
+    // the dictionary to store reserve user mints with address
     access(contract) var allReserved: {UInt64: {Address:RserveMints}}
+    // the dictionary to store mints for drop
+     access(contract) var reservedMints: {UInt64: UInt64}
     // -----------------------------------------------------------------------
     // TriQueta contract-level Composite Type definitions
     // -----------------------------------------------------------------------
@@ -165,6 +167,8 @@ pub contract TriQueta {
             }
             let mintsData = TriQueta.allReserved[dropId]![receiptAddress]!.user_address.remove(key: "mintNumber")
             let reserveData = TriQueta.allReserved[dropId]!.remove(key: receiptAddress)
+            let mints = TriQueta.reservedMints[dropId]!
+            TriQueta.reservedMints[dropId] = mints.saturatingSubtract(mintNumbers)
 
             emit DropPurchased(dropId: dropId,templateId: templateId, mintNumbers: mintNumbers, receiptAddress: receiptAddress)
         }
@@ -201,6 +205,8 @@ pub contract TriQueta {
             }
             let mintsData = TriQueta.allReserved[dropId]![receiptAddress]!.user_address.remove(key: "mintNumber")
             let reserveData = TriQueta.allReserved[dropId]!.remove(key: receiptAddress)
+            let mints = TriQueta.reservedMints[dropId]!
+            TriQueta.reservedMints[dropId] = mints.saturatingSubtract(mintNumbers)
 
             emit DropPurchasedWithFlow(dropId: dropId, templateId: templateId, mintNumbers: mintNumbers, receiptAddress: receiptAddress,price: price)
         }
@@ -219,14 +225,25 @@ pub contract TriQueta {
             let templateData = TriQuetaNFT.getTemplateById(templateId: templateId)
             let mintAvailble = templateData.maxSupply
             let issuedSupply = templateData.issuedSupply
-            assert(issuedSupply + mintNumbers < mintAvailble, message: "mints not available")
+            assert(issuedSupply + mintNumbers <= mintAvailble, message: "mints not available")
+            let mintdata =  TriQueta.reservedMints[dropId]
+            if  mintdata == nil {
+                assert(issuedSupply + mintNumbers <= mintAvailble, message: "mints reached")
+                TriQueta.reservedMints[dropId] = mintNumbers
+            }
+            else{
+                let mints =  TriQueta.reservedMints[dropId]!
+                assert(issuedSupply + mints <= mintAvailble, message: "mints reached")
+                assert(issuedSupply + mints + mintNumbers  <= mintAvailble, message: "mints not available") 
+                TriQueta.reservedMints[dropId] = mints.saturatingAdd(mintNumbers)
+            }
             let userData: {String : UInt64} = {"mintNumber": mintNumbers}
             let data = TriQueta.RserveMints(user_address: userData)
             TriQueta.allReserved.insert(key: dropId, {receiptAddress: data})
             emit MintNumberReserved(dropId: dropId, receiptAddress: receiptAddress)
         }
 
-        pub fun removeReservedUserNFT(dropId: UInt64, receiptAddress:Address): Bool{
+        pub fun removeReservedUserNFT(dropId: UInt64, receiptAddress:Address, mintNumbers: UInt64): Bool{
             pre {
                 dropId != nil : "invalid drop id"
                 receiptAddress !=nil: "invalid receipt Address"
@@ -237,6 +254,8 @@ pub contract TriQueta {
             }
             let mintsData = TriQueta.allReserved[dropId]![receiptAddress]!.user_address.remove(key: "mintNumber")
             let reserveData = TriQueta.allReserved[dropId]!.remove(key: receiptAddress)
+            let mints = TriQueta.reservedMints[dropId]!
+            TriQueta.reservedMints[dropId] = mints.saturatingSubtract(mintNumbers)
             return true
          }
 
@@ -275,6 +294,7 @@ pub contract TriQueta {
         // Initialize contract fields
         self.allDrops = {}
         self.allReserved = {}
+        self.reservedMints = {}
 
         self.DropAdminStoragePath = /storage/TriQuetaDropAdmin
         // get the private capability to the admin resource interface

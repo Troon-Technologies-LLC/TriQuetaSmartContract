@@ -1,6 +1,6 @@
 import TriQueta from 0xc864a46475249419
 
-transaction (DropId: UInt64, Creator: Address){
+transaction (DropId: UInt64, Creator: Address, mintNumbers: UInt64){
    let adminRef: &TriQueta.DropAdmin
     prepare(acct: AuthAccount) {
         self.adminRef = acct.borrow<&TriQueta.DropAdmin>(from: TriQueta.DropAdminStoragePath)
@@ -8,6 +8,6 @@ transaction (DropId: UInt64, Creator: Address){
     }
 
     execute {
-        self.adminRef.removeReservedUserNFT(dropId: DropId, receiptAddress: Creator)
+        self.adminRef.removeReservedUserNFT(dropId: DropId, receiptAddress: Creator, mintNumbers: mintNumbers)
     }
 }
