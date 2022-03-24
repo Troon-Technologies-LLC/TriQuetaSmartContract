@@ -84,6 +84,7 @@ To Reserve Mints with any Drop we have to give the following fields:
 
 - dropId
 - receiptAddress(Address which will recieve NFT)
+- mintNumber(Mint Number of Template)
 
 ## Instructions for Purchase Drop
 
