@@ -26,9 +26,9 @@ pub contract TriQueta {
     access(contract) let adminRef: Capability<&{TriQuetaNFT.NFTMethodsCapability}>
     // Variable size dictionary of Drop structs
     access(self) var allDrops: {UInt64: Drop}
-    // the dictionary to store reserve user mints with address
+    // The dictionary to store reserve user mints with address
     access(contract) var allReserved: {UInt64: {Address:RserveMints}}
-    // the dictionary to store mints for drop
+    // The dictionary to store mints for drop
      access(contract) var reservedMints: {UInt64: UInt64}
     // -----------------------------------------------------------------------
     // TriQueta contract-level Composite Type definitions
