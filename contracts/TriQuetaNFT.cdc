@@ -507,7 +507,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
     } 
 
     //method to get nft-data by id
-    pub fun getTriQuetaNFTDataById(nftId: UInt64): TriQuetaNFTData {
+    pub fun getNFTDataById(nftId: UInt64): TriQuetaNFTData {
         pre {
             TriQuetaNFT.allNFTs[nftId]!=nil:"nft id does not exist"
         }
