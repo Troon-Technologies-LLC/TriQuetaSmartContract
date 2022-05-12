@@ -6,9 +6,9 @@
 		}
 	},
 	"contracts": {
-		"NFTContract": "./NFTContract.cdc",
-		"TriQueta": "./TriQueta.cdc",
-		"NonFungibleToken": "./NonFungibleToken.cdc"
+		"TriQuetaNFT": "./contracts/TriQuetaNFT.cdc",
+		"TriQueta": "./contracts/TriQueta.cdc",
+		"NonFungibleToken": "./contracts/NonFungibleToken.cdc"
 	},
 	"networks": {
 		"emulator": "127.0.0.1:3569",
@@ -20,33 +20,30 @@
 			"address": "f8d6e0586b0a20c7",
 			"key": "fc2192571f18225dde71d611cb5f022724a0038ccc111fe587bd1868616b971e"
 		},
-		"testnet-new-NFTContract": {
-			"address": "0xb8b8bf394da0ff54",
+		"TriQuetaNFT": {
+			"address": "0x3a57788afdda9ea7",
 			"key": {
 				"type": "hex",
 				"index": 0,
 				"signatureAlgorithm": "ECDSA_secp256k1",
 				"hashAlgorithm": "SHA3_256",
-				"privateKey": "9301982df7a1c77db94af43e062ceb3300d3e038fcd82ee7abb1897d98ad7d1f"
+				"privateKey": "99fc5f6ee669b2c576c8095ae49d2d5115abb74b956ebd37116f0f3d1ffe9860"
 			  }
 		}, 
-		"testnet-new-NowWhereContract": {
-			"address": "0xab79c34632e5a7af",
+		"TriQueta": {
+			"address": "0xc864a46475249419",
 			"key": {
 				"type": "hex",
 				"index": 0,
 				"signatureAlgorithm": "ECDSA_secp256k1",
 				"hashAlgorithm": "SHA3_256",
-				"privateKey": "9301982df7a1c77db94af43e062ceb3300d3e038fcd82ee7abb1897d98ad7d1f"
+				"privateKey": "804199d77511a58d966ceb56c18b9e5fd221a420652eeb83219153c16b86bc9c"
 			  }
 		}
 	},
 	"deployments": {
 		"testnet": {
-			"testnet-new-NFTContract": ["NFTContract"]
-		  },
-		  "emulator": {
-			  "emulator-account": ["TriQueta"]
+			"TriQuetaNFT": ["TriQuetaNFT"]
 		  }
 	}
 }
