@@ -39,7 +39,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
     access(self) var allBrands: {UInt64: Brand}
     access(self) var allSchemas: {UInt64: Schema}
     access(self) var allTemplates: {UInt64: Template}
-    access(self) var allNFTs: {UInt64: TriQuetaNFTData}
+    access(self) var allNFTs: {UInt64: NFTData}
 
     // Accounts ability to add capability
     access(self) var whiteListedAccounts: [Address]
@@ -196,7 +196,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
     }
 
     // A structure that link template and mint-no of NFT
-    pub struct TriQuetaNFTData {
+    pub struct NFTData {
         pub let templateID: UInt64
         pub let mintNumber: UInt64
 
@@ -210,12 +210,12 @@ pub contract TriQuetaNFT: NonFungibleToken {
     // 
     pub resource NFT: NonFungibleToken.INFT {
         pub let id: UInt64
-        access(contract) let data: TriQuetaNFTData
+        access(contract) let data: NFTData
 
         init(templateID: UInt64, mintNumber: UInt64) {
             TriQuetaNFT.totalSupply = TriQuetaNFT.totalSupply + 1
             self.id = TriQuetaNFT.totalSupply
-            TriQuetaNFT.allNFTs[self.id] = TriQuetaNFTData(templateID: templateID, mintNumber: mintNumber)
+            TriQuetaNFT.allNFTs[self.id] = NFTData(templateID: templateID, mintNumber: mintNumber)
             self.data = TriQuetaNFT.allNFTs[self.id]!
             emit NFTMinted(nftId: self.id, templateId: templateID, mintNumber: mintNumber)
         }
@@ -304,7 +304,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
         pub fun createSchema(schemaName: String, format: {String: SchemaType})
         pub fun createTemplate(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct})
         pub fun mintNFT(templateId: UInt64, account: Address)
-        pub fun removeTemplateById(templateId: UInt64): Bool
+        pub fun removeTemplateById(templateId: UInt64)
 
     }
     
@@ -438,15 +438,16 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
 
         //method to remove template by id
-        pub fun removeTemplateById(templateId: UInt64): Bool {
+        pub fun removeTemplateById(templateId: UInt64) {
             pre {
+                self.capability != nil: "I don't have the special capability :("
+                TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
                 templateId != nil: "invalid template id"
                 TriQuetaNFT.allTemplates[templateId]!=nil: "template id does not exist"
-                TriQuetaNFT.allTemplates[templateId]!.issuedSupply == 0: "could not remove template with given id"   
+                TriQuetaNFT.allTemplates[templateId]!.issuedSupply == 0: "could not remove template with given id"  
             }
-            let mintsData =  TriQuetaNFT.allTemplates.remove(key: templateId)
+            TriQuetaNFT.allTemplates.remove(key: templateId)
             emit TemplateRemoved(templateId: templateId)
-            return true
         }
 
         init() {
@@ -507,7 +508,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
     } 
 
     //method to get nft-data by id
-    pub fun getNFTDataById(nftId: UInt64): TriQuetaNFTData {
+    pub fun getNFTDataById(nftId: UInt64): NFTData {
         pre {
             TriQuetaNFT.allNFTs[nftId]!=nil:"nft id does not exist"
         }
