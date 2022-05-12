@@ -6,7 +6,6 @@ pub contract TriQuetaNFT: NonFungibleToken {
     pub event ContractInitialized()
     pub event Withdraw(id: UInt64, from: Address?)
     pub event Deposit(id: UInt64, to: Address?)
-    pub event NFTBorrowed(id: UInt64)
     pub event NFTDestroyed(id: UInt64)
     pub event NFTMinted(nftId: UInt64, templateId: UInt64, mintNumber: UInt64)
     pub event BrandCreated(brandId: UInt64, brandName: String, author: Address, data:{String: String})
