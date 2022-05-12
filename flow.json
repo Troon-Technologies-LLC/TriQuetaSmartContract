@@ -20,7 +20,7 @@
 			"address": "f8d6e0586b0a20c7",
 			"key": "fc2192571f18225dde71d611cb5f022724a0038ccc111fe587bd1868616b971e"
 		},
-		"TriQuetaNFT": {
+		"TriQuetaNFTold": {
 			"address": "0x3a57788afdda9ea7",
 			"key": {
 				"type": "hex",
@@ -30,7 +30,7 @@
 				"privateKey": "99fc5f6ee669b2c576c8095ae49d2d5115abb74b956ebd37116f0f3d1ffe9860"
 			  }
 		}, 
-		"TriQueta": {
+		"TriQuetaold": {
 			"address": "0xc864a46475249419",
 			"key": {
 				"type": "hex",
@@ -39,11 +39,41 @@
 				"hashAlgorithm": "SHA3_256",
 				"privateKey": "804199d77511a58d966ceb56c18b9e5fd221a420652eeb83219153c16b86bc9c"
 			  }
+		},
+		"TriQuetaNFTold1": {
+			"address": "0x16d33e23166361e7",
+			"key": {
+				"type": "hex",
+				"index": 0,
+				"signatureAlgorithm": "ECDSA_secp256k1",
+				"hashAlgorithm": "SHA3_256",
+				"privateKey": "46d1dd3bf7e9a5bdbce0e7cd700e666b6558a91345991d3b1071ba4442dc0cdc"
+			  }
+		}, 
+		"TriQuetaNFT": {
+			"address": "0x118cabc98306f7d1",
+			"key": {
+				"type": "hex",
+				"index": 0,
+				"signatureAlgorithm": "ECDSA_secp256k1",
+				"hashAlgorithm": "SHA3_256",
+				"privateKey": "66e56bf0bba3b3a5ac03765d56fb654b2ca314e5e61c47c5fddee43c22b5c1cb"
+			  }
+		}, 
+		"TriQueta": {
+			"address": "0xe175fb8178dc39c3",
+			"key": {
+				"type": "hex",
+				"index": 0,
+				"signatureAlgorithm": "ECDSA_secp256k1",
+				"hashAlgorithm": "SHA3_256",
+				"privateKey": "308f98c1bfbce120fabe44aa8a15bb06979d6c20c331fd401c8072e187e7cbc6"
+			  }
 		}
 	},
 	"deployments": {
 		"testnet": {
-			"TriQuetaNFT": ["TriQuetaNFT"]
+			"TriQueta": ["TriQueta"]
 		  }
 	}
 }
