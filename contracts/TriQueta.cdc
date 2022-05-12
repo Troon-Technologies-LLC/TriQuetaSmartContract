@@ -18,18 +18,12 @@ pub contract TriQueta {
     pub event DropRemoved(dropId: UInt64)
     // Emitted when a new Drop is created
     pub event DropUpdated(dropId: UInt64, startDate: UFix64, endDate: UFix64)
-    // Emitted when a user mintNumber is reserved
-    pub event MintNumberReserved(dropId: UInt64, receiptAddress: Address)
     // Contract level paths for storing resources
     pub let DropAdminStoragePath: StoragePath
     // The capability that is used for calling the admin functions 
     access(contract) let adminRef: Capability<&{TriQuetaNFT.NFTMethodsCapability}>
     // Variable size dictionary of Drop structs
     access(self) var allDrops: {UInt64: Drop}
-    // The dictionary to store reserve user mints with address
-    access(contract) var allReserved: {UInt64: {Address:RserveMints}}
-    // The dictionary to store mints for drop
-     access(contract) var reservedMints: {UInt64: UInt64}
     // -----------------------------------------------------------------------
     // TriQueta contract-level Composite Type definitions
     // -----------------------------------------------------------------------
@@ -90,20 +84,6 @@ pub contract TriQueta {
             emit DropUpdated(dropId: self.dropId, startDate: self.startDate, endDate: self.endDate)
         }
     }
-
-    // RserveMints is a struct 
-    pub struct RserveMints {
-        pub let user_address: {String: UInt64}
-
-        init(user_address: {String: UInt64}) {
-            
-            self.user_address = user_address
-        }
-        pub fun addUserMint(mintNumber: String, mintNumberValue :UInt64){
-            self.user_address.insert(key: mintNumber, mintNumberValue)
-        }
-    }
-    
 
     // DropAdmin
     // This is the main resource to manage the NFTs that they are creating and purchasing.
@@ -183,9 +163,6 @@ pub contract TriQueta {
                 TriQueta.allDrops[dropId]!.startDate <= getCurrentBlock().timestamp: "drop not started yet"
                 TriQueta.allDrops[dropId]!.endDate > getCurrentBlock().timestamp: "drop already ended"
                 TriQueta.allDrops[dropId]!.templates[templateId] != nil: "template id does not exist"
-                TriQueta.allReserved[dropId] != nil: "drop id does not exist in reserved"
-                TriQueta.allReserved[dropId]![receiptAddress] != nil: "given address does not exist in reserved"
-                TriQueta.allReserved[dropId]![receiptAddress]!.user_address["mintNumber"]! > 0: "mint for this address is not reserved"
             }
 
             var template = TriQuetaNFT.getTemplateById(templateId: templateId)
@@ -195,10 +172,6 @@ pub contract TriQueta {
                 TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress)
                 i = i + 1
             }
-            let mintsData = TriQueta.allReserved[dropId]![receiptAddress]!.user_address.remove(key: "mintNumber")
-            let reserveData = TriQueta.allReserved[dropId]!.remove(key: receiptAddress)
-            let mints = TriQueta.reservedMints[dropId]!
-            TriQueta.reservedMints[dropId] = mints.saturatingSubtract(mintNumbers)
 
             emit DropPurchased(dropId: dropId,templateId: templateId, mintNumbers: mintNumbers, receiptAddress: receiptAddress)
         }
@@ -217,9 +190,6 @@ pub contract TriQueta {
                 TriQueta.allDrops[dropId]!.startDate <= getCurrentBlock().timestamp: "drop not started yet"
                 TriQueta.allDrops[dropId]!.endDate > getCurrentBlock().timestamp: "drop already ended"
                 TriQueta.allDrops[dropId]!.templates[templateId] != nil: "template id does not exist"
-                TriQueta.allReserved[dropId] != nil: "drop id does not exist in reserved"
-                TriQueta.allReserved[dropId]![receiptAddress] != nil: "given address does not exist in reserved"
-                TriQueta.allReserved[dropId]![receiptAddress]!.user_address["mintNumber"]! > 0: "mint for this address is not reserved"
             }
                 
             let vaultRef = self.ownerVault!.borrow()
@@ -233,73 +203,8 @@ pub contract TriQueta {
                 TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress)
                 i = i + 1
             }
-            let mintsData = TriQueta.allReserved[dropId]![receiptAddress]!.user_address.remove(key: "mintNumber")
-            let reserveData = TriQueta.allReserved[dropId]!.remove(key: receiptAddress)
-            let mints = TriQueta.reservedMints[dropId]!
-            TriQueta.reservedMints[dropId] = mints.saturatingSubtract(mintNumbers)
 
             emit DropPurchasedWithFlow(dropId: dropId, templateId: templateId, mintNumbers: mintNumbers, receiptAddress: receiptAddress,price: price)
-        }
-
-        pub fun ReserveUserNFT(dropId: UInt64, templateId: UInt64, receiptAddress: Address, mintNumbers: UInt64){
-            pre {
-                mintNumbers > 0: "mint number must be greater than zero"
-                mintNumbers <= 10: "mint numbers must be less than ten"
-                dropId != nil : "invalid drop id"
-                receiptAddress !=nil: "invalid receipt Address"
-                TriQueta.allDrops[dropId] != nil: "drop id does not exist"
-                TriQueta.allDrops[dropId]!.startDate <= getCurrentBlock().timestamp: "drop not started yet"
-                TriQueta.allDrops[dropId]!.endDate > getCurrentBlock().timestamp: "drop already ended"
-            }
-
-            let templateData = TriQuetaNFT.getTemplateById(templateId: templateId)
-            let mintAvailble = templateData.maxSupply
-            let issuedSupply = templateData.issuedSupply
-            assert(issuedSupply + mintNumbers <= mintAvailble, message: "mints not available")
-            let mintdata =  TriQueta.reservedMints[dropId]
-            if  mintdata == nil {
-                assert(issuedSupply + mintNumbers <= mintAvailble, message: "mints reached")
-                TriQueta.reservedMints[dropId] = mintNumbers
-            }
-            else{
-                let mints =  TriQueta.reservedMints[dropId]!
-                assert(issuedSupply + mints <= mintAvailble, message: "mints reached")
-                assert(issuedSupply + mints + mintNumbers  <= mintAvailble, message: "mints not available") 
-                TriQueta.reservedMints[dropId] = mints.saturatingAdd(mintNumbers)
-            }
-            let userData: {String : UInt64} = {"mintNumber": mintNumbers}
-            let data = TriQueta.RserveMints(user_address: userData)
-            TriQueta.allReserved.insert(key: dropId, {receiptAddress: data})
-            emit MintNumberReserved(dropId: dropId, receiptAddress: receiptAddress)
-        }
-
-        pub fun removeReservedUserNFT(dropId: UInt64, receiptAddress:Address, mintNumbers: UInt64){
-            pre {
-                dropId != nil : "invalid drop id"
-                receiptAddress !=nil: "invalid receipt Address"
-                TriQueta.allDrops[dropId] != nil: "drop id does not exist"
-                TriQueta.allReserved[dropId] != nil: "drop id does not exist in reserved"
-                TriQueta.allReserved[dropId]![receiptAddress] != nil: "given address does not exist in reserved"
-                TriQueta.allReserved[dropId]![receiptAddress]!.user_address["mintNumber"]! > 0: "mint for this address is not reserved"
-            }
-            let mintsData = TriQueta.allReserved[dropId]![receiptAddress]!.user_address.remove(key: "mintNumber")
-            let reserveData = TriQueta.allReserved[dropId]!.remove(key: receiptAddress)
-            let mints = TriQueta.reservedMints[dropId]!
-            TriQueta.reservedMints[dropId] = mints.saturatingSubtract(mintNumbers)
-         }
-
-        pub fun getUserMintsByDropId(dropId: UInt64, receiptAddress:Address): Bool{
-            pre {
-                dropId != nil : "invalid drop id"
-                receiptAddress !=nil: "invalid receipt Address"
-                TriQueta.allDrops[dropId] != nil: "drop id does not exist"
-                TriQueta.allReserved[dropId] != nil: "drop id does not exist in reserved"
-                TriQueta.allReserved[dropId]![receiptAddress] != nil: "given address does not exist in reserved"
-                TriQueta.allReserved[dropId]![receiptAddress]!.user_address["mintNumber"]! > 0: "mint for this address is not reserved"
-            }
-            let reserveData = TriQueta.allReserved[dropId]!
-            let userMintData = reserveData[receiptAddress]!.user_address["mintNumber"]
-            return userMintData! > 0
         }
 
         init(){
@@ -322,8 +227,6 @@ pub contract TriQueta {
     init() {
         // Initialize contract fields
         self.allDrops = {}
-        self.allReserved = {}
-        self.reservedMints = {}
 
         self.DropAdminStoragePath = /storage/TriQuetaDropAdmin
         // get the private capability to the admin resource interface
