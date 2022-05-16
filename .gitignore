@@ -103,4 +103,11 @@ dist
 # TernJS port file
 .tern-port
 
+# Ignore the root directory
+.vscode
+~/.vscode-root
+node_modules/
+Credentials.md
+flow.json
 package-lock.json
+.env
