@@ -31,11 +31,6 @@ For more details of NFTContract use this link:
 
 [see Documentation](docs/Technical_Document.md)
 
-## Test Cases (using Golang)
-
-[see Documentation](test/go/README.md)
-
 ## Test Cases (using Javascript)
 
 [see Documentation](test/js/README.md)
-

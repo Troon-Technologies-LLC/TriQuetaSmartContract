@@ -1,4 +1,4 @@
-import TriQueta from 0xc864a46475249419
+import TriQueta from 0xe175fb8178dc39c3
 import FungibleToken from 0x9a0766d93b6608b7
 import FlowToken from 0x7e60df042a9c0868    
 
