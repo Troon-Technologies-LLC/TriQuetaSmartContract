@@ -6,7 +6,6 @@ pub contract TriQuetaNFT: NonFungibleToken {
     pub event ContractInitialized()
     pub event Withdraw(id: UInt64, from: Address?)
     pub event Deposit(id: UInt64, to: Address?)
-    pub event NFTBorrowed(id: UInt64)
     pub event NFTDestroyed(id: UInt64)
     pub event NFTMinted(nftId: UInt64, templateId: UInt64, mintNumber: UInt64)
     pub event BrandCreated(brandId: UInt64, brandName: String, author: Address, data:{String: String})
@@ -39,7 +38,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
     access(self) var allBrands: {UInt64: Brand}
     access(self) var allSchemas: {UInt64: Schema}
     access(self) var allTemplates: {UInt64: Template}
-    access(self) var allNFTs: {UInt64: TriQuetaNFTData}
+    access(self) var allNFTs: {UInt64: NFTData}
 
     // Accounts ability to add capability
     access(self) var whiteListedAccounts: [Address]
@@ -196,7 +195,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
     }
 
     // A structure that link template and mint-no of NFT
-    pub struct TriQuetaNFTData {
+    pub struct NFTData {
         pub let templateID: UInt64
         pub let mintNumber: UInt64
 
@@ -210,12 +209,12 @@ pub contract TriQuetaNFT: NonFungibleToken {
     // 
     pub resource NFT: NonFungibleToken.INFT {
         pub let id: UInt64
-        access(contract) let data: TriQuetaNFTData
+        access(contract) let data: NFTData
 
         init(templateID: UInt64, mintNumber: UInt64) {
             TriQuetaNFT.totalSupply = TriQuetaNFT.totalSupply + 1
             self.id = TriQuetaNFT.totalSupply
-            TriQuetaNFT.allNFTs[self.id] = TriQuetaNFTData(templateID: templateID, mintNumber: mintNumber)
+            TriQuetaNFT.allNFTs[self.id] = NFTData(templateID: templateID, mintNumber: mintNumber)
             self.data = TriQuetaNFT.allNFTs[self.id]!
             emit NFTMinted(nftId: self.id, templateId: templateID, mintNumber: mintNumber)
         }
@@ -507,7 +506,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
     } 
 
     //method to get nft-data by id
-    pub fun getNFTDataById(nftId: UInt64): TriQuetaNFTData {
+    pub fun getNFTDataById(nftId: UInt64): NFTData {
         pre {
             TriQuetaNFT.allNFTs[nftId]!=nil:"nft id does not exist"
         }
