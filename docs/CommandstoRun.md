@@ -1,4 +1,4 @@
-## How to Deploy and Test the Top Shot Contract in VSCode
+## How to Deploy and Test the TriQueta Contract in VSCode
 
 The first step for using any smart contract is deploying it to the blockchain,
 or emulator in our case. Do these commands in vscode.
@@ -6,14 +6,14 @@ See the [vscode extension instructions](https://docs.onflow.org/docs/visual-stud
 to learn how to use it.
 
 1.  Start the emulator with the `Run emulator` vscode command.
-2.  Open the `NonFungibleToken.cdc` file from the [flow-nft repo](https://github.com/onflow/flow-nft/blob/master/contracts/NonFungibleToken.cdc) and the `NFTContract.cdc` file.
+2.  Open the `NonFungibleToken.cdc` file from the [flow-nft repo](https://github.com/onflow/flow-nft/blob/master/contracts/NonFungibleToken.cdc) and the `TriQuetaNFT.cdc` file.
 3.  In `NonFungibleToken.cdc`, click the `deploy contract to account`
     above the `Dummy` contract at the bottom of the file to deploy it.
     This also deploys the `NonFungibleToken` interface.
-4.  In `NFTContract.cdc`, make sure it imports `NonFungibleToken` from
+4.  In `TriQuetaNFT.cdc`, make sure it imports `NonFungibleToken` from
     the account you deployed it to.
 5.  Click the `deploy contract to account` button that appears over the
-    `NFTContract` contract declaration to deploy it to a new account.
+    `TriQuetaNFT` contract declaration to deploy it to a new account.
 
 The above steps deploy the contract code and it will initlialize the
 contract storage variables.
@@ -26,9 +26,9 @@ If you are running these transactions manually in the Flow Playground or
 vscode extension, you will need to remove the transaction arguments and
 hard code the values that they are used for.
 
-## NFTContract Addresses
+## TriQuetaNFT Addresses
 
-`NFTContract.cdc`: This is the main NFTContract smart contract that defines
+`TriQuetaNFT.cdc`: This is the main TriQuetaNFT smart contract that defines
 the core functionality of the NFT.
 
 | Network | Contract Address     |
@@ -46,13 +46,13 @@ A common order of creating NFT would be
 5. Create Mint of Templates and transfer to Address(having Setup Account) with `transactions/mintTemplate.cdc`
 
 You can also see the scripts in `transactions/scripts.cdc` to see how information
-can be read from the NFTContract.
+can be read from the TriQuetaNFT.
 
-## NFTContract Events
+## TriQuetaNFT Events
 
 - ` pub event ContractInitialized()`
 
-  This event is emitted when the `NFTContract` will be initialized.
+  This event is emitted when the `TriQuetaNFT` will be initialized.
 
 ## Event for Brand
 
@@ -80,11 +80,11 @@ Emitted when a new Brand will be created and added to the smart Contract.
 
 ### Creating the contract and minting a token
 
-flow project start-emulator
+`flow project start-emulator`
 
-flow project deploy
+`flow project deploy`
 
-flow keys generate
+`flow keys generate`
 
 ## Create Template argument is max supply
 
@@ -93,11 +93,3 @@ flow keys generate
 ## Mint NFT argument template ID
 
 `flow transactions send transactions/mint.cdc --arg UInt64:2 --network testnet --signer testnet-account`
-
-## Command to lock template argument template ID
-
-`flow transactions send transactions/locktemplate.cdc --arg UInt64:1 --network testnet --signer testnet-account`
-
-## Command to unlock template argument template ID
-
-`flow transactions send transactions/unlocktemplate.cdc --arg UInt64:1 --network testnet --signer testnet-account`

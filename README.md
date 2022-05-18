@@ -18,7 +18,7 @@ TriQuetaContract is a drop contract that is used for the purpose to release or s
 
 [see Documentation](docs/Technical_Document_TriQueta.md)
 
-## Technical Documentation of NFTContract (For more technical details please use this link)
+## Technical Documentation of TriQuetaNFTContract (For more technical details please use this link)
 
 [see Documentation](docs/Technical_Document.md)
 
