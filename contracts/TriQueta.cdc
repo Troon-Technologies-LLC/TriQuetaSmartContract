@@ -50,41 +50,29 @@ pub contract TriQueta {
         // start-date only updated if sale is not started yet
         // end-date can updated any-way, Admin need to check if templates are soldout than no need to active that drop 
         // templates can be updated, if sale is not started yet
-        pub fun updateDrop(startDate: UFix64?, endDate: UFix64?, templates: {UInt64: AnyStruct}?){
+       pub fun updateDrop(startDate: UFix64?, endDate: UFix64?, templates: {UInt64: AnyStruct}?){
             pre{
-                (startDate==nil) || (startDate!=nil &&  self.startDate > getCurrentBlock().timestamp && startDate! >= getCurrentBlock().timestamp): "can't update start date"
-                (endDate==nil) || (endDate!=nil && endDate! > getCurrentBlock().timestamp): "can't update end date"
-                (templates==nil) || (templates != nil && templates!.keys.length != 0 && self.startDate > getCurrentBlock().timestamp) : "can't update templates"
+                (startDate==nil) || (self.startDate > getCurrentBlock().timestamp && startDate! >= getCurrentBlock().timestamp): "can't update start date"
+                (endDate==nil) || (endDate! > getCurrentBlock().timestamp): "can't update end date"
+                (templates==nil) || (templates!.keys.length != 0 && self.startDate > getCurrentBlock().timestamp) : "can't update templates"
                 !(startDate==nil && endDate==nil && templates==nil):"All values are nil"
            }
 
-            var isUpdated:Bool = true;
-            var errorMessage:String = "";
-
             if(startDate != nil && startDate! < self.endDate){
                 self.startDate = startDate!
-            }else{
-                isUpdated = false;
-                errorMessage = "start-date should be greater than end-date"
             }
 
             if(endDate != nil && endDate! > self.startDate) {
                 self.endDate = endDate!
-            }else{
-                isUpdated = false;
-                errorMessage = "end-date should be greater than end-date"
             }
 
             if(templates != nil) {
                 self.templates = templates!
             }
-
-            assert(isUpdated, message: errorMessage);
             
             emit DropUpdated(dropId: self.dropId, startDate: self.startDate, endDate: self.endDate)
         }
     }
-
     // DropAdmin
     // This is the main resource to manage the NFTs that they are creating and purchasing.
     pub resource DropAdmin {
