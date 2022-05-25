@@ -8,7 +8,7 @@ transaction(DropId: UInt64, StartDate: UFix64?,EndDate: UFix64?){
     }
     execute{
          //let template : {UInt64:AnyStruct} = {3:"3"}
-         //et template : {UInt64:AnyStruct} = {}
+         //let template : {UInt64:AnyStruct} = {}
         self.adminRef.updateDrop(dropId: DropId, startDate: StartDate, endDate: EndDate, templates: nil)
         
     }
