@@ -1,4 +1,4 @@
-import TriQueta from 0xc864a46475249419
+import TriQueta from 0xe175fb8178dc39c3
 
 transaction(DropId: UInt64,TemplateId: UInt64,MintNumber: UInt64,Creator: Address) {
     let adminRef: &TriQueta.DropAdmin

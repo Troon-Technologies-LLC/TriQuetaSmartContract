@@ -1,4 +1,3 @@
-
 ## Technical Summary and Code Documentation
 
 ## Instructions for creating Brand, Schema, Template and Mint Templates
@@ -6,14 +5,14 @@
 A common order of creating Drop would be
 
 - Create Admin Account with `transaction/setupAdminAccount`.
-- Owner then make this account Admin, and gives that account ability to create own Brand, Schema, Template, Drop 
- and purchase Drop with `transactions/addAdminAccount` 
+- The owner then makes this account Admin and gives that accountability to create its Brand, Schema, Template, Drop
+  and purchase Drop with `transactions/addAdminAccount`
 - Create new Brand with `transactions/createBrand` using Admin Account.
 - Create new Schema with `transactions/createSchema` using Admin Account.
 - Create new Template with `transactions/createTemplate` using Admin Account.
 - Create NFT Receiver with `transaction/setupAccount` .
 - Create new Drop with `transactions/createDrop` using Admin Account.
-- update Drop `transactions/updateDrop.cdc` using Admin Account.
+- update Drop with `transactions/updateDrop.cdc` using Admin Account.
 - Reserve mints any address with `transactions/reserveUsermints.cdc` using User Account.
 - Remove reserve mints any address with `transactions/removeReserveMints.cdc` using User Account.
 - Purchase NFT and send to any address with `transactions/purchaseDrop` using Admin Account.
@@ -50,7 +49,7 @@ A common order of creating Drop would be
 
 | Network | Contract Address     |
 | ------- | -------------------- |
-| Testnet | `0xc864a46475249419` |
+| Testnet | `0xe175fb8178dc39c3` |
 
 ## Drop Structure
 
@@ -106,11 +105,11 @@ To Purchase NFT with any Drop using flow we have to give the following fields:
 - receiptAddress(Address which will recieve NFT)
 - price(price of drop)
 - flowPayment(flow payment vault)
-  
 
 ## Instructions for Remove Drop
 
 We can remove old drops using this function. Those drops date should be ended and we can't delete active drops. To delete drop we have to give the following fields:
+
 - dropId
 
 ### Deployment Contract on Emulator

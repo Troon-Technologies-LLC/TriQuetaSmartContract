@@ -1,4 +1,4 @@
-import TriQuetaNFT from 0x3a57788afdda9ea7
+import TriQuetaNFT from 0x118cabc98306f7d1
 import NonFungibleToken from 0x631e88ae7f1d7c20
 
 transaction() {

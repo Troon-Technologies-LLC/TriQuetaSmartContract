@@ -1,6 +1,6 @@
 import TriQuetaNFT from 0x118cabc98306f7d1
 import NonFungibleToken from 0x631e88ae7f1d7c20
-import FungibleToken from  0x9a0766d93b6608b7
+import FungibleToken from 0x9a0766d93b6608b7
 import FlowToken from 0x7e60df042a9c0868
 
 pub contract TriQueta {
@@ -46,45 +46,33 @@ pub contract TriQueta {
             self.templates = templates
         }
 
-        //Admin can update start-date, end-date and templates of a drop
+        // Admin can update start-date, end-date and templates of a drop
         // start-date only updated if sale is not started yet
         // end-date can updated any-way, Admin need to check if templates are soldout than no need to active that drop 
         // templates can be updated, if sale is not started yet
-        pub fun updateDrop(startDate: UFix64?, endDate: UFix64?, templates: {UInt64: AnyStruct}?){
-            pre{
-                (startDate==nil) || (startDate!=nil &&  self.startDate > getCurrentBlock().timestamp && startDate! >= getCurrentBlock().timestamp): "can't update start date"
-                (endDate==nil) || (endDate!=nil && endDate! > getCurrentBlock().timestamp): "can't update end date"
-                (templates==nil) || (templates != nil && templates!.keys.length != 0 && self.startDate > getCurrentBlock().timestamp) : "can't update templates"
-                !(startDate==nil && endDate==nil && templates==nil):"All values are nil"
+       pub fun updateDrop(startDate: UFix64?, endDate: UFix64?, templates: {UInt64: AnyStruct}?) {
+            pre {
+                (startDate==nil) || (self.startDate > getCurrentBlock().timestamp && startDate! >= getCurrentBlock().timestamp): "can't update start date"
+                (endDate==nil) || (endDate! > getCurrentBlock().timestamp): "can't update end date"
+                (templates==nil) || (templates!.keys.length != 0 && self.startDate > getCurrentBlock().timestamp) : "can't update templates"
+                !(startDate==nil && endDate==nil && templates==nil): "All values are nil"
            }
 
-            var isUpdated:Bool = true;
-            var errorMessage:String = "";
-
-            if(startDate != nil && startDate! < self.endDate){
+            if(startDate != nil && startDate! < self.endDate) {
                 self.startDate = startDate!
-            }else{
-                isUpdated = false;
-                errorMessage = "start-date should be greater than end-date"
             }
 
             if(endDate != nil && endDate! > self.startDate) {
                 self.endDate = endDate!
-            }else{
-                isUpdated = false;
-                errorMessage = "end-date should be greater than end-date"
             }
 
             if(templates != nil) {
                 self.templates = templates!
             }
-
-            assert(isUpdated, message: errorMessage);
             
             emit DropUpdated(dropId: self.dropId, startDate: self.startDate, endDate: self.endDate)
         }
     }
-
     // DropAdmin
     // This is the main resource to manage the NFTs that they are creating and purchasing.
     pub resource DropAdmin {
@@ -94,8 +82,8 @@ pub contract TriQueta {
             self.ownerVault = _ownerVault
         }
 
-        pub fun createDrop(dropId: UInt64, startDate: UFix64, endDate: UFix64, templates: {UInt64: AnyStruct}){
-            pre{
+        pub fun createDrop(dropId: UInt64, startDate: UFix64, endDate: UFix64, templates: {UInt64: AnyStruct}) {
+            pre {
                 dropId != nil: "invalid drop id"
                 TriQueta.allDrops[dropId] == nil: "drop id already exists"
                 startDate >= getCurrentBlock().timestamp: "Start Date should be greater or Equal than current time"
@@ -106,7 +94,7 @@ pub contract TriQueta {
             var areValidTemplates: Bool = true
             for templateId in templates.keys {
                 var template = TriQuetaNFT.getTemplateById(templateId: templateId)
-                if(template == nil){
+                if(template == nil) {
                     areValidTemplates = false
                     break
                 }
@@ -120,17 +108,17 @@ pub contract TriQueta {
         }
 
        pub fun updateDrop(dropId: UInt64, startDate: UFix64?, endDate: UFix64?, templates: {UInt64: AnyStruct}?) {
-            pre{
+            pre {
                 dropId != nil: "invalid drop id"
                 TriQueta.allDrops[dropId] != nil: "drop id does not exists"
                 startDate != 0.0 || endDate != 0.0: "please provide valid dates"
             }
 
-            if(templates !=nil && templates!.keys.length != 0){
+            if(templates !=nil && templates!.keys.length != 0) {
                 var areValidTemplates: Bool = true
                 for templateId in templates!.keys {
                     var template = TriQuetaNFT.getTemplateById(templateId: templateId)
-                    if(template == nil){
+                    if(template == nil) {
                         areValidTemplates = false
                         break
                     }
@@ -140,19 +128,18 @@ pub contract TriQueta {
             TriQueta.allDrops[dropId]!.updateDrop(startDate: startDate, endDate: endDate, templates: templates)
         }
 
-        pub fun removeDrop(dropId: UInt64){
+        pub fun removeDrop(dropId: UInt64) {
             pre {
                 dropId != nil : "invalid drop id"
                 TriQueta.allDrops[dropId] != nil: "drop id does not exist"
                 getCurrentBlock().timestamp < TriQueta.allDrops[dropId]!.startDate: "Drop sale is started"
-
             }
 
             TriQueta.allDrops.remove(key: dropId)
             emit DropRemoved(dropId: dropId)
         }
 
-        pub fun purchaseNFT(dropId: UInt64,templateId: UInt64, mintNumbers: UInt64, receiptAddress: Address){
+        pub fun purchaseNFT(dropId: UInt64,templateId: UInt64, mintNumbers: UInt64, receiptAddress: Address) {
             pre {
                 mintNumbers > 0: "mint number must be greater than zero"
                 mintNumbers <= 10: "mint numbers must be less than ten"
@@ -166,7 +153,7 @@ pub contract TriQueta {
             }
 
             var template = TriQuetaNFT.getTemplateById(templateId: templateId)
-            assert(template.issuedSupply + mintNumbers <= template.maxSupply, message: "template reached to its max supply") 
+            assert(template.issuedSupply + mintNumbers <= template.maxSupply, message: "template reached to its max supply")
             var i: UInt64 = 0
             while i < mintNumbers {
                 TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress)
@@ -177,7 +164,7 @@ pub contract TriQueta {
         }
 
         pub fun purchaseNFTWithFlow(dropId: UInt64, templateId: UInt64, mintNumbers: UInt64, receiptAddress: Address, price: UFix64, flowPayment: @FungibleToken.Vault) {
-            pre{
+            pre {
                 price > 0.0: "Price should be greater than zero"
                 receiptAddress !=nil: "invalid receipt Address"
                 flowPayment.balance == price: "Your vault does not have balance to buy NFT"
