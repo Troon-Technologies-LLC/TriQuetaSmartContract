@@ -2,7 +2,7 @@
 
 The directories here are organized into contracts, scripts, and transactions.
 
-Contracts contain the source code for the TriQuetaNFT and TriQueta that are deployed to Flow.
+Contracts contain the source code for the TriQuetaNFT and TriQueta that are deployed to Flow Blocckhain.
 
 Scripts contain read-only transactions to get information about
 the state of someones Collection or about the state of the TriQuetaNFT and TriQueta.
@@ -16,7 +16,6 @@ to perform actions in the smart contract like creating Brand, Schema, Templates 
 - `scripts/` : This contains all the read-only Cadence scripts
   that are used to read information from the smart contract
   or from a resource in account storage.
-- `test/` : This directory contains testcases in Golang and Javascript. 'go' folder contain
-  Golang testcases and 'js' folder contains Javascript testcases. This folder contains
-  automated tests written in both languages. See the README in `go/` and `js/` for more information
+- `test/` : This directory contains testcases in Golang and Javascript. 'go' direcotry contains
+  Golang testcases and 'js' directory contains Javascript testcases. See the README in `go/` and `js/` for more information
   about how to run testcases.
