@@ -55,7 +55,7 @@ pub contract TriQueta {
                 (startDate==nil) || (self.startDate > getCurrentBlock().timestamp && startDate! >= getCurrentBlock().timestamp): "can't update start date"
                 (endDate==nil) || (endDate! > getCurrentBlock().timestamp): "can't update end date"
                 (templates==nil) || (templates!.keys.length != 0 && self.startDate > getCurrentBlock().timestamp) : "can't update templates"
-                !(startDate==nil && endDate==nil && templates==nil):"All values are nil"
+                !(startDate==nil && endDate==nil && templates==nil): "All values are nil"
            }
 
             if(startDate != nil && startDate! < self.endDate) {
@@ -82,8 +82,8 @@ pub contract TriQueta {
             self.ownerVault = _ownerVault
         }
 
-        pub fun createDrop(dropId: UInt64, startDate: UFix64, endDate: UFix64, templates: {UInt64: AnyStruct}){
-            pre{
+        pub fun createDrop(dropId: UInt64, startDate: UFix64, endDate: UFix64, templates: {UInt64: AnyStruct}) {
+            pre {
                 dropId != nil: "invalid drop id"
                 TriQueta.allDrops[dropId] == nil: "drop id already exists"
                 startDate >= getCurrentBlock().timestamp: "Start Date should be greater or Equal than current time"
