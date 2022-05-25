@@ -183,11 +183,11 @@ pub contract TriQuetaNFT: NonFungibleToken {
             assert(isValidTemplate, message: "invalid template data. Error: ".concat(invalidKey))
         }
 
-        // a method to increment issued supply for template
+        // A method to increment issued supply for template
         access(contract) fun incrementIssuedSupply(): UInt64 {
             pre {
                 self.issuedSupply < self.maxSupply: "Template reached max supply"
-            }   
+            }
 
             self.issuedSupply = self.issuedSupply + 1
             return self.issuedSupply
@@ -237,7 +237,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
     }
 
-    // Collection is a resource that every user who owns NFTs 
+    // Collection is a resource that every user who owns NFTs
     // will store in their account to manage their NFTS
     //
     pub resource Collection: TriQuetaNFTContractCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
@@ -307,7 +307,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
 
     }
     
-    //AdminCapability to add whiteListedAccounts
+    // AdminCapability to add whiteListedAccounts
     pub resource AdminCapability {
         
         pub fun addwhiteListedAccount(_user: Address) {
@@ -347,7 +347,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
             self.capability = cap
         }
 
-        //method to create new Brand, only access by the verified user
+        // method to create new Brand, only access by the verified user
         pub fun createNewBrand(brandName: String, data: {String: String}) {
             pre {
                 // the transaction will instantly revert if
@@ -363,7 +363,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
             TriQuetaNFT.lastIssuedBrandId = TriQuetaNFT.lastIssuedBrandId + 1
         }
 
-        //method to update the existing Brand, only author of brand can update this brand
+        // method to update the existing Brand, only author of brand can update this brand
         pub fun updateBrandData(brandId: UInt64, data: {String: String}) {
             pre{
                 // the transaction will instantly revert if
@@ -382,10 +382,10 @@ pub contract TriQuetaNFT: NonFungibleToken {
             emit BrandUpdated(brandId: brandId, brandName: oldBrand!.brandName, author: oldBrand!.author, data: data)
         }
 
-        //method to create new Schema, only access by the verified user
+        // method to create new Schema, only access by the verified user
         pub fun createSchema(schemaName: String, format: {String: SchemaType}) {
             pre {
-                // the transaction will instantly revert if 
+                // the transaction will instantly revert if
                 // the capability has not been added
                 self.capability != nil: "I don't have the special capability :("
                 TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
@@ -399,10 +399,10 @@ pub contract TriQuetaNFT: NonFungibleToken {
             
         }
 
-        //method to create new Template, only access by the verified user
+        // method to create new Template, only access by the verified user
         pub fun createTemplate(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct}) {
             pre { 
-                // the transaction will instantly revert if 
+                // the transaction will instantly revert if
                 // the capability has not been added
                 self.capability != nil: "I don't have the special capability :("
                 TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
@@ -417,7 +417,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
             TriQuetaNFT.lastIssuedTemplateId = TriQuetaNFT.lastIssuedTemplateId + 1
         }
 
-        //method to mint NFT, only access by the verified user
+        // method to mint NFT, only access by the verified user
         pub fun mintNFT(templateId: UInt64, account: Address) {
             pre{
                 // the transaction will instantly revert if 
@@ -436,14 +436,14 @@ pub contract TriQuetaNFT: NonFungibleToken {
             recipientCollection.deposit(token: <-newNFT)
         }
 
-        //method to remove template by id
+        // method to remove template by id
         pub fun removeTemplateById(templateId: UInt64) {
             pre {
                 self.capability != nil: "I don't have the special capability :("
                 TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
                 templateId != nil: "invalid template id"
                 TriQuetaNFT.allTemplates[templateId]!=nil: "template id does not exist"
-                TriQuetaNFT.allTemplates[templateId]!.issuedSupply == 0: "could not remove template with given id"  
+                TriQuetaNFT.allTemplates[templateId]!.issuedSupply == 0: "could not remove template with given id"
             }
             TriQuetaNFT.allTemplates.remove(key: templateId)
             emit TemplateRemoved(templateId: templateId)
@@ -457,22 +457,22 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
     }
     
-    //method to create empty Collection
+    // method to create empty Collection
     pub fun createEmptyCollection(): @NonFungibleToken.Collection {
         return <- create TriQuetaNFT.Collection()
     }
 
-    //method to create Admin Resources
+    // method to create Admin Resources
     pub fun createAdminResource(): @AdminResource {
         return <- create AdminResource()
     }
 
-    //method to get all brands
+    // method to get all brands
     pub fun getAllBrands(): {UInt64: Brand} {
         return TriQuetaNFT.allBrands
     }
 
-    //method to get brand by id
+    // method to get brand by id
     pub fun getBrandById(brandId: UInt64): Brand {
         pre {
             TriQuetaNFT.allBrands[brandId] != nil: "brand Id does not exists"
@@ -480,12 +480,12 @@ pub contract TriQuetaNFT: NonFungibleToken {
         return TriQuetaNFT.allBrands[brandId]!
     }
 
-    //method to get all schema
+    // method to get all schema
     pub fun getAllSchemas(): {UInt64: Schema} {
         return TriQuetaNFT.allSchemas
     }
 
-    //method to get schema by id
+    // method to get schema by id
     pub fun getSchemaById(schemaId: UInt64): Schema {
         pre {
             TriQuetaNFT.allSchemas[schemaId] != nil: "schema id does not exist"
@@ -493,12 +493,12 @@ pub contract TriQuetaNFT: NonFungibleToken {
         return TriQuetaNFT.allSchemas[schemaId]!
     }
 
-    //method to get all templates
+    // method to get all templates
     pub fun getAllTemplates(): {UInt64: Template} {
         return TriQuetaNFT.allTemplates
     }
 
-    //method to get template by id
+    // method to get template by id
     pub fun getTemplateById(templateId: UInt64): Template {
         pre {
             TriQuetaNFT.allTemplates[templateId]!=nil: "Template id does not exist"
@@ -506,7 +506,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
         return TriQuetaNFT.allTemplates[templateId]!
     } 
 
-    //method to get nft-data by id
+    // method to get nft-data by id
     pub fun getNFTDataById(nftId: UInt64): NFTData {
         pre {
             TriQuetaNFT.allNFTs[nftId]!=nil:"nft id does not exist"
@@ -514,7 +514,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
         return TriQuetaNFT.allNFTs[nftId]!
     }
 
-    //Initialize all variables with default values
+    // Initialize all variables with default values
     init(){
         self.lastIssuedBrandId = 1
         self.lastIssuedSchemaId = 1
