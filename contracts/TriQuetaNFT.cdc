@@ -36,14 +36,24 @@ pub contract TriQuetaNFT: NonFungibleToken {
     
     // A dictionary that stores all Brands against it's brand-id.
     access(self) var allBrands: {UInt64: Brand}
+
+    // A dictionary that stores all Schemas against it's schema-id.
     access(self) var allSchemas: {UInt64: Schema}
+
+    // A dictionary that stores all Templates against it's template-id.
     access(self) var allTemplates: {UInt64: Template}
+
+    // A dictionary that stores all NFTs against it's nft-id.
     access(self) var allNFTs: {UInt64: NFTData}
 
     // Accounts ability to add capability
     access(self) var whiteListedAccounts: [Address]
 
-    // Create Schema Support all the mentioned Types
+      /*
+    * Schema Enum
+    *   Schema will be data-structure of a NFT. 
+    *   Schema will support following types e.g: String, Int, Fix64, Bool, Address, Array and Any
+    */
     pub enum SchemaType: UInt8 {
         pub case String
         pub case Int
@@ -54,7 +64,12 @@ pub contract TriQuetaNFT: NonFungibleToken {
         pub case Any
     }
 
-    // A structure that contain all the data related to a Brand
+    /*
+    * Brand
+    *   Brand will represent a company or author of NFTs. 
+    *   A Brand has id, name, author and data for brand. 
+    *   Brand data is basic dictionary, so it can contain any of brand data
+    */
     pub struct Brand {
         pub let brandId: UInt64
         pub let brandName: String
@@ -77,7 +92,11 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
     }
 
-    // A structure that contain all the data related to a Schema
+    /*
+    * Schema
+    *   Schema will be data-structure of a NFT. 
+    *   Schema has key name and data-type of its value, which will be used for serialization and deserialization (in future work)
+    */
     pub struct Schema {
         pub let schemaId: UInt64
         pub let schemaName: String
@@ -97,7 +116,12 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
     }
 
-    // A structure that contain all the data and methods related to Template
+    /*
+    * Template
+    *   Template will be blueprint of a NFT. 
+    *   Template has relation between brand and schema. It also manage max-supply of a NFT and its issued-supply.
+    *   Template also contain meta data of a NFT, which make it as a blueprint of NFT
+    */
     pub struct Template {
         pub let templateId: UInt64
         pub let brandId: UInt64
@@ -194,7 +218,11 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
     }
 
-    // A structure that link template and mint-no of NFT
+     /*
+    * NFTData
+    *   NFTData is a structure than manage the relation between a NFT and template.
+    *   Also it manage mint-number of a NFT
+    */
     pub struct NFTData {
         pub let templateID: UInt64
         pub let mintNumber: UInt64
@@ -205,8 +233,11 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
     }
 
-    // The resource that represents the TriQueta NFTs
-    // 
+    /*
+    * NFT
+    *   NFT is a resource that actually stays in user storage.
+    *   NFT has id, data which include relation with template and minter number of that specific NFT
+    */
     pub resource NFT: NonFungibleToken.INFT {
         pub let id: UInt64
         access(contract) let data: NFTData
@@ -222,7 +253,10 @@ pub contract TriQuetaNFT: NonFungibleToken {
             emit NFTDestroyed(id: self.id)
         }
     }
-
+    /** NFTContractCollectionPublic
+    *   A public interface extending the standard NFT Collection with type information specific
+    *   to NowWhere NFTs.
+    */
     pub resource interface TriQuetaNFTContractCollectionPublic {
         pub fun deposit(token: @NonFungibleToken.NFT)
         pub fun getIDs(): [UInt64]
@@ -237,9 +271,9 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
     }
 
-    // Collection is a resource that every user who owns NFTs
-    // will store in their account to manage their NFTS
-    //
+    /** Collection
+    *   Collection is a resource that lie in user storage to manage owned NFT resource
+    */
     pub resource Collection: TriQuetaNFTContractCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
         pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
@@ -324,7 +358,10 @@ pub contract TriQuetaNFT: NonFungibleToken {
         init(){}
     }
 
-    // AdminResource, where are defining all the methods related to Brands, Schema, Template and NFTs
+    /* AdminResource
+    *   AdminReource is a resource which is managing all the methods that a user (admin and end-user) can call e.g:    
+    *   createBrand, createSchema, createTemplate, mintNFT, addCapbility etc
+    */
     pub resource AdminResource: UserSpecialCapability, NFTMethodsCapability {
         // a variable which stores all Brands owned by a user
         priv var ownedBrands: {UInt64: Brand}

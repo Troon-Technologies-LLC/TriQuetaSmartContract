@@ -48,12 +48,15 @@ You can also call scripts to fetch and verify the data, basic scripts would be
   Emitted when a new Schema will be created
 
 - Event for Template ->
-  `pub event TemplateCreated(templateId: UInt64, brandId: UInt64, schemaId: UInt64, maxSupply: UInt64)`
+- `pub event TemplateCreated(templateId:UInt64, brandId:UInt64, schemaId:UInt64, maxSupply:UInt64)`
   Emitted when a new Template will be created
 
-- Event for Template Mint ->
+- `pub event TemplateRemoved(templateId: UInt64)`
+  Emitted when a Template is updated
+
+- Event for NFT ->
   `pub event NFTMinted(nftId: UInt64, templateId: UInt64, mintNumber: UInt64)`
-  Emitted when a Template will be Minted and save as NFT
+  Emitted when a NFT is minted
 
 - Event for Template removed ->
   ` pub event TemplateRemoved(templateId: UInt64)`

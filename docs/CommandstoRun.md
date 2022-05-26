@@ -117,8 +117,8 @@ You can also call scripts to fetch and verify the data, basic scripts would be
 
 ## Create Template
 
-`flow transactions send transactions/createTemplate.cdc --arg UInt64:"1" UInt64:"1" UInt64:"100" --args-json "[{\"type\":\"String\",\"value\":\"test\"},{\"type\":\"String\",\"value\":\"abc\"}]" --network testnet --signer testnet-account`
+`flow transactions send transactions/createTemplate.cdc --arg UInt64:1 UInt64:1 UInt64:100 --args-json "[{\"type\":\"String\",\"value\":\"test\"},{\"type\":\"String\",\"value\":\"abc\"}]" --network testnet --signer testnet-account`
 
 ## Mint NFT
 
-`flow transactions send transactions/mintNFT.cdc --arg UInt64:"1" Address:"0x01" --network testnet --signer testnet-account`
+`flow transactions send transactions/mintNFT.cdc --arg UInt64:1 Address:0x01 --network testnet --signer testnet-account`

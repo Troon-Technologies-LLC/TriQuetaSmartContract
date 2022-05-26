@@ -69,14 +69,6 @@ To update a drop, Admin need to provide drop-id and the attributes that Admin wa
 1. If drop is not active (start-date is not passed), than Admin can update all details of a drop e.g: start-date, end-date and template
 2. If drop is active than, Admin can only update the end-date of drop.
 
-## Instruction of Remove Reserve Mints
-
-To Reserve Mints with any Drop we have to give the following fields:
-
-- dropId
-- receiptAddress(Address which will recieve NFT)
-- mintNumber(Mint Number of Template)
-
 ## Instructions for Purchase Drop
 
 To Purchase NFT with any Drop we have to give the following fields:
