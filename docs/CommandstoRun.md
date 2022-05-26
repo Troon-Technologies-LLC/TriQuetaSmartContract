@@ -1,4 +1,4 @@
-## How to Deploy and Test the NowWhere Contract in VSCode
+## How to Deploy and Test the TriQueta Contract in VSCode
 
 The initial step to use any smart-contract is to deploy that contract to any network e.g: mainnet, testnet or emulator.
 In our case we will deploy our contract to emulator.
