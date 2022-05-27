@@ -1,4 +1,6 @@
-## Technical Summary and Code Documentation
+## Technical Summary and Code Documentation TriQueta Contract
+
+- In this documentation, we will go through the whole guidelines for creating and purchasing the drop.
 
 ## Instructions for creating Brand, Schema, Template and Mint Templates
 
@@ -27,7 +29,11 @@ A common order of creating Drop would be
 
 - Event for Creation of Drop ->
   `pub event DropCreated(dropId: UInt64, creator: Address, startDate: UFix64, endDate: UFix64)`
-  Emitted when a new Drop will be created and added to the smart Contract.
+  Emitted when a new Drop will be created and added to the Smart Contract.
+
+- Event for Updation of Drop ->
+  `pub event DropUpdated(dropId: UInt64, startDate: UFix64, endDate: UFix64)`
+  Emitted when Drop will be updated to the Smart Contract.
 
 - Event for purchase Drop ->
   `pub event DropPurchased(dropId: UInt64, templateId: UInt64, mintNumbers: UInt64, receiptAddress: Address)`
@@ -71,6 +77,8 @@ To update a drop, Admin need to provide drop-id and the attributes that Admin wa
 
 ## Instructions for Purchase Drop
 
+The above transaction can only be performed by an Admin having an Admin resource that will give the special capability to any user to purchase drop simply .
+
 To Purchase NFT with any Drop we have to give the following fields:
 
 - dropId
@@ -80,6 +88,8 @@ To Purchase NFT with any Drop we have to give the following fields:
   Only Whitelisted Address can create Drops and Purchase NFTs with Drops.
 
 ## Instructions for Purchase Drop With Flow
+
+The above transaction can only be performed by an Admin having an Admin resource that will give the special capability to any user to purchase drop with flow payment.
 
 To Purchase NFT with any Drop using flow we have to give the following fields:
 

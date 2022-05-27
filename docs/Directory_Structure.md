@@ -2,7 +2,7 @@
 
 The directories here are organized into contracts, scripts, and transactions.
 
-Contracts contain the source code for the TriQuetaNFT and TriQueta that are deployed to Flow Blocckhain.
+Contracts contain the source code for the TriQuetaNFT and TriQueta that are deployed to Flow BlockChain.
 
 Scripts contain read-only transactions to get information about
 the state of someones Collection or about the state of the TriQuetaNFT and TriQueta.

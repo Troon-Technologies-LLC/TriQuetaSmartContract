@@ -1,4 +1,4 @@
-## Technical Summary and Code Documentation
+## Technical Summary and Code Documentation For TriQuetaNFT Contract
 
 ## Instructions for creating Brand, Schema, Template and Mint Templates
 
@@ -96,9 +96,9 @@ We will then create Template using brandId and schemaId that we created before. 
 
 We then have our Resource type NFT(actual asset) that represents a template owns by a user. It stores its unique Id and NFTData structure contains TemplateId and mintNumber of Template.
 
-The above transaction can only be performed by an Admin having an Admin resource that will give special capability to any user to create Brands, Schema and Template.
+The above transactions can only be performed by an Admin having an Admin resource that will give the special capability to any user to create Brands, Schema, and Template.
 
-### Deployment Contract on Emulator
+### Deployment of Contract on Emulator
 
 - Run `flow project deploy --network emulator`
   - All contracts are deployed to the emulator.
