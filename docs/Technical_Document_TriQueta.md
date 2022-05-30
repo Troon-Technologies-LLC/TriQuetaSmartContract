@@ -4,7 +4,7 @@
 
 ## Instructions for creating Brand, Schema, Template and Mint Templates
 
-A common order of creating Drop would be
+A common order for creating Drop would be
 
 - Create Admin Account with `transaction/setupAdminAccount` transaction.
 - The owner then makes this account Admin and gives that accountability to create its Brand, Schema, Template, Drop
@@ -66,14 +66,14 @@ In drops we have the following Information:
 
 ## Instructions for Create Drops
 
-To Create a drop of specific Template/s, we have to give arguments shown above, after that our function will check that start and end time should be greater than present time, template must not be null, drop Ids should be unique. Our drop is also suporting multiple templates and you can add any details to template which can be entertain in future e.g: price, supply etc.
+To Create a drop for specific Template/s, we have to give arguments shown above, after that our function will check that start and end time should be greater than present time, template must not be null, drop Ids should be unique. Our drop is also suporting multiple templates and you can add any details to template which can be entertain in future e.g: price, supply etc.
 
 ## Instruction of Update Drops
 
 To update a drop, Admin need to provide drop-id and the attributes that Admin want to update e.g: start-date, end-date or templates. Drop will be updated on following situations:
 
-1. If drop is not active (start-date is not passed), than Admin can update all details of a drop e.g: start-date, end-date and template
-2. If drop is active than, Admin can only update the end-date of drop.
+1. If drop is not active (start-date is not passed), then Admin can update all details of a drop e.g: start-date, end-date and template
+2. If drop is active then, Admin can only update the end-date of drop.
 
 ## Instructions for Purchase Drop
 

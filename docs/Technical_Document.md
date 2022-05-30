@@ -2,7 +2,7 @@
 
 ## Instructions for creating Brand, Schema, Template and Mint Templates
 
-A common order of creating NFT would be
+A common order for creating NFT would be
 
 1. Creating new Brand with `transactions/createBrand.cdc` transaction.
 2. Creating new Schema with `transactions/createSchema.cdc` transaction.
