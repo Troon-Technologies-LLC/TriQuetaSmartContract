@@ -1,25 +1,25 @@
-## Technical Summary and Code Documentation
+## Technical Summary and Code Documentation TriQueta Contract
+
+- In this documentation, we will go through the whole guidelines for creating and purchasing the drop.
 
 ## Instructions for creating Brand, Schema, Template and Mint Templates
 
-A common order of creating Drop would be
+A common order for creating Drop would be
 
-- Create Admin Account with `transaction/setupAdminAccount`.
+- Create Admin Account with `transaction/setupAdminAccount` transaction.
 - The owner then makes this account Admin and gives that accountability to create its Brand, Schema, Template, Drop
-  and purchase Drop with `transactions/addAdminAccount`
-- Create new Brand with `transactions/createBrand` using Admin Account.
-- Create new Schema with `transactions/createSchema` using Admin Account.
-- Create new Template with `transactions/createTemplate` using Admin Account.
-- Create NFT Receiver with `transaction/setupAccount` .
-- Create new Drop with `transactions/createDrop` using Admin Account.
-- update Drop with `transactions/updateDrop.cdc` using Admin Account.
-- Reserve mints any address with `transactions/reserveUsermints.cdc` using User Account.
-- Remove reserve mints any address with `transactions/removeReserveMints.cdc` using User Account.
-- Purchase NFT and send to any address with `transactions/purchaseDrop` using Admin Account.
-- Purchase NFT with flow and send to any address with `transactions/purchaseNFTWithFlow` using Admin Account and User Account.
-- Remove Drop `transactions/RemoveDrop.cdc` using Admin Account.
-  You can also see the scripts in `transactions/scripts` to see how information
-  can be read from the TriQuetaContract.
+  and purchase Drop with `transactions/addAdminAccount` transaction.
+- Create new Brand with `transactions/createBrand` transaction using Admin Account.
+- Create new Schema with `transactions/createSchema` transaction using Admin Account.
+- Create new Template with `transactions/createTemplate` transaction using Admin Account.
+- Create NFT Receiver with `transaction/setupAccount` transaction.
+- Create new Drop with `transactions/createDrop` transaction using Admin Account.
+- update Drop with `transactions/updateDrop.cdc` transaction using Admin Account.
+- Reserve mints any address with `transactions/reserveUsermints.cdc` transaction using User Account.
+- Remove reserve mints any address with `transactions/removeReserveMints.cdc` transaction using User Account.
+- Purchase NFT and send to any address with `transactions/purchaseDrop` transaction using Admin Account.
+- Purchase NFT with flow and send to any address with `transactions/purchaseNFTWithFlow` transaction using Admin Account and User Account.
+- Remove Drop `transactions/RemoveDrop.cdc` transaction using Admin Account.
 
 ### TriQueta Events
 
@@ -29,7 +29,11 @@ A common order of creating Drop would be
 
 - Event for Creation of Drop ->
   `pub event DropCreated(dropId: UInt64, creator: Address, startDate: UFix64, endDate: UFix64)`
-  Emitted when a new Drop will be created and added to the smart Contract.
+  Emitted when a new Drop will be created and added to the Smart Contract.
+
+- Event for Updation of Drop ->
+  `pub event DropUpdated(dropId: UInt64, startDate: UFix64, endDate: UFix64)`
+  Emitted when Drop will be updated to the Smart Contract.
 
 - Event for purchase Drop ->
   `pub event DropPurchased(dropId: UInt64, templateId: UInt64, mintNumbers: UInt64, receiptAddress: Address)`
@@ -62,30 +66,18 @@ In drops we have the following Information:
 
 ## Instructions for Create Drops
 
-To Create a drop of specific Template, we have to give arguments shown above, after that our function will check that start and end time should be greater than present time, template must not be null, drop Ids should be unique.
+To Create a drop for specific Template/s, we have to give arguments shown above, after that our function will check that start and end time should be greater than present time, template must not be null, drop Ids should be unique. Our drop is also suporting multiple templates and you can add any details to template which can be entertain in future e.g: price, supply etc.
 
 ## Instruction of Update Drops
 
-To Update a drop of specific Template, we have to give arguments shown above, after that our function will check that start and end time should be greater than present time, template must not be null, drop Ids should be unique.
+To update a drop, Admin need to provide drop-id and the attributes that Admin want to update e.g: start-date, end-date or templates. Drop will be updated on following situations:
 
-## Instruction of Reserve Mints
-
-To Reserve Mints with any Drop we have to give the following fields:
-
-- dropId
-- templateId
-- receiptAddress(Address which will recieve NFT)
-- mintNumber(Mint Number of Template)
-
-## Instruction of Remove Reserve Mints
-
-To Reserve Mints with any Drop we have to give the following fields:
-
-- dropId
-- receiptAddress(Address which will recieve NFT)
-- mintNumber(Mint Number of Template)
+1. If drop is not active (start-date is not passed), then Admin can update all details of a drop e.g: start-date, end-date and template
+2. If drop is active then, Admin can only update the end-date of drop.
 
 ## Instructions for Purchase Drop
+
+The above transaction can only be performed by an Admin having an Admin resource that will give the special capability to any user to purchase drop simply .
 
 To Purchase NFT with any Drop we have to give the following fields:
 
@@ -96,6 +88,8 @@ To Purchase NFT with any Drop we have to give the following fields:
   Only Whitelisted Address can create Drops and Purchase NFTs with Drops.
 
 ## Instructions for Purchase Drop With Flow
+
+The above transaction can only be performed by an Admin having an Admin resource that will give the special capability to any user to purchase drop with flow payment.
 
 To Purchase NFT with any Drop using flow we have to give the following fields:
 
