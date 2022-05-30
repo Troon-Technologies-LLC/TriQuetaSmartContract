@@ -32,7 +32,7 @@ pub contract TriQueta {
     // actual stored values, but an instance (or object) of one of these Types
     // can be created by this contract that contains stored values.
 
-     /* Drop
+    /* Drop
     *   Drop is an event, which has a start-date and end-date. 
     *   In a drop, Admin will add templates that can be purcahsed in that event
     */ 

@@ -13,6 +13,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
     pub event SchemaCreated(schemaId: UInt64, schemaName: String, author: Address)
     pub event TemplateCreated(templateId: UInt64, brandId: UInt64, schemaId: UInt64, maxSupply: UInt64)
     pub event TemplateRemoved(templateId: UInt64)
+    pub event TemplateLocked(templateId: UInt64)
 
     // Paths
     pub let AdminResourceStoragePath: StoragePath
@@ -49,7 +50,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
     // Accounts ability to add capability
     access(self) var whiteListedAccounts: [Address]
 
-      /*
+    /*
     * Schema Enum
     *   Schema will be data-structure of a NFT. 
     *   Schema will support following types e.g: String, Int, Fix64, Bool, Address, Array and Any
@@ -128,6 +129,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
         pub let schemaId: UInt64
         pub var maxSupply: UInt64
         pub var issuedSupply: UInt64
+        pub var locked: Bool
         pub var immutableData: {String: AnyStruct}
 
         init(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct}) {
@@ -144,6 +146,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
             self.maxSupply = maxSupply
             self.immutableData = immutableData
             self.issuedSupply = 0
+            self.locked = false
             // Before creating template, we need to check template data, if it is valid against given schema or not
             let schema = TriQuetaNFT.allSchemas[schemaId]!
             var invalidKey: String = ""
@@ -216,9 +219,18 @@ pub contract TriQuetaNFT: NonFungibleToken {
             self.issuedSupply = self.issuedSupply + 1
             return self.issuedSupply
         }
+
+        // A method to lock the template
+        pub fun lockTempalte(status: Bool){
+            pre {
+                self.locked != true: "template is locked"
+                status != false: "invalid status" 
+            }
+            self.locked = status
+        }
     }
 
-     /*
+    /*
     * NFTData
     *   NFTData is a structure than manage the relation between a NFT and template.
     *   Also it manage mint-number of a NFT
@@ -338,6 +350,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
         pub fun createTemplate(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct})
         pub fun mintNFT(templateId: UInt64, account: Address)
         pub fun removeTemplateById(templateId: UInt64)
+        pub fun lockTemplateById(templateId: UInt64, status: Bool)
 
     }
     
@@ -463,6 +476,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
                 TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
                 self.ownedTemplates[templateId]!= nil: "Minter does not have specific template Id"
                 TriQuetaNFT.allTemplates[templateId] != nil: "Template Id must be valid"
+                TriQuetaNFT.allTemplates[templateId]!.locked != true: "Could not mint NFT. Template is locked" 
                 }
             let receiptAccount = getAccount(account)
             let recipientCollection = receiptAccount
@@ -481,9 +495,24 @@ pub contract TriQuetaNFT: NonFungibleToken {
                 templateId != nil: "invalid template id"
                 TriQuetaNFT.allTemplates[templateId]!=nil: "template id does not exist"
                 TriQuetaNFT.allTemplates[templateId]!.issuedSupply == 0: "could not remove template with given id"
+                TriQuetaNFT.allTemplates[templateId]!.locked != true: "Could not remove template. Template is locked" 
             }
             TriQuetaNFT.allTemplates.remove(key: templateId)
             emit TemplateRemoved(templateId: templateId)
+        }
+
+        // method to lock template by id
+        pub fun lockTemplateById(templateId: UInt64, status: Bool) {
+            pre {
+                self.capability != nil: "I don't have the special capability :("
+                TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
+                templateId != nil: "invalid template id"
+                TriQuetaNFT.allTemplates[templateId]!=nil: "template id does not exist"
+                TriQuetaNFT.allTemplates[templateId]!.locked != true: "Template is locked"
+                status != false: "invalid status" 
+            }
+            TriQuetaNFT.allTemplates[templateId]!.lockTempalte(status: status)
+            emit TemplateLocked(templateId: templateId)
         }
 
         init() {
@@ -541,6 +570,14 @@ pub contract TriQuetaNFT: NonFungibleToken {
             TriQuetaNFT.allTemplates[templateId]!=nil: "Template id does not exist"
         }
         return TriQuetaNFT.allTemplates[templateId]!
+    } 
+    
+    // method to get template is locked by id
+    pub fun getIsTemplateLocked(templateId: UInt64): Bool {
+        pre {
+            TriQuetaNFT.allTemplates[templateId]!=nil: "Template id does not exist"
+        }
+        return TriQuetaNFT.allTemplates[templateId]!.locked
     } 
 
     // method to get nft-data by id
