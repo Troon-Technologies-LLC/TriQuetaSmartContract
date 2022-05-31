@@ -221,7 +221,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
 
         // A method to lock the template
-        pub fun lockTempalte(status: Bool){
+        pub fun lockTemplate(status: Bool){
             pre {
                 self.locked != true: "template is locked"
                 status != false: "invalid status" 
@@ -476,7 +476,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
                 TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
                 self.ownedTemplates[templateId]!= nil: "Minter does not have specific template Id"
                 TriQuetaNFT.allTemplates[templateId] != nil: "Template Id must be valid"
-                TriQuetaNFT.allTemplates[templateId]!.locked != true: "Could not mint NFT. Template is locked" 
+                TriQuetaNFT.allTemplates[templateId]!.locked != true: "You are not authorized because the template is locked" 
                 }
             let receiptAccount = getAccount(account)
             let recipientCollection = receiptAccount
@@ -495,7 +495,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
                 templateId != nil: "invalid template id"
                 TriQuetaNFT.allTemplates[templateId]!=nil: "template id does not exist"
                 TriQuetaNFT.allTemplates[templateId]!.issuedSupply == 0: "could not remove template with given id"
-                TriQuetaNFT.allTemplates[templateId]!.locked != true: "Could not remove template. Template is locked" 
+                TriQuetaNFT.allTemplates[templateId]!.locked != true: "You are not authorized to remove the template because the template is locked" 
             }
             TriQuetaNFT.allTemplates.remove(key: templateId)
             emit TemplateRemoved(templateId: templateId)
@@ -507,11 +507,11 @@ pub contract TriQuetaNFT: NonFungibleToken {
                 self.capability != nil: "I don't have the special capability :("
                 TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
                 templateId != nil: "invalid template id"
-                TriQuetaNFT.allTemplates[templateId]!=nil: "template id does not exist"
-                TriQuetaNFT.allTemplates[templateId]!.locked != true: "Template is locked"
+                TriQuetaNFT.allTemplates[templateId]!= nil: "template id does not exist"
+                TriQuetaNFT.allTemplates[templateId]!.locked != true: "Template is already locked"
                 status != false: "invalid status" 
             }
-            TriQuetaNFT.allTemplates[templateId]!.lockTempalte(status: status)
+            TriQuetaNFT.allTemplates[templateId]!.lockTemplate(status: status)
             emit TemplateLocked(templateId: templateId)
         }
 
@@ -573,9 +573,9 @@ pub contract TriQuetaNFT: NonFungibleToken {
     } 
     
     // method to get template is locked by id
-    pub fun getIsTemplateLocked(templateId: UInt64): Bool {
+    pub fun isTemplateLocked(templateId: UInt64): Bool {
         pre {
-            TriQuetaNFT.allTemplates[templateId]!=nil: "Template id does not exist"
+            TriQuetaNFT.allTemplates[templateId]!= nil: "Template id does not exist"
         }
         return TriQuetaNFT.allTemplates[templateId]!.locked
     } 

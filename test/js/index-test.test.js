@@ -913,7 +913,7 @@ describe("Transactions", () => {
     console.log("update drop is done");
     console.log("Update the end date and with wrong params");
     //console.log("tx Result", txResult);
-    expect(txResult[1]).toMatch("pre-condition failed: can't update end date");
+    expect(txResult[1]).toMatch("can't update end date");
   });
 
   //remove drop test case
@@ -1073,6 +1073,78 @@ describe("Transactions", () => {
       console.log(e);
     }
     expect(txResult[0].status).toBe(4);
+  });
+  //lock the template that is already locked
+  test("test transaction lock the template", async () => {
+    const name = "lockTemplate";
+    // Import participating accounts
+    const Charlie = await getAccountAddress("Charlie");
+    // Set transaction signers
+    const signers = [Charlie];
+    // Generate addressMap from import statements
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+    const TriQueta = await getContractAddress("TriQueta");
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+      TriQueta,
+    };
+
+    let code = await getTransactionCode({
+      name,
+      addressMap,
+    });
+    // brandId, schemaId, maxSupply,immutableData
+    const args = [4, true];
+    let txResult;
+    try {
+      txResult = await sendTransaction({
+        code,
+        signers,
+        args,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    expect(txResult[1]).toMatch("Template is already locked");
+  });
+  //remove the template after lock
+  test("test transaction remove template", async () => {
+    const name = "removeTemplate";
+    // Import participating accounts
+    const Charlie = await getAccountAddress("Charlie");
+    // Set transaction signers
+    const signers = [Charlie];
+    // Generate addressMap from import statements
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+    const TriQueta = await getContractAddress("TriQueta");
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+      TriQueta,
+    };
+
+    let code = await getTransactionCode({
+      name,
+      addressMap,
+    });
+    // brandId, schemaId, maxSupply,immutableData
+    const args = [4];
+    let txResult;
+    try {
+      txResult = await sendTransaction({
+        code,
+        signers,
+        args,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    expect(txResult[1]).toMatch(
+      "You are not authorized to remove the template because the template is locked"
+    );
   });
 });
 describe("Scripts", () => {
@@ -1331,7 +1403,7 @@ describe("Scripts", () => {
   });
 
   test("get template is locked by Id", async () => {
-    const name = "getIsTemplateLocked";
+    const name = "getTemplateIsLocked";
     const Charlie = await getAccountAddress("Charlie");
 
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
