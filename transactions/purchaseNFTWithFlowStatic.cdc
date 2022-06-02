@@ -2,7 +2,7 @@ import TriQueta from 0xc864a46475249419
 import FungibleToken from  0x9a0766d93b6608b7 // testnet address
 import FlowToken from 0x7e60df042a9c0868 // testnet address
 
-transaction(DropId: UInt64, TemplateId: UInt64, MintNumber: UInt64, receiptAddress: Address, Price: UFix64, immutableData:{String:AnyStruct}?) {
+transaction(DropId: UInt64, TemplateId: UInt64, MintNumber: UInt64, receiptAddress: Address, Price: UFix64) {
     //it holds the reference to the owner
     let adminRef: &TriQueta.DropAdmin
     // Temporary Vault object that holds the balance that is being transferred
@@ -17,7 +17,7 @@ transaction(DropId: UInt64, TemplateId: UInt64, MintNumber: UInt64, receiptAddre
     }
   
     execute{
-        let dropResponse = self.adminRef.purchaseNFTWithFlow(dropId: DropId, templateId: TemplateId, mintNumbers: MintNumber, receiptAddress: receiptAddress, price:Price,flowPayment: <- self.temporaryVault, immutableData: immutableData)
+        let dropResponse = self.adminRef.purchaseNFTWithFlow(dropId: DropId, templateId: TemplateId, mintNumbers: MintNumber, receiptAddress: receiptAddress, price:Price,flowPayment: <- self.temporaryVault, immutableData: nil)
         log(dropResponse)
     }
 }
