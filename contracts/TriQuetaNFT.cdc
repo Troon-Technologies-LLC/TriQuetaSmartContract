@@ -66,72 +66,6 @@ pub contract TriQuetaNFT: NonFungibleToken {
         pub case Any
     }
 
-    /*  
-    *   Method to validate template's Immutable data as per the one defined in related schema format
-    *   Immutable data's keys and their value types must be according to the schema format defination
-    */
-    pub fun validateDataAgainstSchema(format: {String: SchemaType}, data: {String: AnyStruct}) {
-
-        var invalidKey: String = ""
-        var isValidTemplate = true
-
-        for key in data.keys {
-            let value = data[key]!
-            if(format[key] == nil) {
-                isValidTemplate = false
-                invalidKey = "key $".concat(key.concat(" not found"))
-                break
-            }
-            if format[key] == TriQuetaNFT.SchemaType.String {
-                if(value as? String == nil) {
-                    isValidTemplate = false
-                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
-                    break
-                }
-            }
-            else if format[key] == TriQuetaNFT.SchemaType.Int {
-                if(value as? Int == nil) {
-                    isValidTemplate = false
-                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
-                    break
-                }
-            } 
-            else if format[key] == TriQuetaNFT.SchemaType.Fix64 {
-                if(value as? Fix64 == nil) {
-                    isValidTemplate = false
-                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
-                    break
-                }
-            }else if format[key] == TriQuetaNFT.SchemaType.Bool {
-                if(value as? Bool == nil) {
-                    isValidTemplate = false
-                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
-                    break
-                }
-            }else if format[key] == TriQuetaNFT.SchemaType.Address {
-                if(value as? Address == nil) {
-                    isValidTemplate = false
-                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
-                    break
-                }
-            }
-            else if format[key] == TriQuetaNFT.SchemaType.Array {
-                if(value as? [AnyStruct] == nil) {
-                    isValidTemplate = false
-                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
-                    break
-                }
-            }
-            else if format[key] == TriQuetaNFT.SchemaType.Any {
-                if(value as? {String:AnyStruct} ==nil) {
-                    isValidTemplate = false
-                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
-                    break
-                }
-            }
-        }
-            assert(isValidTemplate, message: "invalid template data. Error: ".concat(invalidKey))
-    }
 
     /*
     * Brand
@@ -614,7 +548,74 @@ pub contract TriQuetaNFT: NonFungibleToken {
     pub fun createAdminResource(): @AdminResource {
         return <- create AdminResource()
     }
+    
+    /*  
+    *   Method to validate template's Immutable data as per the one defined in related schema format
+    *   Immutable data's keys and their value types must be according to the schema format defination
+    */
+    pub fun validateDataAgainstSchema(format: {String: SchemaType}, data: {String: AnyStruct}) {
 
+        var invalidKey: String = ""
+        var isValidTemplate = true
+
+        for key in data.keys {
+            let value = data[key]!
+            if(format[key] == nil) {
+                isValidTemplate = false
+                invalidKey = "key $".concat(key.concat(" not found"))
+                break
+            }
+            if format[key] == TriQuetaNFT.SchemaType.String {
+                if(value as? String == nil) {
+                    isValidTemplate = false
+                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
+                    break
+                }
+            }
+            else if format[key] == TriQuetaNFT.SchemaType.Int {
+                if(value as? Int == nil) {
+                    isValidTemplate = false
+                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
+                    break
+                }
+            } 
+            else if format[key] == TriQuetaNFT.SchemaType.Fix64 {
+                if(value as? Fix64 == nil) {
+                    isValidTemplate = false
+                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
+                    break
+                }
+            }else if format[key] == TriQuetaNFT.SchemaType.Bool {
+                if(value as? Bool == nil) {
+                    isValidTemplate = false
+                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
+                    break
+                }
+            }else if format[key] == TriQuetaNFT.SchemaType.Address {
+                if(value as? Address == nil) {
+                    isValidTemplate = false
+                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
+                    break
+                }
+            }
+            else if format[key] == TriQuetaNFT.SchemaType.Array {
+                if(value as? [AnyStruct] == nil) {
+                    isValidTemplate = false
+                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
+                    break
+                }
+            }
+            else if format[key] == TriQuetaNFT.SchemaType.Any {
+                if(value as? {String:AnyStruct} ==nil) {
+                    isValidTemplate = false
+                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
+                    break
+                }
+            }
+        }
+            assert(isValidTemplate, message: "invalid template data. Error: ".concat(invalidKey))
+    }
+    
     // method to get all brands
     pub fun getAllBrands(): {UInt64: Brand} {
         return TriQuetaNFT.allBrands
