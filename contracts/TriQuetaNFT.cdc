@@ -664,11 +664,17 @@ pub contract TriQuetaNFT: NonFungibleToken {
 
     //method to get data at immutableData field of Template
     pub fun getImmutableData(templateId: UInt64): {String:AnyStruct} {
+        pre {
+            TriQuetaNFT.allTemplates[templateId]!= nil: "Template id does not exist"
+        }
         return TriQuetaNFT.allTemplates[templateId]!.getImmutableData()
     }
 
     //method to get data at mutableData field of Template
     pub fun getMutableData(templateId: UInt64): {String: AnyStruct}? {
+        pre {
+            TriQuetaNFT.allTemplates[templateId]!= nil: "Template id does not exist"
+        }
         return TriQuetaNFT.allTemplates[templateId]!.getMutableData()
     }
 
