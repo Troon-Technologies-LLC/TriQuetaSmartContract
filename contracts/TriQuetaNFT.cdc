@@ -165,6 +165,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
         pub fun updateMutableAttribute(key: String, value: AnyStruct){
             pre{
                 self.mutableData != nil: "Mutable data is nil, update complete mutable data of template instead!"
+                key != "": "Can't update invalid key"
             }
             self.mutableData?.insert(key: key, value)
         }
