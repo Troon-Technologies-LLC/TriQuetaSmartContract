@@ -72,3 +72,7 @@ the core functionality of the Drop.
 ## Setup Reciver Account
 
 `flow transactions send transactions/setupAccount.cdc --network testnet --signer testnet-account`
+
+## Lock Template
+
+`flow transactions send transactions/mintNFT.cdc --arg UInt64:1 Bool:true --network testnet --signer testnet-account`
