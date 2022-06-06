@@ -15,11 +15,14 @@ A common order for creating Drop would be
 - Create NFT Receiver with `transaction/setupAccount` transaction.
 - Create new Drop with `transactions/createDrop` transaction using Admin Account.
 - update Drop with `transactions/updateDrop.cdc` transaction using Admin Account.
-- Reserve mints any address with `transactions/reserveUsermints.cdc` transaction using User Account.
-- Remove reserve mints any address with `transactions/removeReserveMints.cdc` transaction using User Account.
 - Purchase NFT and send to any address with `transactions/purchaseDrop` transaction using Admin Account.
 - Purchase NFT with flow and send to any address with `transactions/purchaseNFTWithFlow` transaction using Admin Account and User Account.
 - Remove Drop `transactions/RemoveDrop.cdc` transaction using Admin Account.
+
+You can also call scripts to fetch and verify the data, basic scripts would be
+
+- Get all drops by calling `scripts/getAllDrops.cdc` script.
+- Get specific drop data by its drop-id by calling `scripts/getDropById.cdc` script.
 
 ### TriQueta Events
 
@@ -85,6 +88,7 @@ To Purchase NFT with any Drop we have to give the following fields:
 - templateId
 - mintNumber(Mint Number of Template)
 - receiptAddress(Address which will recieve NFT)
+- immutableData(optional)
   Only Whitelisted Address can create Drops and Purchase NFTs with Drops.
 
 ## Instructions for Purchase Drop With Flow
@@ -99,6 +103,7 @@ To Purchase NFT with any Drop using flow we have to give the following fields:
 - receiptAddress(Address which will recieve NFT)
 - price(price of drop)
 - flowPayment(flow payment vault)
+- immutableData(optional)
 
 ## Instructions for Remove Drop
 

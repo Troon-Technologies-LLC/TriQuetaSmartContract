@@ -1,5 +1,5 @@
 import TriQuetaNFT from 0x3a57788afdda9ea7
-transaction(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData:{String: AnyStruct}) {
+transaction(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData:{String: AnyStruct}, mutableData: {String: AnyStruct}?) {
     prepare(acct: AuthAccount) {
         let actorResource = acct.getCapability
             <&{TriQuetaNFT.NFTMethodsCapability}>
@@ -15,7 +15,7 @@ transaction(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData:
                 "startDate" : "",
                 "endDate" : ""             
         }
-        actorResource.createTemplate(brandId: brandId, schemaId: schemaId, maxSupply: maxSupply, immutableData: immutableData)
+        actorResource.createTemplate(brandId: brandId, schemaId: schemaId, maxSupply: maxSupply, immutableData: immutableData, mutableData: mutableData)
         log("ok")
     }
 }

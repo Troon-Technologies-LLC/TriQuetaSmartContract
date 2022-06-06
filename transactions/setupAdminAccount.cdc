@@ -1,6 +1,6 @@
-import TriQuetaNFT from 0x118cabc98306f7d1
+// import TriQuetaNFT from 0x118cabc98306f7d1
 import NonFungibleToken from 0x631e88ae7f1d7c20
-
+import TriQuetaNFT from "../contracts/TriQuetaNFT.cdc"
 transaction() {
     prepare(signer: AuthAccount) {
         // save the resource to the signer's account storage

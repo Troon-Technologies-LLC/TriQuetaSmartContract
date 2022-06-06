@@ -32,7 +32,7 @@ pub contract TriQueta {
     // actual stored values, but an instance (or object) of one of these Types
     // can be created by this contract that contains stored values.
 
-     /* Drop
+    /* Drop
     *   Drop is an event, which has a start-date and end-date. 
     *   In a drop, Admin will add templates that can be purcahsed in that event
     */ 
@@ -40,7 +40,7 @@ pub contract TriQueta {
         pub let dropId: UInt64
         pub var startDate: UFix64
         pub var endDate: UFix64
-        pub var templates: {UInt64: AnyStruct}
+        access(contract) var templates: {UInt64: AnyStruct}
 
         init(dropId: UInt64, startDate: UFix64, endDate: UFix64, templates: {UInt64: AnyStruct}) {
             self.dropId = dropId
@@ -74,6 +74,10 @@ pub contract TriQueta {
             }
             
             emit DropUpdated(dropId: self.dropId, startDate: self.startDate, endDate: self.endDate)
+        }
+
+        pub fun getDropTemplates(): {UInt64: AnyStruct} {
+            return self.templates
         }
     }
     /* DropAdmin
@@ -143,7 +147,7 @@ pub contract TriQueta {
             emit DropRemoved(dropId: dropId)
         }
 
-        pub fun purchaseNFT(dropId: UInt64,templateId: UInt64, mintNumbers: UInt64, receiptAddress: Address) {
+        pub fun purchaseNFT(dropId: UInt64,templateId: UInt64, mintNumbers: UInt64, receiptAddress: Address, immutableData:{String:AnyStruct}?) {
             pre {
                 mintNumbers > 0: "mint number must be greater than zero"
                 mintNumbers <= 10: "mint numbers must be less than ten"
@@ -160,14 +164,14 @@ pub contract TriQueta {
             assert(template.issuedSupply + mintNumbers <= template.maxSupply, message: "template reached to its max supply")
             var i: UInt64 = 0
             while i < mintNumbers {
-                TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress)
+                TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress, immutableData:immutableData)
                 i = i + 1
             }
 
             emit DropPurchased(dropId: dropId,templateId: templateId, mintNumbers: mintNumbers, receiptAddress: receiptAddress)
         }
 
-        pub fun purchaseNFTWithFlow(dropId: UInt64, templateId: UInt64, mintNumbers: UInt64, receiptAddress: Address, price: UFix64, flowPayment: @FungibleToken.Vault) {
+        pub fun purchaseNFTWithFlow(dropId: UInt64, templateId: UInt64, mintNumbers: UInt64, receiptAddress: Address, price: UFix64, flowPayment: @FungibleToken.Vault, immutableData:{String:AnyStruct}?) {
             pre {
                 price > 0.0: "Price should be greater than zero"
                 receiptAddress !=nil: "invalid receipt Address"
@@ -191,7 +195,7 @@ pub contract TriQueta {
             
             var i: UInt64 = 0
             while i < mintNumbers {
-                TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress)
+                TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress, immutableData: immutableData)
                 i = i + 1
             }
 

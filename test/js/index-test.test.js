@@ -158,7 +158,8 @@ describe("Transactions", () => {
       console.log(e);
     }
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    console.log("test transaction");
+    expect(txResult[0].status).toBe(4);
   });
 
   test("test transaction add admin Account", async () => {
@@ -196,7 +197,7 @@ describe("Transactions", () => {
       console.log(e);
     }
     console.log("tx result ", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
   test("test transaction  create brand", async () => {
     const name = "createBrand";
@@ -230,7 +231,7 @@ describe("Transactions", () => {
       console.log(e);
     }
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
   test("test transaction  create Schema", async () => {
     const name = "createSchema";
@@ -265,7 +266,7 @@ describe("Transactions", () => {
       console.log(e);
     }
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
 
   test("test transaction  create template", async () => {
@@ -301,7 +302,7 @@ describe("Transactions", () => {
       console.log(e);
     }
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
 
   test("test transaction  create drop", async () => {
@@ -340,7 +341,7 @@ describe("Transactions", () => {
       console.log("Error", e);
     }
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
 
   test("add owner vault", async () => {
@@ -375,7 +376,7 @@ describe("Transactions", () => {
       console.log("Error", e);
     }
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
 
   test("create user empty collection", async () => {
@@ -409,11 +410,11 @@ describe("Transactions", () => {
     }
     console.log("tx Result", txResult);
     console.log("done empty collection");
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
 
   test("test transaction purchase drop", async () => {
-    const name = "purchaseDrop";
+    const name = "purchaseDropStatic";
 
     // Import participating accounts
     const Charlie = await getAccountAddress("Charlie");
@@ -450,7 +451,7 @@ describe("Transactions", () => {
       console.log(e);
     }
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
 
   test("create user empty collection", async () => {
@@ -483,7 +484,7 @@ describe("Transactions", () => {
       console.log("Error", e);
     }
     console.log("tx Result", txResult);
-    // expect(txResult.errorMessage).toBe("");
+    // expect(txResult[0].status).toBe("");
   });
   test("check intial balance of both user owner and buyer", async () => {
     let userOne = "0.00100000,";
@@ -500,7 +501,7 @@ describe("Transactions", () => {
   });
 
   test("purchase drop with flow", async () => {
-    const name = "purchaseNFTWithFlow";
+    const name = "purchaseNFTWithFlowStatic";
     // Import participating accounts
     const Charlie = await getAccountAddress("Charlie");
     const Bob = await getAccountAddress("Bob");
@@ -533,7 +534,7 @@ describe("Transactions", () => {
     }
     console.log("tx Result", txResult);
     console.log("done the user purchase with flow");
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
 
   test("check final balance of both user owner and buyer", async () => {
@@ -585,7 +586,7 @@ describe("Transactions", () => {
       console.log(e);
     }
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
 
   test("test transaction remove template", async () => {
@@ -621,7 +622,7 @@ describe("Transactions", () => {
     } catch (e) {
       console.log(e);
     }
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
 
   //update drop testcase
@@ -659,7 +660,7 @@ describe("Transactions", () => {
       console.log(e);
     }
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
 
   test("test transaction  create drop", async () => {
@@ -702,12 +703,12 @@ describe("Transactions", () => {
       console.log("Error", e);
     }
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
 
   //updating the start date, end date and templates
-  test("test transaction  Update drop", async () => {
-    const name = "updateDropStatic1";
+  test("test transaction  Update drop for start date, end date, and templates", async () => {
+    const name = "updateDropStaticForTemplate";
     var currentTimeInSeconds = Math.floor(Date.now() / 1000); //unix timestamp in seconds
 
     // Import participating accounts
@@ -748,11 +749,11 @@ describe("Transactions", () => {
     console.log("update drop is done");
     console.log("Update the drop with correct params");
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
 
   //updating the start date
-  test("test transaction  Update drop", async () => {
+  test("test transaction  Update drop for the start date", async () => {
     const name = "updateDropStatic";
     var currentTimeInSeconds = Math.floor(Date.now() / 1000); //unix timestamp in seconds
 
@@ -790,10 +791,10 @@ describe("Transactions", () => {
     console.log("update drop is done");
     console.log("Update the start date with correct params");
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
   //updating the end date
-  test("test transaction  Update drop", async () => {
+  test("test transaction  Update drop for the end date", async () => {
     const name = "updateDropStatic";
     var currentTimeInSeconds = Math.floor(Date.now() / 1000); //unix timestamp in seconds
 
@@ -831,10 +832,10 @@ describe("Transactions", () => {
     console.log("update drop is done");
     console.log("Update the start date and end date with correct params");
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
   //updating with wrong params
-  test("test transaction  Update drop", async () => {
+  test("test transaction  Update drop with wrong parameters", async () => {
     const name = "updateDropStatic";
     var currentTimeInSeconds = Math.floor(Date.now() / 1000); //unix timestamp in seconds
 
@@ -871,11 +872,11 @@ describe("Transactions", () => {
     }
     console.log("update drop is done");
     console.log("Update the drop with wrong params");
-    console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    //console.log("tx Result", txResult);
+    expect(txResult[1]).toMatch("All values are nil");
   });
   //updating the end date
-  test("test transaction  Update drop", async () => {
+  test("test transaction  Update drop with wrong date", async () => {
     const name = "updateDropStatic";
     var currentTimeInSeconds = Math.floor(Date.now() / 1000); //unix timestamp in seconds
 
@@ -912,8 +913,8 @@ describe("Transactions", () => {
     }
     console.log("update drop is done");
     console.log("Update the end date and with wrong params");
-    console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    //console.log("tx Result", txResult);
+    expect(txResult[1]).toMatch("can't update end date");
   });
 
   //remove drop test case
@@ -957,7 +958,7 @@ describe("Transactions", () => {
       console.log("Error", e);
     }
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
   });
 
   test("test transaction  remove drop", async () => {
@@ -998,7 +999,300 @@ describe("Transactions", () => {
       console.log("Error", e);
     }
     console.log("tx Result", txResult);
-    expect(txResult.errorMessage).toBe(undefined);
+    expect(txResult[0].status).toBe(4);
+  });
+
+  //test-cases for lock template
+  test("test transaction  create template", async () => {
+    const name = "createTemplateStaticData";
+    // Import participating accounts
+    const Charlie = await getAccountAddress("Charlie");
+    // Set transaction signers
+    const signers = [Charlie];
+    // Generate addressMap from import statements
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+    const TriQueta = await getContractAddress("TriQueta");
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+      TriQueta,
+    };
+
+    let code = await getTransactionCode({
+      name,
+      addressMap,
+    });
+    // brandId, schemaId, maxSupply,immutableData
+    const args = [1, 1, 100];
+    let txResult;
+    try {
+      txResult = await sendTransaction({
+        code,
+        signers,
+        args,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    console.log("tx Result", txResult);
+    expect(txResult[0].status).toBe(4);
+  });
+
+  //lock the template
+  test("test transaction lock the template", async () => {
+    const name = "lockTemplate";
+    // Import participating accounts
+    const Charlie = await getAccountAddress("Charlie");
+    // Set transaction signers
+    const signers = [Charlie];
+    // Generate addressMap from import statements
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+    const TriQueta = await getContractAddress("TriQueta");
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+      TriQueta,
+    };
+
+    let code = await getTransactionCode({
+      name,
+      addressMap,
+    });
+    // brandId, schemaId, maxSupply,immutableData
+    const args = [4, true];
+    let txResult;
+    try {
+      txResult = await sendTransaction({
+        code,
+        signers,
+        args,
+      });
+      console.log("lock the Template result:", txResult);
+    } catch (e) {
+      console.log(e);
+    }
+    expect(txResult[0].status).toBe(4);
+  });
+  //lock the template that is already locked
+  test("test transaction lock the template", async () => {
+    const name = "lockTemplate";
+    // Import participating accounts
+    const Charlie = await getAccountAddress("Charlie");
+    // Set transaction signers
+    const signers = [Charlie];
+    // Generate addressMap from import statements
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+    const TriQueta = await getContractAddress("TriQueta");
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+      TriQueta,
+    };
+
+    let code = await getTransactionCode({
+      name,
+      addressMap,
+    });
+    // brandId, schemaId, maxSupply,immutableData
+    const args = [4, true];
+    let txResult;
+    try {
+      txResult = await sendTransaction({
+        code,
+        signers,
+        args,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    expect(txResult[1]).toMatch("Template is already locked");
+  });
+  //remove the template after lock
+  test("test transaction remove template", async () => {
+    const name = "removeTemplate";
+    // Import participating accounts
+    const Charlie = await getAccountAddress("Charlie");
+    // Set transaction signers
+    const signers = [Charlie];
+    // Generate addressMap from import statements
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+    const TriQueta = await getContractAddress("TriQueta");
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+      TriQueta,
+    };
+
+    let code = await getTransactionCode({
+      name,
+      addressMap,
+    });
+    // brandId, schemaId, maxSupply,immutableData
+    const args = [4];
+    let txResult;
+    try {
+      txResult = await sendTransaction({
+        code,
+        signers,
+        args,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    expect(txResult[1]).toMatch(
+      "You are not authorized to remove the template because the template is locked"
+    );
+  });
+
+  //update template test cases
+  test("test transaction  create template", async () => {
+    const name = "createTemplateStaticData";
+    // Import participating accounts
+    const Charlie = await getAccountAddress("Charlie");
+    // Set transaction signers
+    const signers = [Charlie];
+    // Generate addressMap from import statements
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+    const TriQueta = await getContractAddress("TriQueta");
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+      TriQueta,
+    };
+
+    let code = await getTransactionCode({
+      name,
+      addressMap,
+    });
+    // brandId, schemaId, maxSupply,immutableData
+    const args = [1, 1, 100];
+    let txResult;
+    try {
+      txResult = await sendTransaction({
+        code,
+        signers,
+        args,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    console.log("tx Result", txResult);
+    expect(txResult[0].status).toBe(4);
+  });
+
+  test("test transaction  create template", async () => {
+    const name = "createTemplateNilMutableData";
+    // Import participating accounts
+    const Charlie = await getAccountAddress("Charlie");
+    // Set transaction signers
+    const signers = [Charlie];
+    // Generate addressMap from import statements
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+    const TriQueta = await getContractAddress("TriQueta");
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+      TriQueta,
+    };
+
+    let code = await getTransactionCode({
+      name,
+      addressMap,
+    });
+    // brandId, schemaId, maxSupply,immutableData
+    const args = [1, 1, 100];
+    let txResult;
+    try {
+      txResult = await sendTransaction({
+        code,
+        signers,
+        args,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    console.log("tx Result", txResult);
+    expect(txResult[0].status).toBe(4);
+  });
+  test("test transaction to Update the Template's MUtable Data", async () => {
+    const name = "updateTemplateMutableAttribute";
+    // Import participating accounts
+    const Charlie = await getAccountAddress("Charlie");
+    // Set transaction signers
+    const signers = [Charlie];
+    // Generate addressMap from import statements
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+    const TriQueta = await getContractAddress("TriQueta");
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+      TriQueta,
+    };
+
+    let code = await getTransactionCode({
+      name,
+      addressMap,
+    });
+    // brandId, schemaId, maxSupply,immutableData
+    const args = [5];
+    let txResult;
+    try {
+      txResult = await sendTransaction({
+        code,
+        signers,
+        args,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+
+    console.log("tx Result", txResult);
+    console.log("Mutable attribute updated for first template");
+    expect(txResult[0].status).toBe(4);
+  });
+
+  test("test transaction to Update the Template's MUtable attribute", async () => {
+    const name = "updateTemplateMutableData";
+    // Import participating accounts
+    const Charlie = await getAccountAddress("Charlie");
+    // Set transaction signers
+    const signers = [Charlie];
+    // Generate addressMap from import statements
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+    const TriQueta = await getContractAddress("TriQueta");
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+      TriQueta,
+    };
+
+    let code = await getTransactionCode({
+      name,
+      addressMap,
+    });
+    // brandId, schemaId, maxSupply,immutableData
+    const args = [6];
+    let txResult;
+    try {
+      txResult = await sendTransaction({
+        code,
+        signers,
+        args,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    console.log("tx Result", txResult);
+    console.log("Mutable data updated for third template");
+    expect(txResult[0].status).toBe(4);
   });
 });
 describe("Scripts", () => {
@@ -1255,6 +1549,40 @@ describe("Scripts", () => {
     });
     console.log("result", result);
   });
+
+  test("get template is locked by Id", async () => {
+    const name = "getTemplateIsLocked";
+    const Charlie = await getAccountAddress("Charlie");
+
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+    };
+    let code = await getScriptCode({
+      name,
+      addressMap,
+    });
+
+    code = code
+      .toString()
+      .replace(/(?:getAccount\(\s*)(0x.*)(?:\s*\))/g, (_, match) => {
+        const accounts = {
+          "0x02": Charlie,
+        };
+        const name = accounts[match];
+        return `getAccount(${name})`;
+      });
+    const args = [4];
+    const result = await executeScript({
+      code,
+      args,
+    });
+
+    console.log("template is locked result", result);
+  });
   test("get drop data ", async () => {
     const name = "getAllDrops";
     const Bob = await getAccountAddress("Bob");
@@ -1421,6 +1749,141 @@ describe("Scripts", () => {
         return `getAccount(${name})`;
       });
     const args = [1];
+    const result = await executeScript({
+      code,
+      args,
+    });
+    console.log("result", result);
+  });
+  test("Get template immutable data at Id 1", async () => {
+    const name = "getTemplateImmutableData";
+    const Bob = await getAccountAddress("Bob");
+
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+    };
+    let code = await getScriptCode({
+      name,
+      addressMap,
+    });
+
+    code = code
+      .toString()
+      .replace(/(?:getAccount\(\s*)(0x.*)(?:\s*\))/g, (_, match) => {
+        const accounts = {
+          "0x01": Alice,
+          "0x02": Bob,
+        };
+        const name = accounts[match];
+        return `getAccount(${name})`;
+      });
+    const args = [5];
+    const result = await executeScript({
+      code,
+      args,
+    });
+    console.log("result", result);
+  });
+
+  test("Get template mutable data at Id 1", async () => {
+    const name = "getTemplateMutableData";
+    const Bob = await getAccountAddress("Bob");
+
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+    };
+    let code = await getScriptCode({
+      name,
+      addressMap,
+    });
+
+    code = code
+      .toString()
+      .replace(/(?:getAccount\(\s*)(0x.*)(?:\s*\))/g, (_, match) => {
+        const accounts = {
+          "0x01": Alice,
+          "0x02": Bob,
+        };
+        const name = accounts[match];
+        return `getAccount(${name})`;
+      });
+    const args = [5];
+    const result = await executeScript({
+      code,
+      args,
+    });
+    console.log("result", result);
+  });
+
+  test("Get template immutable data at Id 3", async () => {
+    const name = "getTemplateImmutableData";
+    const Bob = await getAccountAddress("Bob");
+
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+    };
+    let code = await getScriptCode({
+      name,
+      addressMap,
+    });
+
+    code = code
+      .toString()
+      .replace(/(?:getAccount\(\s*)(0x.*)(?:\s*\))/g, (_, match) => {
+        const accounts = {
+          "0x01": Alice,
+          "0x02": Bob,
+        };
+        const name = accounts[match];
+        return `getAccount(${name})`;
+      });
+    const args = [6];
+    const result = await executeScript({
+      code,
+      args,
+    });
+    console.log("result", result);
+  });
+
+  test("Get template mutable data at Id 3", async () => {
+    const name = "getTemplateMutableData";
+    const Bob = await getAccountAddress("Bob");
+
+    const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+
+    const addressMap = {
+      NonFungibleToken,
+      TriQuetaNFT,
+    };
+    let code = await getScriptCode({
+      name,
+      addressMap,
+    });
+
+    code = code
+      .toString()
+      .replace(/(?:getAccount\(\s*)(0x.*)(?:\s*\))/g, (_, match) => {
+        const accounts = {
+          "0x01": Alice,
+          "0x02": Bob,
+        };
+        const name = accounts[match];
+        return `getAccount(${name})`;
+      });
+    const args = [6];
     const result = await executeScript({
       code,
       args,
