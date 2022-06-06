@@ -22,9 +22,8 @@ You can also call scripts to fetch and verify the data, basic scripts would be
 5. Get all templates by calling `scripts/getAllTemplates.cdc` script.
 6. Get specific template mutable data by its template-id by calling `scripts/getTemplateMutableData.cdc` script.
 7. Get specific template by its template-id by calling `scripts/getTemplateById.cdc` script.
-8. Get specific template by its template-id by calling `scripts/getTemplateById.cdc` script.
-9. Get all nfts of an address by calling `scripts/getNFTTemplateData.cdc` script.
-10. Get specific nft-data by its nft-id by calling `scripts/getNFTDataById.cdc` script.
+8. Get all nfts of an address by calling `scripts/getNFTTemplateData.cdc` script.
+9. Get specific nft-data by its nft-id by calling `scripts/getNFTDataById.cdc` script.
 
 ### TriQuetaNFT Events
 
