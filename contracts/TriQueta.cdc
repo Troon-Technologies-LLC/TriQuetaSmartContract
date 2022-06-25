@@ -40,7 +40,7 @@ pub contract TriQueta {
         pub let dropId: UInt64
         pub var startDate: UFix64
         pub var endDate: UFix64
-        pub var templates: {UInt64: AnyStruct}
+        access(contract) var templates: {UInt64: AnyStruct}
 
         init(dropId: UInt64, startDate: UFix64, endDate: UFix64, templates: {UInt64: AnyStruct}) {
             self.dropId = dropId
@@ -74,6 +74,10 @@ pub contract TriQueta {
             }
             
             emit DropUpdated(dropId: self.dropId, startDate: self.startDate, endDate: self.endDate)
+        }
+
+        pub fun getDropTemplates(): {UInt64: AnyStruct} {
+            return self.templates
         }
     }
     /* DropAdmin

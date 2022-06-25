@@ -7,8 +7,11 @@ A common order for creating NFT would be
 1. Creating new Brand with `transactions/createBrand.cdc` transaction.
 2. Creating new Schema with `transactions/createSchema.cdc` transaction.
 3. Creating new Template with `transactions/createTemplate.cdc` transaction.
-4. Create NFT receiver with `transaction/setupAccount.cdc` transaction for the end-user who will receive the NFT.
-5. Mint NFT and transfer that NFT to given address(having NFT-receiver) with `transactions/mintTemplate.cdc` transaction.
+4. Update the Template Mutable data for a specific attribute with `transactions/updateTemplateMutableAttribute.cdc` transaction using Admin Account.
+5. Update the Template whole Mutable data with `transactions/updateTemplateMutableData.cdc` transaction using Admin Account.
+6. Lock specific Template with `transactions/lockTemplate.cdc` transaction using Admin Account.
+7. Create NFT receiver with `transaction/setupAccount.cdc` transaction for the end-user who will receive the NFT.
+8. Mint NFT and transfer that NFT to given address(having NFT-receiver) with `transactions/mintTemplate.cdc` transaction.
 
 You can also call scripts to fetch and verify the data, basic scripts would be
 
@@ -93,6 +96,7 @@ We will then create Template using brandId and schemaId that we created before. 
 - schemaId: UInt64 (Foreign Id of Schema)
 - maxSupply: UInt64 (maximum NFTs that could be created using that template)
 - immutableData: {String: AnyStruct} (Immutable metadata of template)
+- mutableData: {String: AnyStruct}? (Mutable metadata of template)
 
 We then have our Resource type NFT(actual asset) that represents a template owns by a user. It stores its unique Id and NFTData structure contains TemplateId and mintNumber of Template.
 
