@@ -160,7 +160,7 @@ pub contract TriQueta {
             assert(template.issuedSupply + mintNumbers <= template.maxSupply, message: "template reached to its max supply")
             var i: UInt64 = 0
             while i < mintNumbers {
-                TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress)
+                TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress, immutableData: nil)
                 i = i + 1
             }
 
@@ -191,11 +191,11 @@ pub contract TriQueta {
             
             var i: UInt64 = 0
             while i < mintNumbers {
-                TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress)
+                TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress, immutableData: nil)
                 i = i + 1
             }
 
-            emit DropPurchasedWithFlow(dropId: dropId, templateId: templateId, mintNumbers: mintNumbers, receiptAddress: receiptAddress,price: price)
+            emit DropPurchasedWithFlow(dropId: dropId, templateId: templateId, mintNumbers: mintNumbers, receiptAddress: receiptAddress, price: price)
         }
 
         init(){
