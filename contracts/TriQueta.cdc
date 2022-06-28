@@ -1,7 +1,7 @@
-import TriQuetaNFT from 0x118cabc98306f7d1
-import NonFungibleToken from 0x631e88ae7f1d7c20
-import FungibleToken from 0x9a0766d93b6608b7
-import FlowToken from 0x7e60df042a9c0868
+import TriQuetaNFT from 0xf8d6e0586b0a20c7
+import NonFungibleToken from 0xf8d6e0586b0a20c7
+import FungibleToken from 0xee82856bf20e2aa6
+import FlowToken from 0x0ae53cb6e3f42a79
 
 pub contract TriQueta {
     // -----------------------------------------------------------------------
@@ -32,7 +32,7 @@ pub contract TriQueta {
     // actual stored values, but an instance (or object) of one of these Types
     // can be created by this contract that contains stored values.
 
-     /* Drop
+    /* Drop
     *   Drop is an event, which has a start-date and end-date. 
     *   In a drop, Admin will add templates that can be purcahsed in that event
     */ 
@@ -112,7 +112,7 @@ pub contract TriQueta {
             var newDrop = Drop(dropId: dropId,startDate: startDate, endDate: endDate, templates: templates)
             TriQueta.allDrops[newDrop.dropId] = newDrop
 
-            emit DropCreated(dropId: dropId, creator: self.owner?.address!, startDate: startDate, endDate: endDate)
+            emit DropCreated(dropId: dropId, creator: self.owner!.address, startDate: startDate, endDate: endDate)
         }
 
        pub fun updateDrop(dropId: UInt64, startDate: UFix64?, endDate: UFix64?, templates: {UInt64: AnyStruct}?) {
