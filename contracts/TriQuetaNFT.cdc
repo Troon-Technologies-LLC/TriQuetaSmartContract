@@ -6,7 +6,6 @@ pub contract TriQuetaNFT: NonFungibleToken {
     pub event ContractInitialized()
     pub event Withdraw(id: UInt64, from: Address?)
     pub event Deposit(id: UInt64, to: Address?)
-    pub event NFTBorrowed(id: UInt64)
     pub event NFTDestroyed(id: UInt64)
     pub event NFTMinted(nftId: UInt64, templateId: UInt64, mintNumber: UInt64)
     pub event BrandCreated(brandId: UInt64, brandName: String, author: Address, data:{String: String})
@@ -187,6 +186,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
         access(contract) fun incrementIssuedSupply(): UInt64 {
             pre {
                 self.issuedSupply < self.maxSupply: "Template reached max supply"
+                !self.locked: "template is locked"
             }
 
             self.issuedSupply = self.issuedSupply + 1
@@ -194,12 +194,11 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
 
         // A method to lock the template
-        pub fun lockTemplate(status: Bool){
+        pub fun lockTemplate(){
             pre {
-                self.locked != true: "template is locked"
-                status != false: "invalid status"
+                !self.locked: "template is locked"
             }
-            self.locked = status
+            self.locked = true
         }
     }
 
@@ -235,6 +234,10 @@ pub contract TriQuetaNFT: NonFungibleToken {
         access(contract) let data: NFTData
 
         init(templateID: UInt64, mintNumber: UInt64, immutableData: {String: AnyStruct}?) {
+            pre {
+                !TriQuetaNFT.allTemplates[templateID]!.locked: "You are not authorized because the template is locked"
+
+            }
             TriQuetaNFT.totalSupply = TriQuetaNFT.totalSupply + 1
             self.id = TriQuetaNFT.totalSupply
             TriQuetaNFT.allNFTs[self.id] = NFTData(templateID: templateID, mintNumber: mintNumber, immutableData: immutableData)
@@ -286,12 +289,15 @@ pub contract TriQuetaNFT: NonFungibleToken {
 
         // deposit method will store NFT into user storage 
         pub fun deposit(token: @NonFungibleToken.NFT) {
+            // Cast the deposited token as a TriQueta NFT to make sure
+            // it is the correct type
             let token <- token as! @TriQuetaNFT.NFT
+            // Get the token's ID
             let id = token.id
+            // Add the new token to the dictionary
             let oldToken <- self.ownedNFTs[id] <- token
-            if self.owner?.address != nil {
-                emit Deposit(id: id, to: self.owner?.address)
-            }
+
+            emit Deposit(id: id, to: self.owner!.address)
             destroy oldToken
         }
 
@@ -339,7 +345,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
         pub fun updateTemplateMutableAttribute(templateId: UInt64, key: String, value: AnyStruct)
         pub fun mintNFT(templateId: UInt64, account: Address, immutableData:{String:AnyStruct}?)
         pub fun removeTemplateById(templateId: UInt64)
-        pub fun lockTemplateById(templateId: UInt64, status: Bool)
+        pub fun lockTemplateById(templateId: UInt64)
     }
     
     //AdminCapability to add whiteListedAccounts
@@ -501,7 +507,6 @@ pub contract TriQuetaNFT: NonFungibleToken {
                 TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
                 self.ownedTemplates[templateId]!= nil: "Minter does not have specific template Id"
                 TriQuetaNFT.allTemplates[templateId] != nil: "Template ID must be valid"
-                TriQuetaNFT.allTemplates[templateId]!.locked != true: "You are not authorized because the template is locked"
                 }
             let receiptAccount = getAccount(account)
             let recipientCollection = receiptAccount
@@ -527,16 +532,15 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
 
          // method to lock template by id
-        pub fun lockTemplateById(templateId: UInt64, status: Bool) {
+        pub fun lockTemplateById(templateId: UInt64) {
             pre {
                 self.capability != nil: "I don't have the special capability :("
                 TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
                 templateId != nil: "invalid template id"
                 TriQuetaNFT.allTemplates[templateId]!= nil: "template id does not exist"
                 TriQuetaNFT.allTemplates[templateId]!.locked != true: "Template is already locked"
-                status != false: "invalid status"
             }
-            TriQuetaNFT.allTemplates[templateId]!.lockTemplate(status: status)
+            TriQuetaNFT.allTemplates[templateId]!.lockTemplate()
             emit TemplateLocked(templateId: templateId)
         }
 
