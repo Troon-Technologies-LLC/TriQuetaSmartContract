@@ -340,7 +340,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
         pub fun createNewBrand(brandName: String, data: {String: String})
         pub fun updateBrandData(brandId: UInt64, data: {String: String})
         pub fun createSchema(schemaName: String, format: {String: SchemaType})
-        pub fun createTemplate(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct})
+        pub fun createTemplate(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct}, mutableData: {String: AnyStruct}?)
         pub fun updateTemplateMutableData(templateId: UInt64, mutableData: {String: AnyStruct})
         pub fun updateTemplateMutableAttribute(templateId: UInt64, key: String, value: AnyStruct)
         pub fun mintNFT(templateId: UInt64, account: Address, immutableData:{String:AnyStruct}?)
@@ -444,7 +444,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
 
         //method to create new Template, only access by the verified user
-        pub fun createTemplate(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct}) {
+        pub fun createTemplate(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct}, mutableData: {String: AnyStruct}?) {
             pre {
                 // the transaction will instantly revert if 
                 // the capability has not been added
