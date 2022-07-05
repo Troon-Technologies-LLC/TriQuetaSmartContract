@@ -1,19 +1,28 @@
-## Technical Summary and Code Documentation
+## Technical Summary and Code Documentation For TriQuetaNFT Contract
 
 ## Instructions for creating Brand, Schema, Template and Mint Templates
 
-A common order of creating NFT would be
+A common order for creating NFT would be
 
-- Create Admin Account with `transaction/setupAdminAccount`.
-- Owner then make this account Admin, and gives that account ability to create own Brand, Schema and Template with `transactions/addAdminAccount`
-- Create new Brand with `transactions/createBrand` using Admin Account.
-- Create new Schema with `transactions/createSchema` using Admin Account.
-- Create new Template with `transactions/createTemplate` using Admin Account.
-- Remove the Template with `transactions/removeTemplate` using Admin Account.
-- Create NFT Receiver with `transaction/setupAccount` .
-- Create Mint of Templates and transfer to Address(having Setup Account enabled) with `transaction/mintNFT`
-  You can also see the scripts in `transactions/scripts` to see how information
-  can be read from the TriQuetaNFT.
+1. Creating new Brand with `transactions/createBrand.cdc` transaction.
+2. Creating new Schema with `transactions/createSchema.cdc` transaction.
+3. Creating new Template with `transactions/createTemplate.cdc` transaction.
+4. Update the Template Mutable data for a specific attribute with `transactions/updateTemplateMutableAttribute.cdc` transaction using Admin Account.
+5. Update the Template whole Mutable data with `transactions/updateTemplateMutableData.cdc` transaction using Admin Account.
+6. Lock specific Template with `transactions/lockTemplate.cdc` transaction using Admin Account.
+7. Create NFT receiver with `transaction/setupAccount.cdc` transaction for the end-user who will receive the NFT.
+8. Mint NFT and transfer that NFT to given address(having NFT-receiver) with `transactions/mintTemplate.cdc` transaction.
+
+You can also call scripts to fetch and verify the data, basic scripts would be
+
+1. Get all brands ids by calling `scripts/getAllBrands.cdc` script.
+2. Get specific brand data by its brand-id by calling `scripts/getBrandById.cdc` script.
+3. Get all schemas by calling `scripts/getallSchema.cdc` script.
+4. Get specific schema by its schema-id by calling `scripts/getSchemaById.cdc` script.
+5. Get all templates by calling `scripts/getAllTemplates.cdc` script.
+6. Get specific template by its tamplate-id by calling `scripts/getTemplateById.cdc` script.
+7. Get all nfts of an address by calling `scripts/getNFTTemplateData.cdc` script.
+8. Get specific nft-data by its nft-id by calling `scripts/getNFTDataById.cdc` script.
 
 ### TriQuetaNFT Events
 
@@ -29,10 +38,6 @@ A common order of creating NFT would be
   `pub event Deposit(id: UInt64, to: Address?)`
   This event is emitted when NFT will be deposited.
 
-- Event for Borrowed NFT ->
-  `pub event NFTBorrowed(id: UInt64)`
-  This event is emitted when NFT will be borrowed.
-
 - Event for Brand ->
   `pub event BrandCreated(brandId: UInt64, brandName: String, author: Address, data: {String:String})`
   Emitted when a new Brand will be created and added to the smart Contract.
@@ -46,12 +51,15 @@ A common order of creating NFT would be
   Emitted when a new Schema will be created
 
 - Event for Template ->
-  `pub event TemplateCreated(templateId: UInt64, brandId: UInt64, schemaId: UInt64, maxSupply: UInt64)`
+- `pub event TemplateCreated(templateId:UInt64, brandId:UInt64, schemaId:UInt64, maxSupply:UInt64)`
   Emitted when a new Template will be created
 
-- Event for Template Mint ->
+- `pub event TemplateRemoved(templateId: UInt64)`
+  Emitted when a Template is updated
+
+- Event for NFT ->
   `pub event NFTMinted(nftId: UInt64, templateId: UInt64, mintNumber: UInt64)`
-  Emitted when a Template will be Minted and save as NFT
+  Emitted when a NFT is minted
 
 - Event for Template removed ->
   ` pub event TemplateRemoved(templateId: UInt64)`
@@ -68,7 +76,7 @@ the core functionality of the NFT.
 
 ## TriQuetaNFT Overview Technical
 
-Each TriQuetaNFT represent a standard to create an NFT. We inherited NonFungibleToken to conform our standard with the existent NFT standard.
+TriQuetaNFT represent a standard to create an NFT. We inherited NonFungibleToken contract interface to conform our nft standard with the existent NFT standard by Flow Blockchain.
 To Create an NFT, you first have to create a Brand structure which contains following fields:
 
 - brandId: UInt64 (Id of Brand)
@@ -88,12 +96,13 @@ We will then create Template using brandId and schemaId that we created before. 
 - schemaId: UInt64 (Foreign Id of Schema)
 - maxSupply: UInt64 (maximum NFTs that could be created using that template)
 - immutableData: {String: AnyStruct} (Immutable metadata of template)
+- mutableData: {String: AnyStruct}? (Mutable metadata of template)
 
 We then have our Resource type NFT(actual asset) that represents a template owns by a user. It stores its unique Id and NFTData structure contains TemplateId and mintNumber of Template.
 
-The above transaction can only be performed by an Admin having an Admin resource that will give special capability to any user to create Brands, Schema and Template.
+The above transactions can only be performed by an Admin having an Admin resource that will give the special capability to any user to create Brands, Schema, and Template.
 
-### Deployment Contract on Emulator
+### Deployment of Contract on Emulator
 
 - Run `flow project deploy --network emulator`
   - All contracts are deployed to the emulator.

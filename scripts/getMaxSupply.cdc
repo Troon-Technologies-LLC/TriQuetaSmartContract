@@ -4,7 +4,7 @@ import TriQueta from 0xc864a46475249419
 pub fun main(dropId: UInt64):{String:UInt64}{
 
     let outdropId = TriQueta.getDropById(dropId: dropId)
-    let templateid = outdropId.templates.keys
+    let templateid = outdropId.getDropTemplates().keys
 
     let getTemplate = TriQuetaNFT.getTemplateById(templateId: templateid[0])
     let issuedSupply = getTemplate.issuedSupply

@@ -1,7 +1,7 @@
-import TriQuetaNFT from 0x118cabc98306f7d1
-import NonFungibleToken from 0x631e88ae7f1d7c20
-import FungibleToken from 0x9a0766d93b6608b7
-import FlowToken from 0x7e60df042a9c0868
+import TriQuetaNFT from 0xf8d6e0586b0a20c7
+import NonFungibleToken from 0xf8d6e0586b0a20c7
+import FungibleToken from 0xee82856bf20e2aa6
+import FlowToken from 0x0ae53cb6e3f42a79
 
 pub contract TriQueta {
     // -----------------------------------------------------------------------
@@ -32,12 +32,15 @@ pub contract TriQueta {
     // actual stored values, but an instance (or object) of one of these Types
     // can be created by this contract that contains stored values.
 
-    // Drop is a struct 
+    /* Drop
+    *   Drop is an event, which has a start-date and end-date. 
+    *   In a drop, Admin will add templates that can be purcahsed in that event
+    */ 
     pub struct Drop {
         pub let dropId: UInt64
         pub var startDate: UFix64
         pub var endDate: UFix64
-        pub var templates: {UInt64: AnyStruct}
+        access(contract) var templates: {UInt64: AnyStruct}
 
         init(dropId: UInt64, startDate: UFix64, endDate: UFix64, templates: {UInt64: AnyStruct}) {
             self.dropId = dropId
@@ -72,9 +75,14 @@ pub contract TriQueta {
             
             emit DropUpdated(dropId: self.dropId, startDate: self.startDate, endDate: self.endDate)
         }
+
+        pub fun getDropTemplates(): {UInt64: AnyStruct} {
+            return self.templates
+        }
     }
-    // DropAdmin
-    // This is the main resource to manage the NFTs that they are creating and purchasing.
+    /* DropAdmin
+    *   DropAdmin is resource, which will be used by the Admin to create, update, remove drop and purcahse NFT
+    */
     pub resource DropAdmin {
         access(contract) var ownerVault: Capability<&AnyResource{FungibleToken.Receiver}>?
 
@@ -104,7 +112,7 @@ pub contract TriQueta {
             var newDrop = Drop(dropId: dropId,startDate: startDate, endDate: endDate, templates: templates)
             TriQueta.allDrops[newDrop.dropId] = newDrop
 
-            emit DropCreated(dropId: dropId, creator: self.owner?.address!, startDate: startDate, endDate: endDate)
+            emit DropCreated(dropId: dropId, creator: self.owner!.address, startDate: startDate, endDate: endDate)
         }
 
        pub fun updateDrop(dropId: UInt64, startDate: UFix64?, endDate: UFix64?, templates: {UInt64: AnyStruct}?) {
@@ -156,7 +164,7 @@ pub contract TriQueta {
             assert(template.issuedSupply + mintNumbers <= template.maxSupply, message: "template reached to its max supply")
             var i: UInt64 = 0
             while i < mintNumbers {
-                TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress)
+                TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress, immutableData: nil)
                 i = i + 1
             }
 
@@ -187,11 +195,11 @@ pub contract TriQueta {
             
             var i: UInt64 = 0
             while i < mintNumbers {
-                TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress)
+                TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress, immutableData: nil)
                 i = i + 1
             }
 
-            emit DropPurchasedWithFlow(dropId: dropId, templateId: templateId, mintNumbers: mintNumbers, receiptAddress: receiptAddress,price: price)
+            emit DropPurchasedWithFlow(dropId: dropId, templateId: templateId, mintNumbers: mintNumbers, receiptAddress: receiptAddress, price: price)
         }
 
         init(){

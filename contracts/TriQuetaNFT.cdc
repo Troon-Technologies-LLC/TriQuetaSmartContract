@@ -1,4 +1,4 @@
-import NonFungibleToken from 0x631e88ae7f1d7c20
+import NonFungibleToken from 0xf8d6e0586b0a20c7
 
 pub contract TriQuetaNFT: NonFungibleToken {
 
@@ -13,6 +13,8 @@ pub contract TriQuetaNFT: NonFungibleToken {
     pub event SchemaCreated(schemaId: UInt64, schemaName: String, author: Address)
     pub event TemplateCreated(templateId: UInt64, brandId: UInt64, schemaId: UInt64, maxSupply: UInt64)
     pub event TemplateRemoved(templateId: UInt64)
+    pub event TemplateUpdated(templateId: UInt64)
+    pub event TemplateLocked(templateId: UInt64)
 
     // Paths
     pub let AdminResourceStoragePath: StoragePath
@@ -34,16 +36,27 @@ pub contract TriQuetaNFT: NonFungibleToken {
     // Total supply of all NFTs that are minted using this contract
     pub var totalSupply: UInt64
     
+
     // A dictionary that stores all Brands against it's brand-id.
     access(self) var allBrands: {UInt64: Brand}
+
+    // A dictionary that stores all Schemas against it's schema-id.
     access(self) var allSchemas: {UInt64: Schema}
+
+    // A dictionary that stores all Templates against it's template-id.
     access(self) var allTemplates: {UInt64: Template}
+
+    // A dictionary that stores all NFTs against it's nft-id.
     access(self) var allNFTs: {UInt64: NFTData}
 
     // Accounts ability to add capability
     access(self) var whiteListedAccounts: [Address]
 
-    // Create Schema Support all the mentioned Types
+    /*
+    * Schema Enum
+    *   Schema will be data-structure of a NFT. 
+    *   Schema will support following types e.g: String, Int, Fix64, Bool, Address, Array and Any
+    */
     pub enum SchemaType: UInt8 {
         pub case String
         pub case Int
@@ -54,7 +67,13 @@ pub contract TriQuetaNFT: NonFungibleToken {
         pub case Any
     }
 
-    // A structure that contain all the data related to a Brand
+    /*
+    * Brand
+    *   Brand will represent a company or author of NFTs. 
+    *   A Brand has id, name, author and data for brand. 
+    *   Brand data is basic dictionary, so it can contain any of brand data
+    */
+
     pub struct Brand {
         pub let brandId: UInt64
         pub let brandName: String
@@ -77,7 +96,11 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
     }
 
-    // A structure that contain all the data related to a Schema
+    /*
+    * Schema
+    *   Schema will be data-structure of a NFT. 
+    *   Schema has key name and data-type of its value, which will be used for serialization and deserialization (in future work)
+    */
     pub struct Schema {
         pub let schemaId: UInt64
         pub let schemaName: String
@@ -97,16 +120,23 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
     }
 
-    // A structure that contain all the data and methods related to Template
+    /*
+    * Template
+    *   Template will be blueprint of a NFT. 
+    *   Template has relation between brand and schema. It also manage max-supply of a NFT and its issued-supply.
+    *   Template also contain meta data of a NFT, which make it as a blueprint of NFT
+    */ 
     pub struct Template {
         pub let templateId: UInt64
         pub let brandId: UInt64
         pub let schemaId: UInt64
         pub var maxSupply: UInt64
         pub var issuedSupply: UInt64
-        pub var immutableData: {String: AnyStruct}
+        pub var locked: Bool
+        access(contract) var immutableData: {String: AnyStruct}
+        access(contract) var mutableData: {String: AnyStruct}?
 
-        init(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct}) {
+        init(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct}, mutableData: {String: AnyStruct}?) {
             pre {
                 TriQuetaNFT.allBrands[brandId] != nil:"Brand Id must be valid"
                 TriQuetaNFT.allSchemas[schemaId] != nil:"Schema Id must be valid"
@@ -114,107 +144,103 @@ pub contract TriQuetaNFT: NonFungibleToken {
                 immutableData != nil: "ImmutableData must not be nil"
             }
 
+            // Before creating template, we need to check template data, if it is valid against given schema or not
+            let schema = TriQuetaNFT.allSchemas[schemaId]!
+            TriQuetaNFT.validateDataAgainstSchema(format: schema.format, data: immutableData!)
             self.templateId = TriQuetaNFT.lastIssuedTemplateId
             self.brandId = brandId
             self.schemaId = schemaId
             self.maxSupply = maxSupply
             self.immutableData = immutableData
+            self.mutableData = mutableData
             self.issuedSupply = 0
-            // Before creating template, we need to check template data, if it is valid against given schema or not
-            let schema = TriQuetaNFT.allSchemas[schemaId]!
-            var invalidKey: String = ""
-            var isValidTemplate = true
+            self.locked = false
 
-            for key in immutableData.keys {
-                let value = immutableData[key]!
-                if(schema.format[key] == nil) {
-                    isValidTemplate = false
-                    invalidKey = "key $".concat(key.concat(" not found"))
-                    break
-                }
-                if schema.format[key] == TriQuetaNFT.SchemaType.String {
-                    if(value as? String == nil) {
-                        isValidTemplate = false
-                        invalidKey = "key $".concat(key.concat(" has type mismatch"))
-                        break
-                    }
-                }
-                else if schema.format[key] == TriQuetaNFT.SchemaType.Int {
-                    if(value as? Int == nil) {
-                        isValidTemplate = false
-                        invalidKey = "key $".concat(key.concat(" has type mismatch"))
-                        break
-                    }
-                } 
-                else if schema.format[key] == TriQuetaNFT.SchemaType.Fix64 {
-                    if(value as? Fix64 == nil) {
-                        isValidTemplate = false
-                        invalidKey = "key $".concat(key.concat(" has type mismatch"))
-                        break
-                    }
-                }else if schema.format[key] == TriQuetaNFT.SchemaType.Bool {
-                    if(value as? Bool == nil) {
-                        isValidTemplate = false
-                        invalidKey = "key $".concat(key.concat(" has type mismatch"))
-                        break
-                    }
-                }else if schema.format[key] == TriQuetaNFT.SchemaType.Address {
-                    if(value as? Address == nil) {
-                        isValidTemplate = false
-                        invalidKey = "key $".concat(key.concat(" has type mismatch"))
-                        break
-                    }
-                }
-                else if schema.format[key] == TriQuetaNFT.SchemaType.Array {
-                    if(value as? [AnyStruct] == nil) {
-                        isValidTemplate = false
-                        invalidKey = "key $".concat(key.concat(" has type mismatch"))
-                        break
-                    }
-                }
-                else if schema.format[key] == TriQuetaNFT.SchemaType.Any {
-                    if(value as? {String:AnyStruct} ==nil) {
-                        isValidTemplate = false
-                        invalidKey = "key $".concat(key.concat(" has type mismatch"))
-                        break
-                    }
-                }
-            }
-            assert(isValidTemplate, message: "invalid template data. Error: ".concat(invalidKey))
         }
 
-        // A method to increment issued supply for template
+        // a method to update entire MutableData field of Template
+        pub fun updateMutableData(mutableData: {String: AnyStruct}) {
+                self.mutableData = mutableData
+        }
+
+        // a method to update or add particular pair in MutableData field of Template
+        pub fun updateMutableAttribute(key: String, value: AnyStruct){
+            pre{
+                self.mutableData != nil: "Mutable data is nil, update complete mutable data of template instead!"
+                key != "": "Can't update invalid key"
+            }
+            self.mutableData?.insert(key: key, value)
+        }
+
+        // a method to get ImmutableData field of Template
+        pub fun getImmutableData(): {String:AnyStruct} {
+            return self.immutableData
+        }
+ 
+        // a method to get MutableData field of Template
+        pub fun getMutableData(): {String: AnyStruct}? {
+            return self.mutableData
+        }
+
+        // a method to increment issued supply for template
         access(contract) fun incrementIssuedSupply(): UInt64 {
             pre {
                 self.issuedSupply < self.maxSupply: "Template reached max supply"
+                !self.locked: "template is locked"
             }
 
             self.issuedSupply = self.issuedSupply + 1
             return self.issuedSupply
         }
-    }
 
-    // A structure that link template and mint-no of NFT
-    pub struct NFTData {
-        pub let templateID: UInt64
-        pub let mintNumber: UInt64
-
-        init(templateID: UInt64, mintNumber: UInt64) {
-            self.templateID = templateID
-            self.mintNumber = mintNumber
+        // A method to lock the template
+        pub fun lockTemplate(){
+            pre {
+                !self.locked: "template is locked"
+            }
+            self.locked = true
         }
     }
 
-    // The resource that represents the TriQueta NFTs
-    // 
+    /*
+    * NFTData
+    *   NFTData is a structure than manage the relation between a NFT and template.
+    *   Also it manage mint-number of a NFT
+    */
+    pub struct NFTData {
+        pub let templateID: UInt64
+        pub let mintNumber: UInt64
+        access(contract) var immutableData: {String: AnyStruct}?
+
+        init(templateID: UInt64, mintNumber: UInt64, immutableData: {String: AnyStruct}?) {
+            self.templateID = templateID
+            self.mintNumber = mintNumber
+            self.immutableData = immutableData
+        }
+        
+        // a method to get the immutable data of the NFT
+        pub fun getImmutableData(): {String: AnyStruct}? {
+            return self.immutableData
+        }
+    }
+
+    /*
+    * NFT
+    *   NFT is a resource that actually stays in user storage.
+    *   NFT has id, data which include relation with template and minter number of that specific NFT
+    */
     pub resource NFT: NonFungibleToken.INFT {
         pub let id: UInt64
         access(contract) let data: NFTData
 
-        init(templateID: UInt64, mintNumber: UInt64) {
+        init(templateID: UInt64, mintNumber: UInt64, immutableData: {String: AnyStruct}?) {
+            pre {
+                !TriQuetaNFT.allTemplates[templateID]!.locked: "You are not authorized because the template is locked"
+
+            }
             TriQuetaNFT.totalSupply = TriQuetaNFT.totalSupply + 1
             self.id = TriQuetaNFT.totalSupply
-            TriQuetaNFT.allNFTs[self.id] = NFTData(templateID: templateID, mintNumber: mintNumber)
+            TriQuetaNFT.allNFTs[self.id] = NFTData(templateID: templateID, mintNumber: mintNumber, immutableData: immutableData)
             self.data = TriQuetaNFT.allNFTs[self.id]!
             emit NFTMinted(nftId: self.id, templateId: templateID, mintNumber: mintNumber)
         }
@@ -223,26 +249,32 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
     }
 
+    /** TriQuetaNFTContractCollectionPublic
+    *   A public interface extending the standard NFT Collection with type information specific
+    *   to Triqueta NFTs.
+    */
     pub resource interface TriQuetaNFTContractCollectionPublic {
         pub fun deposit(token: @NonFungibleToken.NFT)
         pub fun getIDs(): [UInt64]
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
-        pub fun borrowNFTTriQuetaContract(id: UInt64): &TriQuetaNFT.NFT? {
+        pub fun borrowTriquetaNFT(id: UInt64): &TriQuetaNFT.NFT? {
             // If the result isn't nil, the id of the returned reference
             // should be the same as the argument to the function
             post {
                 (result == nil) || (result?.id == id):
-                    "Cannot borrow Reward reference: The ID of the returned reference is incorrect"
+                    "Cannot borrow NFT reference: The ID of the returned reference is incorrect"
             }
         }
     }
 
-    // Collection is a resource that every user who owns NFTs
-    // will store in their account to manage their NFTS
-    //
+    /** Collection
+    *   Collection is a resource that lie in user storage to manage owned NFT resource
+    */
     pub resource Collection: TriQuetaNFTContractCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
+        // ownedNFTs will manage all user owned NFTs against it NFT id
         pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
+        // withdraw method will withdraw NFT from NFT id from user storage
         pub fun withdraw(withdrawID: UInt64): @NonFungibleToken.NFT {
             let token <- self.ownedNFTs.remove(key: withdrawID) 
                 ?? panic("Cannot withdraw: template does not exist in the collection")
@@ -250,38 +282,45 @@ pub contract TriQuetaNFT: NonFungibleToken {
             return <-token
         }
 
+        // getIDs method will return all NFT-ids that are owned by a user
         pub fun getIDs(): [UInt64] {
             return self.ownedNFTs.keys
         }
 
+        // deposit method will store NFT into user storage 
         pub fun deposit(token: @NonFungibleToken.NFT) {
+            // Cast the deposited token as a TriQueta NFT to make sure
+            // it is the correct type
             let token <- token as! @TriQuetaNFT.NFT
+            // Get the token's ID
             let id = token.id
+            // Add the new token to the dictionary
             let oldToken <- self.ownedNFTs[id] <- token
-            if self.owner?.address != nil {
-                emit Deposit(id: id, to: self.owner?.address)
-            }
+
+            emit Deposit(id: id, to: self.owner!.address)
             destroy oldToken
         }
 
+        // borrowNFT is method to borrow a NFT (as NonFungibleToken.NFT)
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT {
-            return &self.ownedNFTs[id] as &NonFungibleToken.NFT
+            return (&self.ownedNFTs[id] as &NonFungibleToken.NFT?)!
         }
 
-        // borrowNFTTriQuetaContract returns a borrowed reference to a TriQuetaNFT
+        // borrowTriquetaNFT returns a borrowed reference to a TriquetaNFTContract
         // so that the caller can read data and call methods from it.
         //
         // Parameters: id: The ID of the NFT to get the reference for
         //
         // Returns: A reference to the NFT
-        pub fun borrowNFTTriQuetaContract(id: UInt64): &TriQuetaNFT.NFT? {
+        pub fun borrowTriquetaNFT(id: UInt64): &TriQuetaNFT.NFT? {
             if self.ownedNFTs[id] != nil {
-                let ref = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
+                let ref = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
                 return ref as! &TriQuetaNFT.NFT
             } else {
                 return nil
             }
         }
+
         init() {
             self.ownedNFTs <- {}
         }
@@ -301,13 +340,15 @@ pub contract TriQuetaNFT: NonFungibleToken {
         pub fun createNewBrand(brandName: String, data: {String: String})
         pub fun updateBrandData(brandId: UInt64, data: {String: String})
         pub fun createSchema(schemaName: String, format: {String: SchemaType})
-        pub fun createTemplate(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct})
-        pub fun mintNFT(templateId: UInt64, account: Address)
+        pub fun createTemplate(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct}, mutableData: {String: AnyStruct}?)
+        pub fun updateTemplateMutableData(templateId: UInt64, mutableData: {String: AnyStruct})
+        pub fun updateTemplateMutableAttribute(templateId: UInt64, key: String, value: AnyStruct)
+        pub fun mintNFT(templateId: UInt64, account: Address, immutableData:{String:AnyStruct}?)
         pub fun removeTemplateById(templateId: UInt64)
-
+        pub fun lockTemplateById(templateId: UInt64)
     }
     
-    // AdminCapability to add whiteListedAccounts
+    //AdminCapability to add whiteListedAccounts
     pub resource AdminCapability {
         
         pub fun addwhiteListedAccount(_user: Address) {
@@ -324,7 +365,10 @@ pub contract TriQuetaNFT: NonFungibleToken {
         init(){}
     }
 
-    // AdminResource, where are defining all the methods related to Brands, Schema, Template and NFTs
+    /* AdminResource
+    *   AdminReource is a resource which is managing all the methods that a user (admin and end-user) can call e.g:    
+    *   createBrand, createSchema, createTemplate, mintNFT, addCapbility etc
+    */
     pub resource AdminResource: UserSpecialCapability, NFTMethodsCapability {
         // a variable which stores all Brands owned by a user
         priv var ownedBrands: {UInt64: Brand}
@@ -347,7 +391,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
             self.capability = cap
         }
 
-        // method to create new Brand, only access by the verified user
+        //method to create new Brand, only access by the verified user
         pub fun createNewBrand(brandName: String, data: {String: String}) {
             pre {
                 // the transaction will instantly revert if
@@ -358,12 +402,12 @@ pub contract TriQuetaNFT: NonFungibleToken {
 
             let newBrand = Brand(brandName: brandName, author: self.owner?.address!, data: data)
             TriQuetaNFT.allBrands[TriQuetaNFT.lastIssuedBrandId] = newBrand
-            emit BrandCreated(brandId: TriQuetaNFT.lastIssuedBrandId ,brandName: brandName, author: self.owner?.address!, data: data)
+            emit BrandCreated(brandId: TriQuetaNFT.lastIssuedBrandId ,brandName: brandName, author: self.owner!.address, data: data)
             self.ownedBrands[TriQuetaNFT.lastIssuedBrandId] = newBrand 
             TriQuetaNFT.lastIssuedBrandId = TriQuetaNFT.lastIssuedBrandId + 1
         }
 
-        // method to update the existing Brand, only author of brand can update this brand
+        //method to update the existing Brand, only author of brand can update this brand
         pub fun updateBrandData(brandId: UInt64, data: {String: String}) {
             pre{
                 // the transaction will instantly revert if
@@ -373,8 +417,8 @@ pub contract TriQuetaNFT: NonFungibleToken {
                 TriQuetaNFT.allBrands[brandId] != nil: "brand Id does not exists"
             }
 
-            let oldBrand = TriQuetaNFT.allBrands[brandId]
-            if self.owner?.address! != oldBrand!.author {
+            let oldBrand = TriQuetaNFT.allBrands[brandId]!
+            if self.owner!.address != oldBrand!.author {
                 panic("No permission to update others brand")
             }
 
@@ -382,27 +426,27 @@ pub contract TriQuetaNFT: NonFungibleToken {
             emit BrandUpdated(brandId: brandId, brandName: oldBrand!.brandName, author: oldBrand!.author, data: data)
         }
 
-        // method to create new Schema, only access by the verified user
+        //method to create new Schema, only access by the verified user
         pub fun createSchema(schemaName: String, format: {String: SchemaType}) {
             pre {
-                // the transaction will instantly revert if
+                // the transaction will instantly revert if 
                 // the capability has not been added
                 self.capability != nil: "I don't have the special capability :("
                 TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
             }
 
-            let newSchema = Schema(schemaName: schemaName, author: self.owner?.address!, format: format)
+            let newSchema = Schema(schemaName: schemaName, author: self.owner!.address, format: format)
             TriQuetaNFT.allSchemas[TriQuetaNFT.lastIssuedSchemaId] = newSchema
-            emit SchemaCreated(schemaId: TriQuetaNFT.lastIssuedSchemaId, schemaName: schemaName, author: self.owner?.address!)
+            emit SchemaCreated(schemaId: TriQuetaNFT.lastIssuedSchemaId, schemaName: schemaName, author: self.owner!.address)
             self.ownedSchemas[TriQuetaNFT.lastIssuedSchemaId] = newSchema
             TriQuetaNFT.lastIssuedSchemaId = TriQuetaNFT.lastIssuedSchemaId + 1
             
         }
 
-        // method to create new Template, only access by the verified user
-        pub fun createTemplate(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct}) {
-            pre { 
-                // the transaction will instantly revert if
+        //method to create new Template, only access by the verified user
+        pub fun createTemplate(brandId: UInt64, schemaId: UInt64, maxSupply: UInt64, immutableData: {String: AnyStruct}, mutableData: {String: AnyStruct}?) {
+            pre {
+                // the transaction will instantly revert if 
                 // the capability has not been added
                 self.capability != nil: "I don't have the special capability :("
                 TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
@@ -410,43 +454,94 @@ pub contract TriQuetaNFT: NonFungibleToken {
                 self.ownedSchemas[schemaId] != nil: "Schema Id Must be valid"
             }
 
-            let newTemplate = Template(brandId: brandId, schemaId: schemaId, maxSupply: maxSupply, immutableData: immutableData)
+            let newTemplate = Template(brandId: brandId, schemaId: schemaId, maxSupply: maxSupply, immutableData: immutableData, mutableData: nil)
             TriQuetaNFT.allTemplates[TriQuetaNFT.lastIssuedTemplateId] = newTemplate
             emit TemplateCreated(templateId: TriQuetaNFT.lastIssuedTemplateId, brandId: brandId, schemaId: schemaId, maxSupply: maxSupply)
             self.ownedTemplates[TriQuetaNFT.lastIssuedTemplateId] = newTemplate
             TriQuetaNFT.lastIssuedTemplateId = TriQuetaNFT.lastIssuedTemplateId + 1
         }
 
-        // method to mint NFT, only access by the verified user
-        pub fun mintNFT(templateId: UInt64, account: Address) {
+        //method to update the existing template's mutable data, only author of brand can update this template
+        pub fun updateTemplateMutableData(templateId: UInt64, mutableData: {String: AnyStruct}) {
+            pre{
+                // the transaction will instantly revert if
+                // the capability has not been added
+                self.capability != nil: "I don't have the special capability :("
+                TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
+                TriQuetaNFT.allTemplates[templateId] != nil: "Template ID must be valid"
+            }
+
+            let oldTemplate = TriQuetaNFT.allTemplates[templateId]
+            if self.owner!.address != TriQuetaNFT.allBrands[oldTemplate!.brandId]!.author {
+                panic("No permission to update others Template's Mutable Data")
+            }
+
+            TriQuetaNFT.allTemplates[templateId]!.updateMutableData(mutableData: mutableData)
+            emit TemplateUpdated(templateId: templateId)
+        }
+
+        //method to update or add particular key-value pair in Template's mutable data, only author of brand can update this template
+        pub fun updateTemplateMutableAttribute(templateId: UInt64, key: String, value:AnyStruct) {
+            pre{
+                // the transaction will instantly revert if the capability has not been added
+                self.capability != nil: "I don't have the special capability :("
+                TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
+                TriQuetaNFT.allTemplates[templateId] != nil: "Template ID must be valid"
+            }
+
+            let oldTemplate = TriQuetaNFT.allTemplates[templateId]
+            if self.owner!.address != TriQuetaNFT.allBrands[oldTemplate!.brandId]!.author {
+                panic("No permission to update others Template's Mutable Data")
+            }
+
+            TriQuetaNFT.allTemplates[templateId]!.updateMutableAttribute(key: key, value: value)
+            emit TemplateUpdated(templateId: templateId)
+        }
+
+        //method to mint NFT, only access by the verified user
+        pub fun mintNFT(templateId: UInt64, account: Address, immutableData:{String:AnyStruct}?) {
             pre{
                 // the transaction will instantly revert if 
                 // the capability has not been added
                 self.capability != nil: "I don't have the special capability :("
                 TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
                 self.ownedTemplates[templateId]!= nil: "Minter does not have specific template Id"
-                TriQuetaNFT.allTemplates[templateId] != nil: "Template Id must be valid"
+                TriQuetaNFT.allTemplates[templateId] != nil: "Template ID must be valid"
                 }
             let receiptAccount = getAccount(account)
             let recipientCollection = receiptAccount
                 .getCapability(TriQuetaNFT.CollectionPublicPath)
                 .borrow<&{TriQuetaNFT.TriQuetaNFTContractCollectionPublic}>()
                 ?? panic("Could not get receiver reference to the NFT Collection")
-            var newNFT: @NFT <- create NFT(templateID: templateId, mintNumber: TriQuetaNFT.allTemplates[templateId]!.incrementIssuedSupply())
+            var newNFT: @NFT <- create NFT(templateID: templateId, mintNumber: TriQuetaNFT.allTemplates[templateId]!.incrementIssuedSupply(), immutableData: immutableData)
             recipientCollection.deposit(token: <-newNFT)
         }
 
-        // method to remove template by id
+         //method to remove template by id
         pub fun removeTemplateById(templateId: UInt64) {
             pre {
                 self.capability != nil: "I don't have the special capability :("
                 TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
                 templateId != nil: "invalid template id"
-                TriQuetaNFT.allTemplates[templateId]!=nil: "template id does not exist"
+                TriQuetaNFT.allTemplates[templateId] != nil: "Template ID must be valid"
                 TriQuetaNFT.allTemplates[templateId]!.issuedSupply == 0: "could not remove template with given id"
+                TriQuetaNFT.allTemplates[templateId]!.locked != true: "You are not authorized to remove the template because the template is locked"
             }
             TriQuetaNFT.allTemplates.remove(key: templateId)
             emit TemplateRemoved(templateId: templateId)
+        }
+
+         // method to lock template by id
+        pub fun lockTemplateById(templateId: UInt64) {
+            pre {
+                self.capability != nil: "I don't have the special capability :("
+                TriQuetaNFT.whiteListedAccounts.contains(self.owner!.address): "you are not authorized for this action"
+                templateId != nil: "invalid template id"
+                TriQuetaNFT.allTemplates[templateId]!= nil: "template id does not exist"
+                TriQuetaNFT.allTemplates[templateId]!.locked != true: "Template is already locked"
+            }
+            TriQuetaNFT.allTemplates[templateId]!.lockTemplate()
+            emit TemplateLocked(templateId: templateId)
         }
 
         init() {
@@ -457,22 +552,84 @@ pub contract TriQuetaNFT: NonFungibleToken {
         }
     }
     
-    // method to create empty Collection
+    //method to create empty Collection
     pub fun createEmptyCollection(): @NonFungibleToken.Collection {
         return <- create TriQuetaNFT.Collection()
     }
 
-    // method to create Admin Resources
-    pub fun createAdminResource(): @AdminResource {
-        return <- create AdminResource()
+    /*
+    *   Method to validate template's Immutable data as per the one defined in related schema format
+    *   Immutable data's keys and their value types must be according to the schema format defination
+    */
+    pub fun validateDataAgainstSchema(format: {String: SchemaType}, data: {String: AnyStruct}) {
+
+        var invalidKey: String = ""
+        var isValidTemplate = true
+
+        for key in data.keys {
+            let value = data[key]!
+            if(format[key] == nil) {
+                isValidTemplate = false
+                invalidKey = "key $".concat(key.concat(" not found"))
+                break
+            }
+            if format[key] == TriQuetaNFT.SchemaType.String {
+                if(value as? String == nil) {
+                    isValidTemplate = false
+                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
+                    break
+                }
+            }
+            else if format[key] == TriQuetaNFT.SchemaType.Int {
+                if(value as? Int == nil) {
+                    isValidTemplate = false
+                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
+                    break
+                }
+            }
+            else if format[key] == TriQuetaNFT.SchemaType.Fix64 {
+                if(value as? Fix64 == nil) {
+                    isValidTemplate = false
+                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
+                    break
+                }
+            }else if format[key] == TriQuetaNFT.SchemaType.Bool {
+                if(value as? Bool == nil) {
+                    isValidTemplate = false
+                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
+                    break
+                }
+            }else if format[key] == TriQuetaNFT.SchemaType.Address {
+                if(value as? Address == nil) {
+                    isValidTemplate = false
+                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
+                    break
+                }
+            }
+            else if format[key] == TriQuetaNFT.SchemaType.Array {
+                if(value as? [AnyStruct] == nil) {
+                    isValidTemplate = false
+                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
+                    break
+                }
+            }
+            else if format[key] == TriQuetaNFT.SchemaType.Any {
+                if(value as? {String:AnyStruct} == nil) {
+                    isValidTemplate = false
+                    invalidKey = "key $".concat(key.concat(" has type mismatch"))
+                    break
+                }
+            }
+        }
+            assert(isValidTemplate, message: "invalid template data. Error: ".concat(invalidKey))
     }
 
-    // method to get all brands
+    //method to get all brands
     pub fun getAllBrands(): {UInt64: Brand} {
         return TriQuetaNFT.allBrands
     }
 
-    // method to get brand by id
+    //method to get brand by id
     pub fun getBrandById(brandId: UInt64): Brand {
         pre {
             TriQuetaNFT.allBrands[brandId] != nil: "brand Id does not exists"
@@ -480,12 +637,12 @@ pub contract TriQuetaNFT: NonFungibleToken {
         return TriQuetaNFT.allBrands[brandId]!
     }
 
-    // method to get all schema
+    //method to get all schema
     pub fun getAllSchemas(): {UInt64: Schema} {
         return TriQuetaNFT.allSchemas
     }
 
-    // method to get schema by id
+    //method to get schema by id
     pub fun getSchemaById(schemaId: UInt64): Schema {
         pre {
             TriQuetaNFT.allSchemas[schemaId] != nil: "schema id does not exist"
@@ -493,12 +650,12 @@ pub contract TriQuetaNFT: NonFungibleToken {
         return TriQuetaNFT.allSchemas[schemaId]!
     }
 
-    // method to get all templates
+    //method to get all templates
     pub fun getAllTemplates(): {UInt64: Template} {
         return TriQuetaNFT.allTemplates
     }
 
-    // method to get template by id
+    //method to get template by id
     pub fun getTemplateById(templateId: UInt64): Template {
         pre {
             TriQuetaNFT.allTemplates[templateId]!=nil: "Template id does not exist"
@@ -506,7 +663,31 @@ pub contract TriQuetaNFT: NonFungibleToken {
         return TriQuetaNFT.allTemplates[templateId]!
     } 
 
-    // method to get nft-data by id
+    // method to get template is locked by id
+    pub fun isTemplateLocked(templateId: UInt64): Bool {
+        pre {
+            TriQuetaNFT.allTemplates[templateId]!= nil: "Template id does not exist"
+        }
+        return TriQuetaNFT.allTemplates[templateId]!.locked
+    } 
+
+    //method to get data at immutableData field of Template
+    pub fun getImmutableData(templateId: UInt64): {String:AnyStruct}? {
+        pre {
+            TriQuetaNFT.allTemplates[templateId]!= nil: "Template id does not exist"
+        }
+        return TriQuetaNFT.allTemplates[templateId]!.getImmutableData()
+    }
+
+    //method to get data at mutableData field of Template
+    pub fun getMutableData(templateId: UInt64): {String: AnyStruct}? {
+        pre {
+            TriQuetaNFT.allTemplates[templateId]!= nil: "Template id does not exist"
+        }
+        return TriQuetaNFT.allTemplates[templateId]!.getMutableData()
+    }
+
+    //method to get nft-data by id
     pub fun getNFTDataById(nftId: UInt64): NFTData {
         pre {
             TriQuetaNFT.allNFTs[nftId]!=nil:"nft id does not exist"
