@@ -557,11 +557,6 @@ pub contract TriQuetaNFT: NonFungibleToken {
         return <- create TriQuetaNFT.Collection()
     }
 
-    //method to create Admin Resources
-    pub fun createAdminResource(): @AdminResource {
-        return <- create AdminResource()
-    }
-
     /*
     *   Method to validate template's Immutable data as per the one defined in related schema format
     *   Immutable data's keys and their value types must be according to the schema format defination
@@ -619,7 +614,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
                 }
             }
             else if format[key] == TriQuetaNFT.SchemaType.Any {
-                if(value as? {String:AnyStruct} ==nil) {
+                if(value as? {String:AnyStruct} == nil) {
                     isValidTemplate = false
                     invalidKey = "key $".concat(key.concat(" has type mismatch"))
                     break

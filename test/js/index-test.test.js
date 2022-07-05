@@ -75,7 +75,7 @@ describe("Deployment", () => {
 
   test("Deploy for TriQuetaNFT", async () => {
     const name = "TriQuetaNFT";
-    const to = await getAccountAddress("Bob");
+    const to = await getAccountAddress("Charlie");
     let update = true;
     console.log("started");
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
@@ -167,7 +167,7 @@ describe("Transactions", () => {
     const Bob = await getAccountAddress("Bob");
     const Charlie = await getAccountAddress("Charlie");
     // Set transaction signers
-    const signers = [Bob];
+    const signers = [Charlie];
     // Generate addressMap from import statements
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
     const TriQuetaNFT = await getContractAddress("TriQuetaNFT");

@@ -9,9 +9,9 @@ transaction (schemaName: String){
             panic("could not borrow a reference to the NFTMethodsCapability interface")
 
          let format : {String: TriQuetaNFT.SchemaType} = {
-            "artist" : TriQuetaNFT.SchemaType.String,
-            "artistEmail"  :  TriQuetaNFT.SchemaType.String,
-            "title":TriQuetaNFT.SchemaType.String,
+            "artist": TriQuetaNFT.SchemaType.String,
+            "artistEmail":  TriQuetaNFT.SchemaType.String,
+            "title":  TriQuetaNFT.SchemaType.String,
             "mintType":  TriQuetaNFT.SchemaType.String,
             "nftType":  TriQuetaNFT.SchemaType.String,
             "rarity":  TriQuetaNFT.SchemaType.String,
