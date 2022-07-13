@@ -17,7 +17,7 @@ transaction(DropId: UInt64, TemplateId: UInt64, MintNumber: UInt64, receiptAddre
     }
   
     execute{
-        let dropResponse = self.adminRef.purchaseNFTWithFlow(dropId: DropId, templateId: TemplateId, mintNumbers: MintNumber, receiptAddress: receiptAddress, price:Price,flowPayment: <- self.temporaryVault)
+        let dropResponse = self.adminRef.purchaseNFTWithFlow(dropId: DropId, templateId: TemplateId, mintNumbers: MintNumber, receiptAddress: receiptAddress, price:Price,flowPayment: <- self.temporaryVault, immutableData: nil)
         log(dropResponse)
     }
 }

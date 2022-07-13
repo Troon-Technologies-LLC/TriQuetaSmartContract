@@ -1,4 +1,4 @@
-import NonFungibleToken from 0xf8d6e0586b0a20c7
+import NonFungibleToken from 0x631e88ae7f1d7c20
 
 pub contract TriQuetaNFT: NonFungibleToken {
 
@@ -146,7 +146,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
 
             // Before creating template, we need to check template data, if it is valid against given schema or not
             let schema = TriQuetaNFT.allSchemas[schemaId]!
-            TriQuetaNFT.validateDataAgainstSchema(format: schema.format, data: immutableData!)
+            TriQuetaNFT.validateDataAgainstSchema(format: schema.format, data: immutableData)
             self.templateId = TriQuetaNFT.lastIssuedTemplateId
             self.brandId = brandId
             self.schemaId = schemaId

@@ -1,7 +1,7 @@
-import TriQuetaNFT from 0xf8d6e0586b0a20c7
-import NonFungibleToken from 0xf8d6e0586b0a20c7
-import FungibleToken from 0xee82856bf20e2aa6
-import FlowToken from 0x0ae53cb6e3f42a79
+import TriQuetaNFT from 0x57c136b6efbd3ac3
+import NonFungibleToken from 0x631e88ae7f1d7c20
+import FungibleToken from 0x9a0766d93b6608b7
+import FlowToken from 0x7e60df042a9c0868
 
 pub contract TriQueta {
     // -----------------------------------------------------------------------
@@ -171,7 +171,7 @@ pub contract TriQueta {
             emit DropPurchased(dropId: dropId,templateId: templateId, mintNumbers: mintNumbers, receiptAddress: receiptAddress)
         }
 
-        pub fun purchaseNFTWithFlow(dropId: UInt64, templateId: UInt64, mintNumbers: UInt64, receiptAddress: Address, price: UFix64, flowPayment: @FungibleToken.Vault) {
+        pub fun purchaseNFTWithFlow(dropId: UInt64, templateId: UInt64, mintNumbers: UInt64, receiptAddress: Address, price: UFix64, flowPayment: @FungibleToken.Vault, immutableData:{String:AnyStruct}?) {
             pre {
                 price > 0.0: "Price should be greater than zero"
                 receiptAddress !=nil: "invalid receipt Address"
@@ -195,7 +195,7 @@ pub contract TriQueta {
             
             var i: UInt64 = 0
             while i < mintNumbers {
-                TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress, immutableData: nil)
+                TriQueta.adminRef.borrow()!.mintNFT(templateId: templateId, account: receiptAddress, immutableData: immutableData)
                 i = i + 1
             }
 
