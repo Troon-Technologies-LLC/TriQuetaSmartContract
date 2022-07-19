@@ -23,7 +23,7 @@ transaction() {
         // store the empty NFT Collection in account storage
         signer.save( <- collection, to: TriQuetaNFT.CollectionStoragePath)
         // create a public capability for the Collection
-        signer.link<&{TriQuetaNFT.TriQuetaNFTContractCollectionPublic}>(TriQuetaNFT.CollectionPublicPath, target:TriQuetaNFT.CollectionStoragePath)
+        signer.link<&{TriQuetaNFT.NFTContractCollectionPublic}>(TriQuetaNFT.CollectionPublicPath, target:TriQuetaNFT.CollectionStoragePath)
         log("ok")
     }
 }

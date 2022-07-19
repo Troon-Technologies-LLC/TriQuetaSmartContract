@@ -1,4 +1,5 @@
-import NonFungibleToken from 0x631e88ae7f1d7c20
+import NonFungibleToken from 0xf8d6e0586b0a20c7
+import MetadataViews from 0xf8d6e0586b0a20c7
 
 pub contract TriQuetaNFT: NonFungibleToken {
 
@@ -229,14 +230,13 @@ pub contract TriQuetaNFT: NonFungibleToken {
     *   NFT is a resource that actually stays in user storage.
     *   NFT has id, data which include relation with template and minter number of that specific NFT
     */
-    pub resource NFT: NonFungibleToken.INFT {
+    pub resource NFT: NonFungibleToken.INFT, MetadataViews.Resolver {
         pub let id: UInt64
         access(contract) let data: NFTData
 
         init(templateID: UInt64, mintNumber: UInt64, immutableData: {String: AnyStruct}?) {
             pre {
                 !TriQuetaNFT.allTemplates[templateID]!.locked: "You are not authorized because the template is locked"
-
             }
             TriQuetaNFT.totalSupply = TriQuetaNFT.totalSupply + 1
             self.id = TriQuetaNFT.totalSupply
@@ -244,16 +244,100 @@ pub contract TriQuetaNFT: NonFungibleToken {
             self.data = TriQuetaNFT.allNFTs[self.id]!
             emit NFTMinted(nftId: self.id, templateId: templateID, mintNumber: mintNumber)
         }
+
         destroy(){
             emit NFTDestroyed(id: self.id)
         }
+
+        pub fun getViews(): [Type] {
+            return [
+                Type<MetadataViews.Display>()
+            ]
+        }
+        pub fun resolveView(_ view: Type): AnyStruct? {
+            switch view {
+                case Type<MetadataViews.Display>():
+                    return MetadataViews.Display(
+                        name: "test",
+                        description: "description",
+                        thumbnail: MetadataViews.HTTPFile(
+                            url: "url"
+                        )
+                    )
+                case Type<MetadataViews.Editions>():
+                    // There is no max number of NFTs that can be minted from this contract
+                    // so the max edition field value is set to nil
+                    let editionInfo = MetadataViews.Edition(name: "Example NFT Edition", number: self.id, max: nil)
+                    let editionList: [MetadataViews.Edition] = [editionInfo]
+                    return MetadataViews.Editions(
+                        editionList
+                    )
+                case Type<MetadataViews.Serial>():
+                    return MetadataViews.Serial(
+                        self.id
+                    )
+                // case Type<MetadataViews.Royalties>():
+                //     return MetadataViews.Royalties(
+                //         self.royalties
+                //     )
+                case Type<MetadataViews.ExternalURL>():
+                    return MetadataViews.ExternalURL("https://example-nft.onflow.org/".concat(self.id.toString()))
+                case Type<MetadataViews.NFTCollectionData>():
+                    return MetadataViews.NFTCollectionData(
+                        storagePath: TriQuetaNFT.CollectionStoragePath,
+                        publicPath: TriQuetaNFT.CollectionPublicPath,
+                        providerPath: /private/exampleNFTCollection,
+                        publicCollection: Type<&TriQuetaNFT.Collection{TriQuetaNFT.NFTContractCollectionPublic}>(),
+                        publicLinkedType: Type<&TriQuetaNFT.Collection{TriQuetaNFT.NFTContractCollectionPublic,NonFungibleToken.CollectionPublic,NonFungibleToken.Receiver, MetadataViews.ResolverCollection}>(),
+                        providerLinkedType: Type<&TriQuetaNFT.Collection{TriQuetaNFT.NFTContractCollectionPublic,NonFungibleToken.CollectionPublic,NonFungibleToken.Provider, MetadataViews.ResolverCollection}>(),
+                        createEmptyCollectionFunction: (fun (): @NonFungibleToken.Collection {
+                            return <-TriQuetaNFT.createEmptyCollection()
+                        })
+                    )
+                case Type<MetadataViews.NFTCollectionDisplay>():
+                    let media = MetadataViews.Media(
+                        file: MetadataViews.HTTPFile(
+                            url: "https://assets.website-files.com/5f6294c0c7a8cdd643b1c820/5f6294c0c7a8cda55cb1c936_Flow_Wordmark.svg"
+                        ),
+                        mediaType: "image/svg+xml"
+                    )
+                    return MetadataViews.NFTCollectionDisplay(
+                        name: "The Example Collection",
+                        description: "This collection is used as an example to help you develop your next Flow NFT.",
+                        externalURL: MetadataViews.ExternalURL("https://example-nft.onflow.org"),
+                        squareImage: media,
+                        bannerImage: media,
+                        socials: {
+                            "twitter": MetadataViews.ExternalURL("https://twitter.com/flow_blockchain")
+                        }
+                    )
+                // case Type<MetadataViews.Traits>():
+                //     // exclude mintedTime and foo to show other uses of Traits
+                //     let excludedTraits = ["mintedTime", "foo"]
+                //     let traitsView = MetadataViews.dictToTraits(dict: self.metadata, excludedNames: excludedTraits)
+
+                //     // mintedTime is a unix timestamp, we should mark it with a displayType so platforms know how to show it.
+                //     let mintedTimeTrait = MetadataViews.Trait(name: "mintedTime", value: self.metadata["mintedTime"]!, displayType: "Date", rarity: nil)
+                //     traitsView.addTrait(mintedTimeTrait)
+
+                //     // foo is a trait with its own rarity
+                //     let fooTraitRarity = MetadataViews.Rarity(score: 10.0, max: 100.0, description: "Common")
+                //     let fooTrait = MetadataViews.Trait(name: "foo", value: self.metadata["foo"], displayType: nil, rarity: fooTraitRarity)
+                //     traitsView.addTrait(fooTrait)
+                    
+                //     return traitsView
+
+            }
+            return nil
+        }
     }
 
-    /** TriQuetaNFTContractCollectionPublic
+
+    /** NFTContractCollectionPublic
     *   A public interface extending the standard NFT Collection with type information specific
     *   to Triqueta NFTs.
     */
-    pub resource interface TriQuetaNFTContractCollectionPublic {
+    pub resource interface NFTContractCollectionPublic {
         pub fun deposit(token: @NonFungibleToken.NFT)
         pub fun getIDs(): [UInt64]
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
@@ -265,12 +349,13 @@ pub contract TriQuetaNFT: NonFungibleToken {
                     "Cannot borrow NFT reference: The ID of the returned reference is incorrect"
             }
         }
+        pub fun borrowViewResolver(id: UInt64): &AnyResource{MetadataViews.Resolver}
     }
 
     /** Collection
     *   Collection is a resource that lie in user storage to manage owned NFT resource
     */
-    pub resource Collection: TriQuetaNFTContractCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
+    pub resource Collection: NFTContractCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, MetadataViews.ResolverCollection  {
         // ownedNFTs will manage all user owned NFTs against it NFT id
         pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
@@ -320,6 +405,18 @@ pub contract TriQuetaNFT: NonFungibleToken {
                 return nil
             }
         }
+
+        pub fun borrowViewResolver(id: UInt64): &AnyResource{MetadataViews.Resolver} {
+            let nft = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
+            let exampleNFT = nft as! &TriQuetaNFT.NFT
+            return exampleNFT as &AnyResource{MetadataViews.Resolver}
+        }
+
+        //pub fun borrowViewResolver(id: UInt64): &AnyResource{MetadataViews.Resolver} {
+        //     let nft = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)! 
+        //     let topShotNFT = nft as! &TopShot.NFT
+        //     return topShotNFT as &AnyResource{MetadataViews.Resolver}
+        //}
 
         init() {
             self.ownedNFTs <- {}
@@ -511,7 +608,7 @@ pub contract TriQuetaNFT: NonFungibleToken {
             let receiptAccount = getAccount(account)
             let recipientCollection = receiptAccount
                 .getCapability(TriQuetaNFT.CollectionPublicPath)
-                .borrow<&{TriQuetaNFT.TriQuetaNFTContractCollectionPublic}>()
+                .borrow<&{TriQuetaNFT.NFTContractCollectionPublic}>()
                 ?? panic("Could not get receiver reference to the NFT Collection")
             var newNFT: @NFT <- create NFT(templateID: templateId, mintNumber: TriQuetaNFT.allTemplates[templateId]!.incrementIssuedSupply(), immutableData: immutableData)
             recipientCollection.deposit(token: <-newNFT)

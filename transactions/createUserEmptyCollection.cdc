@@ -8,7 +8,7 @@ transaction {
         acct.save( <- collection, to:TriQuetaNFT.CollectionStoragePath)
         log("Collection created for account".concat(acct.address.toString()))
         // create a public capability for the Collection
-        acct.link<&{TriQuetaNFT.TriQuetaNFTContractCollectionPublic}>(TriQuetaNFT.CollectionPublicPath, target:TriQuetaNFT.CollectionStoragePath)
+        acct.link<&{TriQuetaNFT.NFTContractCollectionPublic}>(TriQuetaNFT.CollectionPublicPath, target:TriQuetaNFT.CollectionStoragePath)
         log("Capability created")
 
     }

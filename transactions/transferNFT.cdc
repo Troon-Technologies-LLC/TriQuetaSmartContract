@@ -24,7 +24,7 @@ transaction(recipient: Address, withdrawID: UInt64) {
     execute {
         // get the recipient's public account object
         let recipient = getAccount(recipient)
-        let receiverRef = recipient.getCapability<&{TriQuetaNFT.TriQuetaNFTContractCollectionPublic}>(TriQuetaNFT.CollectionPublicPath)
+        let receiverRef = recipient.getCapability<&{TriQuetaNFT.NFTContractCollectionPublic}>(TriQuetaNFT.CollectionPublicPath)
             .borrow()
             ?? panic("Could not borrow receiver reference")
         // deposit the NFT in the receivers collection

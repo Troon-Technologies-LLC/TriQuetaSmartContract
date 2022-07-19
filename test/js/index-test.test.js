@@ -73,14 +73,40 @@ describe("Deployment", () => {
     expect(name).toBe("NonFungibleToken");
   });
 
+  test("Deploy for MetaDataViews", async () => {
+    const name = "MetadataViews";
+    const to = await getAccountAddress("Alice");
+    let update = true;
+
+    let result;
+    try {
+      const NonFungibleToken = await getContractAddress("NonFungibleToken");
+      
+      const addressMap = {
+        NonFungibleToken,
+      };
+      result = await deployContractByName({
+        name,
+        to,
+        update,
+        addressMap
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    expect(name).toBe("MetadataViews");
+  });
+
   test("Deploy for TriQuetaNFT", async () => {
     const name = "TriQuetaNFT";
     const to = await getAccountAddress("Charlie");
     let update = true;
     console.log("started");
     const NonFungibleToken = await getContractAddress("NonFungibleToken");
+    const metadataViews = await getContractAddress("MetadataViews");
     const addressMap = {
       NonFungibleToken,
+      metadataViews,
     };
 
     let result;
@@ -1428,3 +1454,40 @@ describe("Scripts", () => {
     console.log("result", result);
   });
 });
+
+
+test("get nft View", async () => {
+  const name = "getNFTView";
+  const Bob = await getAccountAddress("Bob");
+  const Dani = await getAccountAddress("Dani");
+
+  const TriQuetaNFT = await getContractAddress("TriQuetaNFT");
+  const MetaDataView = await getContractAddress("MetadataViews");
+
+  const addressMap = {
+    TriQuetaNFT,
+    MetaDataView
+  };
+  let code = await getScriptCode({
+    name,
+    addressMap,
+  });
+
+  code = code
+    .toString()
+    .replace(/(?:getAccount\(\s*)(0x.*)(?:\s*\))/g, (_, match) => {
+      const accounts = {
+        "0x01": Alice,
+        "0x02": Bob,
+      };
+      const name = accounts[match];
+      return `getAccount(${name})`;
+    });
+  const args = [Dani,1];
+  const result = await executeScript({
+    code,
+    args,
+  });
+  console.log("result", result);
+});
+
